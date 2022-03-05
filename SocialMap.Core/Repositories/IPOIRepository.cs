@@ -13,6 +13,6 @@ namespace SocialMap.Core.Repositories
         Task<POI> GetAsync(int id);
         Task<IEnumerable<POI>> BrowseAllAsync();
         Task UpdateAsync(POI poi);
-        Task DelAsync(POI poi);
+        Task DelAsync(int id);
     }
 }

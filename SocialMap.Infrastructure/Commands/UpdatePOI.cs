@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocialMap.Infrastructure.DTO
+namespace SocialMap.Infrastructure.Commands
 {
-    public class POIDTO
+    public class UpdatePOI
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string Name { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
@@ -24,7 +24,5 @@ namespace SocialMap.Infrastructure.DTO
 
         //public ICollection<Like> Likes { get; set; }
         //public ICollection<Comment> Comments { get; set; }
-
-        //nie wiem czy dobrze zakomentowane
     }
 }

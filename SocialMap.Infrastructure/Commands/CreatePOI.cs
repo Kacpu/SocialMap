@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SocialMap.Infrastructure.DTO
+namespace SocialMap.Infrastructure.Commands
 {
-    public class POIDTO
+    public class CreatePOI
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -17,5 +17,7 @@ namespace SocialMap.Infrastructure.Repositories
 
         }
         public DbSet<Category> Category { get; set; }
+        public DbSet<POI> POI { get; set; }
+        public DbSet<POIAccess> POIAccess { get; set; }
     }
 }
