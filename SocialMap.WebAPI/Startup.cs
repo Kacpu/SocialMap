@@ -40,8 +40,7 @@ namespace SocialMap.WebAPI
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddDbContext<AppDbContext>(
-                options => options.UseSqlServer(
-                    Configuration.GetConnectionString("DbConnectionString"))
+                options => options.UseSqlServer(Configuration.GetConnectionString("DbConnectionString"))
             );
         }
 

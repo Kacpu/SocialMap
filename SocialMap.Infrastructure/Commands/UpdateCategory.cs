@@ -9,7 +9,6 @@ namespace SocialMap.Infrastructure.Commands
 {
     public class UpdateCategory
     {
-        public int Id { get; set; }
         public string Name { get; set; }
 
         public ICollection<POIDTO> POIs { get; set; }

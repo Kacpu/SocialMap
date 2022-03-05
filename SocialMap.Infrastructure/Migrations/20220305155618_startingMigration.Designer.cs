@@ -10,7 +10,7 @@ using SocialMap.Infrastructure.Repositories;
 namespace SocialMap.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220305134959_startingMigration")]
+    [Migration("20220305155618_startingMigration")]
     partial class startingMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

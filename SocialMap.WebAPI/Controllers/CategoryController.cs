@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
 using SocialMap.Infrastructure.Services;
 using System;
@@ -25,26 +26,35 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDirector(int id)
+        public async Task<IActionResult> GetCategory(int id)
         {
             CategoryDTO z = await _CategoryService.GetAsync(id);
             return Json(z);
         }
 
         [HttpPost]
-        public async Task AddDirector([FromBody] CategoryDTO categoryDTO)
+        public async Task AddCategory([FromBody] CreateCategory createCategory)
         {
+            CategoryDTO categoryDTO = new CategoryDTO()
+            {
+                Name = createCategory.Name
+            };
             await _CategoryService.AddAsync(categoryDTO);
         }
 
         [HttpPut("{id}")]
-        public async Task UpdateCompetitor([FromBody] CategoryDTO categoryDTO)
+        public async Task UpdateCategory([FromBody] UpdateCategory updateCategory, int id)
         {
+            CategoryDTO categoryDTO = new CategoryDTO()
+            {
+                Id = id,
+                Name = updateCategory.Name
+            };
             await _CategoryService.UpdateAsync(categoryDTO);
         }
 
         [HttpDelete("{id}")]
-        public async Task DeleteDirector(int id)
+        public async Task DeleteCategory(int id)
         {
             await _CategoryService.DelAsync(id);
         }
