@@ -69,8 +69,6 @@ namespace SocialMap.Infrastructure.Repositories
 
         public async Task UpdateAsync(Category category)
         {
-            Console.WriteLine("AAAAAAAAAAAAAAAAA");
-            Console.WriteLine(category.Id);
             try
             {
                 var c = _appDbContext.Category.FirstOrDefault(x => x.Id == category.Id);
