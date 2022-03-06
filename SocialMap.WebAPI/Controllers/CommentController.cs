@@ -31,7 +31,8 @@ namespace SocialMap.WebAPI.Controllers
             {
                 Content = comment.Content,
                 POIId = comment.POIId,
-                AppUserId = comment.AppUserId
+                AppUserId = comment.AppUserId,
+                PublicationDate = DateTime.Now
             };
 
             var c = await _commentService.AddAsync(commentDTO);
