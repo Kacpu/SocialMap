@@ -10,10 +10,10 @@ namespace SocialMap.Infrastructure.Services
 {
     public interface IPOIService
     {
-        Task<POIDTO> AddAsync(CreatePOI poi);
+        Task<POIDTO> AddAsync(POIDTO poi);
         Task<POIDTO> GetAsync(int id);
         Task<IEnumerable<POIDTO>> BrowseAllAsync();
-        Task UpdateAsync(UpdatePOI poi);
+        Task UpdateAsync(POIDTO poi);
         Task DelAsync(int id);
     }
 }

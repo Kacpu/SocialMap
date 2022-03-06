@@ -30,7 +30,7 @@ namespace SocialMap.Infrastructure.Services
             };
             return poiDTO;
         }
-        public async Task<POIAccessDTO> AddAsync(CreatePOIAccess poiAccess)
+        public async Task<POIAccessDTO> AddAsync(POIAccessDTO poiAccess)
         {
             POIAccess p = new POIAccess()
             {
@@ -71,7 +71,7 @@ namespace SocialMap.Infrastructure.Services
             return MakeDTO(z);
         }
 
-        public async Task UpdateAsync(UpdatePOIAccess poiAccess)
+        public async Task UpdateAsync(POIAccessDTO poiAccess)
         {
             POIAccess p = new POIAccess()
             {

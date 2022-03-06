@@ -27,7 +27,19 @@ namespace SocialMap.WebAPI.Controllers
                 return BadRequest();
             }
 
-            var p = await _POIService.AddAsync(poi);
+            POIDTO poiDTO = new POIDTO()
+            {
+                Id = poi.Id,
+                Name = poi.Name,
+                X = poi.X,
+                Y = poi.Y,
+                Description = poi.Description,
+                IsGlobal = poi.IsGlobal,
+                AppUserId = poi.AppUserId,
+                CategoryId = poi.CategoryId
+            };
+
+            var p = await _POIService.AddAsync(poiDTO);
 
             if (p == null)
             {
@@ -93,7 +105,18 @@ namespace SocialMap.WebAPI.Controllers
                 return BadRequest();
             }
 
-            await _POIService.UpdateAsync(poi);
+            POIDTO poiDTO = new POIDTO()
+            {
+                Name = poi.Name,
+                X = poi.X,
+                Y = poi.Y,
+                Description = poi.Description,
+                IsGlobal = poi.IsGlobal,
+                AppUserId = poi.AppUserId,
+                CategoryId = poi.CategoryId
+            };
+
+            await _POIService.UpdateAsync(poiDTO);
 
             return Json(poi);
         }

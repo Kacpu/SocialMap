@@ -35,7 +35,7 @@ namespace SocialMap.Infrastructure.Services
             return poiDTO;
         }
 
-        public async Task<POIDTO> AddAsync(CreatePOI poi)
+        public async Task<POIDTO> AddAsync(POIDTO poi)
         {
             POI p = new POI()
             {
@@ -80,7 +80,7 @@ namespace SocialMap.Infrastructure.Services
             return MakeDTO(z);
         }
 
-        public async Task UpdateAsync(UpdatePOI poi)
+        public async Task UpdateAsync(POIDTO poi)
         {
             POI p = new POI()
             {
