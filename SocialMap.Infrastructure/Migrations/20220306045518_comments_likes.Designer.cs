@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SocialMap.Infrastructure.Repositories;
 
 namespace SocialMap.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220306045518_comments_likes")]
+    partial class comments_likes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,7 +239,10 @@ namespace SocialMap.Infrastructure.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("AppUserId")
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Content")
@@ -251,7 +256,7 @@ namespace SocialMap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserId1");
 
                     b.HasIndex("POIId");
 
@@ -265,7 +270,10 @@ namespace SocialMap.Infrastructure.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("AppUserId")
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("POIId")
@@ -273,7 +281,7 @@ namespace SocialMap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserId1");
 
                     b.HasIndex("POIId");
 
@@ -287,7 +295,10 @@ namespace SocialMap.Infrastructure.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("AppUserId")
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AppUserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("CategoryId")
@@ -310,7 +321,7 @@ namespace SocialMap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserId1");
 
                     b.HasIndex("CategoryId");
 
@@ -324,8 +335,8 @@ namespace SocialMap.Infrastructure.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsAccpeted")
                         .HasColumnType("bit");
@@ -393,7 +404,7 @@ namespace SocialMap.Infrastructure.Migrations
                 {
                     b.HasOne("SocialMap.Core.Domain.AppUser", "AppUser")
                         .WithMany("Comments")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserId1");
 
                     b.HasOne("SocialMap.Core.Domain.POI", "POI")
                         .WithMany("Comments")
@@ -410,7 +421,7 @@ namespace SocialMap.Infrastructure.Migrations
                 {
                     b.HasOne("SocialMap.Core.Domain.AppUser", null)
                         .WithMany("Likes")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserId1");
 
                     b.HasOne("SocialMap.Core.Domain.POI", null)
                         .WithMany("Likes")
@@ -423,7 +434,7 @@ namespace SocialMap.Infrastructure.Migrations
                 {
                     b.HasOne("SocialMap.Core.Domain.AppUser", "AppUser")
                         .WithMany("POIs")
-                        .HasForeignKey("AppUserId");
+                        .HasForeignKey("AppUserId1");
 
                     b.HasOne("SocialMap.Core.Domain.Category", "Category")
                         .WithMany("POIs")

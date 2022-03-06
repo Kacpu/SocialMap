@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace SocialMap.Infrastructure.Commands
 {
-    public class CreatePOIAccess
+    public class CreateComment
     {
-        public int Id { get; set; }
+        public string Content { get; set; }
         public int POIId { get; set; }
         public string AppUserId { get; set; }
-        public bool IsAccpeted { get; set; }
     }
 }
