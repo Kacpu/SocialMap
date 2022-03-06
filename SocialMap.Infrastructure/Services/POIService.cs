@@ -84,6 +84,7 @@ namespace SocialMap.Infrastructure.Services
         {
             POI p = new POI()
             {
+                Id = poi.Id,
                 Name = poi.Name,
                 X = poi.X,
                 Y = poi.Y,

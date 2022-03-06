@@ -75,6 +75,7 @@ namespace SocialMap.Infrastructure.Services
         {
             POIAccess p = new POIAccess()
             {
+                Id = poiAccess.Id,
                 POIId = poiAccess.POIId,
                 AppUserId = poiAccess.AppUserId,
                 IsAccpeted = poiAccess.IsAccpeted

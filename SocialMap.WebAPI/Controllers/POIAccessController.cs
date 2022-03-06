@@ -103,6 +103,7 @@ namespace SocialMap.WebAPI.Controllers
 
             POIAccessDTO poiDTO = new POIAccessDTO()
             {
+                Id = id,
                 POIId = poi.POIId,
                 AppUserId = poi.AppUserId,
                 IsAccpeted = poi.IsAccpeted

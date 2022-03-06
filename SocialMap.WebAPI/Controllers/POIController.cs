@@ -107,6 +107,7 @@ namespace SocialMap.WebAPI.Controllers
 
             POIDTO poiDTO = new POIDTO()
             {
+                Id = id,
                 Name = poi.Name,
                 X = poi.X,
                 Y = poi.Y,
