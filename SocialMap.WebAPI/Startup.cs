@@ -41,10 +41,17 @@ namespace SocialMap.WebAPI
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IAppUserRepository, AppUserRepository>();
             services.AddScoped<IAppUserService, AppUserService>();
+
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ILikeRepository, LikeRepository>();
             services.AddScoped<ILikeService, LikeService>();
+
+            services.AddScoped<IPOIRepository, POIRepository>();
+            services.AddScoped<IPOIService, POIService>();
+            services.AddScoped<IPOIAccessRepository, POIAccessRepository>();
+            services.AddScoped<IPOIAccessService, POIAccessService>();
+
             services.AddDbContext<AppDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DbConnectionString"))
             );
