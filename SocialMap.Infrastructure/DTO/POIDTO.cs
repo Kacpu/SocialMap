@@ -22,9 +22,7 @@ namespace SocialMap.Infrastructure.DTO
         public int CategoryId { get; set; }
         //public Category Category { get; set; }
 
-        //public ICollection<Like> Likes { get; set; }
+        public ICollection<LikeDTO> Likes { get; set; }
         //public ICollection<Comment> Comments { get; set; }
-
-        //nie wiem czy dobrze zakomentowane
     }
 }

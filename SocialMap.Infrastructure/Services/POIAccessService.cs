@@ -19,40 +19,44 @@ namespace SocialMap.Infrastructure.Services
             _POIAccessRepository = POIAccessRepository;
         }
 
-        private POIAccessDTO MakeDTO(POIAccess p)
+        private POIAccessDTO ToDTO(POIAccess p)
         {
-            POIAccessDTO poiDTO = new POIAccessDTO()
+            return new POIAccessDTO()
             {
                 Id = p.Id,
                 POIId = p.POIId,
                 AppUserId = p.AppUserId,
                 IsAccpeted = p.IsAccpeted
             };
-            return poiDTO;
         }
+
+        private POIAccess ToDomain(POIAccessDTO p)
+        {
+            return new POIAccess()
+            {
+                Id = p.Id,
+                POIId = p.POIId,
+                AppUserId = p.AppUserId,
+                IsAccpeted = p.IsAccpeted
+            };
+        }
+
         public async Task<POIAccessDTO> AddAsync(POIAccessDTO poiAccess)
         {
-            POIAccess p = new POIAccess()
-            {
-                Id = poiAccess.Id,
-                POIId = poiAccess.POIId,
-                AppUserId = poiAccess.AppUserId,
-                IsAccpeted = poiAccess.IsAccpeted
-            };
+            var z = await _POIAccessRepository.AddAsync(ToDomain(poiAccess));
+            return z != null ? await Task.FromResult(ToDTO(z)) : null;
+        }
 
-            var z = await _POIAccessRepository.AddAsync(p);
-
-            if (z == null)
-            {
-                return null;
-            }
-            return MakeDTO(z);
+        public async Task<POIAccessDTO> GetAsync(int id)
+        {
+            var z = await _POIAccessRepository.GetAsync(id);
+            return z != null ? await Task.FromResult(ToDTO(z)) : null;
         }
 
         public async Task<IEnumerable<POIAccessDTO>> BrowseAllAsync()
         {
             var z = await _POIAccessRepository.BrowseAllAsync();
-            return z.Select(x => MakeDTO(x));
+            return z != null ? z.Select(x => ToDTO(x)) : null;
         }
 
         public async Task DelAsync(int id)
@@ -60,28 +64,9 @@ namespace SocialMap.Infrastructure.Services
             await _POIAccessRepository.DelAsync(id);
         }
 
-        public async Task<POIAccessDTO> GetAsync(int id)
-        {
-            var z = await _POIAccessRepository.GetAsync(id);
-
-            if (z == null)
-            {
-                return null;
-            }
-            return MakeDTO(z);
-        }
-
         public async Task UpdateAsync(POIAccessDTO poiAccess)
         {
-            POIAccess p = new POIAccess()
-            {
-                Id = poiAccess.Id,
-                POIId = poiAccess.POIId,
-                AppUserId = poiAccess.AppUserId,
-                IsAccpeted = poiAccess.IsAccpeted
-            };
-
-            await _POIAccessRepository.UpdateAsync(p);
+            await _POIAccessRepository.UpdateAsync(ToDomain(poiAccess));
         }
     }
 }

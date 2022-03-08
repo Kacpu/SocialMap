@@ -15,5 +15,6 @@ namespace SocialMap.Infrastructure.DTO
         public int POIId { get; set; }
 
         public string AppUserId { get; set; }
+        public AppUserDTO AppUser { get; set; }
     }
 }

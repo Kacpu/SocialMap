@@ -13,7 +13,6 @@ namespace SocialMap.Core.Domain
         public double X { get; set; }
         public double Y { get; set; }
         public string Description { get; set; }
-
         public bool IsGlobal { get; set; } = false;
 
         public string AppUserId { get; set; }
@@ -24,5 +23,6 @@ namespace SocialMap.Core.Domain
 
         public ICollection<Like> Likes { get; set; }
         public ICollection<Comment> Comments { get; set; }
+        public ICollection<POIAccess> POIAccesses { get; set; }
     }
 }

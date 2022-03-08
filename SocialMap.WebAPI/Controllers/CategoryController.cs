@@ -12,51 +12,97 @@ namespace SocialMap.WebAPI.Controllers
     [Route("[Controller]")]
     public class CategoryController : Controller
     {
-        private readonly ICategoryService _CategoryService;
+        private readonly ICategoryService _categoryService;
+
         public CategoryController(ICategoryService CategoryService)
         {
-            _CategoryService = CategoryService;
+            _categoryService = CategoryService;
         }
 
         [HttpGet]
         public async Task<IActionResult> BrowseAllAsync()
         {
-            IEnumerable<CategoryDTO> z = await _CategoryService.BrowseAllAsync();
+            IEnumerable<CategoryDTO> z = await _categoryService.BrowseAllAsync();
+
+            if (z == null)
+            {
+                return NotFound();
+            }
+
             return Json(z);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategory(int id)
         {
-            CategoryDTO z = await _CategoryService.GetAsync(id);
+            CategoryDTO z = await _categoryService.GetAsync(id);
+
+            if (z == null)
+            {
+                return NotFound();
+            }
+
             return Json(z);
         }
 
         [HttpPost]
-        public async Task AddCategory([FromBody] CreateCategory createCategory)
+        public async Task<IActionResult> AddCategory([FromBody] CreateCategory createCategory)
         {
+            if (createCategory == null)
+            {
+                return BadRequest();
+            }
+
             CategoryDTO categoryDTO = new CategoryDTO()
             {
                 Name = createCategory.Name
             };
-            await _CategoryService.AddAsync(categoryDTO);
+
+            var c = await _categoryService.AddAsync(categoryDTO);
+
+            if (c == null)
+            {
+                return BadRequest();
+            }
+
+            return CreatedAtAction(nameof(GetCategory), new { id = c.Id }, c);
         }
 
         [HttpPut("{id}")]
-        public async Task UpdateCategory([FromBody] UpdateCategory updateCategory, int id)
+        public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategory updateCategory, int id)
         {
-            CategoryDTO categoryDTO = new CategoryDTO()
+            CategoryDTO categoryDTO = await _categoryService.GetAsync(id);
+
+            if (categoryDTO == null)
             {
-                Id = id,
-                Name = updateCategory.Name
-            };
-            await _CategoryService.UpdateAsync(categoryDTO);
+                return NotFound();
+            }
+
+            if (updateCategory == null)
+            {
+                return BadRequest();
+            }
+
+            categoryDTO.Name = updateCategory.Name ?? categoryDTO.Name;
+
+            await _categoryService.UpdateAsync(categoryDTO);
+
+            return Json(categoryDTO);
         }
 
         [HttpDelete("{id}")]
-        public async Task DeleteCategory(int id)
+        public async Task<IActionResult> DeleteCategory(int id)
         {
-            await _CategoryService.DelAsync(id);
+            CategoryDTO categoryDTO = await _categoryService.GetAsync(id);
+
+            if (categoryDTO == null)
+            {
+                return NotFound();
+            }
+
+            await _categoryService.DelAsync(id);
+
+            return Ok();
         }
     }
 }

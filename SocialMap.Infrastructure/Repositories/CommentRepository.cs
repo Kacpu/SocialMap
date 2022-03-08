@@ -1,4 +1,5 @@
-﻿using SocialMap.Core.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
 using System;
 using System.Collections.Generic;
@@ -25,21 +26,20 @@ namespace SocialMap.Infrastructure.Repositories
                 _appDbContext.SaveChanges();
                 return await Task.FromResult(comment);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //await Task.FromException(ex);
                 return null;
             }
         }
 
         public async Task<Comment> GetAsync(int id)
         {
-            return await Task.FromResult(_appDbContext.Comments.FirstOrDefault(c => c.Id == id));
+            return await Task.FromResult(_appDbContext.Comments.Include(c => c.AppUser).FirstOrDefault(c => c.Id == id));
         }
 
         public async Task<IEnumerable<Comment>> BrowseAllAsync()
         {
-            return await Task.FromResult(_appDbContext.Comments.OrderByDescending(c => c.PublicationDate));
+            return await Task.FromResult(_appDbContext.Comments.Include(c => c.AppUser).OrderByDescending(c => c.PublicationDate));
         }
 
         public async Task UpdateAsync(Comment comment)

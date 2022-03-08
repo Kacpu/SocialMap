@@ -16,16 +16,26 @@ namespace SocialMap.WebAPI.Controllers
         {
             _AppUserService = AppUserService;
         }
-        [HttpGet]
-        public async Task<IActionResult> BrowseAllAsync()
-        {
-            IEnumerable<AppUserDTO> z = await _AppUserService.BrowseAllAsync();
-            return Json(z);
-        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAppUser(string id)
         {
             AppUserDTO z = await _AppUserService.GetAsync(id);
+            if (z == null)
+            {
+                return NotFound();
+            }
+            return Json(z);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> BrowseAllAsync()
+        {
+            IEnumerable<AppUserDTO> z = await _AppUserService.BrowseAllAsync();
+            if (z == null)
+            {
+                return NotFound();
+            }
             return Json(z);
         }
     }

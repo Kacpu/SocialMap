@@ -29,7 +29,6 @@ namespace SocialMap.WebAPI.Controllers
 
             POIDTO poiDTO = new POIDTO()
             {
-                Id = poi.Id,
                 Name = poi.Name,
                 X = poi.X,
                 Y = poi.Y,
@@ -52,40 +51,40 @@ namespace SocialMap.WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPOI(int id)
         {
-            POIDTO poiAccessDTO = await _POIService.GetAsync(id);
+            POIDTO poiDTO = await _POIService.GetAsync(id);
 
-            if (poiAccessDTO == null)
+            if (poiDTO == null)
             {
                 return NotFound();
             }
 
-            return Json(poiAccessDTO);
+            return Json(poiDTO);
         }
 
         [HttpGet]
         public async Task<IActionResult> BrowseAllPOI()
         {
-            IEnumerable<POIDTO> poiAccessDTO = await _POIService.BrowseAllAsync();
+            IEnumerable<POIDTO> poisDTO = await _POIService.BrowseAllAsync();
 
-            if (poiAccessDTO == null)
+            if (poisDTO == null)
             {
                 return NotFound();
             }
 
-            return Json(poiAccessDTO);
+            return Json(poisDTO);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePOI(int id)
         {
-            POIDTO poiAccessDTO = await _POIService.GetAsync(id);
+            POIDTO poiDTO = await _POIService.GetAsync(id);
 
-            if (poiAccessDTO == null)
+            if (poiDTO == null)
             {
                 return NotFound();
             }
 
-            await _POIService.DelAsync(poiAccessDTO.Id);
+            await _POIService.DelAsync(poiDTO.Id);
 
             return Ok();
         }
@@ -93,9 +92,9 @@ namespace SocialMap.WebAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdatePOI([FromBody] UpdatePOI poi, int id)
         {
-            POIDTO poiAccessDTO = await _POIService.GetAsync(id);
+            POIDTO poiDTO = await _POIService.GetAsync(id);
 
-            if (poiAccessDTO == null)
+            if (poiDTO == null)
             {
                 return NotFound();
             }
@@ -105,21 +104,16 @@ namespace SocialMap.WebAPI.Controllers
                 return BadRequest();
             }
 
-            POIDTO poiDTO = new POIDTO()
-            {
-                Id = id,
-                Name = poi.Name,
-                X = poi.X,
-                Y = poi.Y,
-                Description = poi.Description,
-                IsGlobal = poi.IsGlobal,
-                AppUserId = poi.AppUserId,
-                CategoryId = poi.CategoryId
-            };
+            poiDTO.Name = poi.Name ?? poiDTO.Name;
+            poiDTO.X = poi.X;
+            poiDTO.Y = poi.Y;
+            poiDTO.Description = poi.Description ?? poiDTO.Description;
+            poiDTO.IsGlobal = poi.IsGlobal;
+            poiDTO.CategoryId = poi.CategoryId;
 
             await _POIService.UpdateAsync(poiDTO);
 
-            return Json(poi);
+            return Json(poiDTO);
         }
     }
 }

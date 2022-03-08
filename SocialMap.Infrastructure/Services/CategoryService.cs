@@ -11,59 +11,77 @@ namespace SocialMap.Infrastructure.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly ICategoryRepository _CategoryRepository;
+        private readonly ICategoryRepository _categoryRepository;
+
         public CategoryService(ICategoryRepository CategoryRepository)
         {
-            _CategoryRepository = CategoryRepository;
+            _categoryRepository = CategoryRepository;
         }
+
         public async Task<CategoryDTO> AddAsync(CategoryDTO categoryDTO)
         {
-            var c = new Category()
-            {
-                Name = categoryDTO.Name,
-                POIs = (ICollection<POI>)categoryDTO.POIs
-            };
-            await _CategoryRepository.AddAsync(c);
-            return await Task.FromResult(categoryDTO);
-        }
-
-        public async Task<IEnumerable<CategoryDTO>> BrowseAllAsync()
-        {
-            var z = await _CategoryRepository.BrowseAllAsync();
-            return z.Select(c => new CategoryDTO()
-            {
-                Id = c.Id,
-                Name = c.Name,
-                POIs = (ICollection<POIDTO>)c.POIs
-            });
-        }
-
-        public async Task DelAsync(int id)
-        {
-            await _CategoryRepository.DelAsync(id);
+            var c = await _categoryRepository.AddAsync(ToDomain(categoryDTO));
+            return c != null ? await Task.FromResult(ToDTO(c)) : null;
         }
 
         public async Task<CategoryDTO> GetAsync(int id)
         {
-            var z = await _CategoryRepository.GetAsync(id);
-            var x = new CategoryDTO()
-            {
-                Id = z.Id,
-                Name = z.Name,
-                POIs = (ICollection<POIDTO>)z.POIs,
-            };
-            return x;
+            var c = await _categoryRepository.GetAsync(id);
+            return c != null ? await Task.FromResult(ToDTO(c)) : null;
+        }
+
+        public async Task<IEnumerable<CategoryDTO>> BrowseAllAsync()
+        {
+            var catgeories = await _categoryRepository.BrowseAllAsync();
+            return catgeories != null ? catgeories.Select(c => ToDTO(c)) : null;
         }
 
         public async Task UpdateAsync(CategoryDTO categoryDTO)
         {
-            Category z = new Category()
+            await _categoryRepository.UpdateAsync(ToDomain(categoryDTO));
+        }
+
+        public async Task DelAsync(int id)
+        {
+            await _categoryRepository.DelAsync(id);
+        }
+
+        private CategoryDTO ToDTO(Category c)
+        {
+            ICollection<POIDTO> poisDTO = new List<POIDTO>();
+            if (c.POIs != null)
             {
-                Id = categoryDTO.Id,
-                Name = categoryDTO.Name,
-                POIs = (ICollection<POI>)categoryDTO.POIs
+                foreach(POI p in c.POIs)
+                {
+                    poisDTO.Add(new POIDTO
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        X = p.X,
+                        Y = p.Y,
+                        Description = p.Description,
+                        IsGlobal = p.IsGlobal,
+                        AppUserId = p.AppUserId,
+                        CategoryId = p.CategoryId
+                    });
+                }
+            }
+
+            return new CategoryDTO()
+            {
+                Id = c.Id,
+                Name = c.Name,
+                POIs = poisDTO
             };
-            await _CategoryRepository.UpdateAsync(z);
+        }
+
+        private Category ToDomain(CategoryDTO cDTO)
+        {
+            return new Category()
+            {
+                Id = cDTO.Id,
+                Name = cDTO.Name
+            };
         }
     }
 }

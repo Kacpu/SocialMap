@@ -1,4 +1,5 @@
-﻿using SocialMap.Core.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,12 @@ namespace SocialMap.Infrastructure.Repositories
         {
             _appDbContext = appDbContext;
         }
-        public async Task<IEnumerable<AppUser>> BrowseAllAsync()
+
+        public async Task<AppUser> GetAsync(string id)
         {
             try
             {
-                return await Task.FromResult(_appDbContext.Users);
+                return await Task.FromResult(_appDbContext.Users.Include(u => u.POIs).Include(u => u.POIAccesses).FirstOrDefault(c => c.Id == id));
             }
             catch (Exception)
             {
@@ -27,11 +29,11 @@ namespace SocialMap.Infrastructure.Repositories
             }
         }
 
-        public async Task<AppUser> GetAsync(string id)
+        public async Task<IEnumerable<AppUser>> BrowseAllAsync()
         {
             try
             {
-                return await Task.FromResult(_appDbContext.Users.FirstOrDefault(c => c.Id == id));
+                return await Task.FromResult(_appDbContext.Users.Include(u => u.POIs).Include(u => u.POIAccesses));
             }
             catch (Exception)
             {

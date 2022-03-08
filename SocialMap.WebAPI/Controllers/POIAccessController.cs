@@ -29,7 +29,6 @@ namespace SocialMap.WebAPI.Controllers
 
             POIAccessDTO poiDTO = new POIAccessDTO()
             {
-                Id = poi.Id,
                 POIId = poi.POIId,
                 AppUserId = poi.AppUserId,
                 IsAccpeted = poi.IsAccpeted
@@ -61,14 +60,14 @@ namespace SocialMap.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> BrowseAllPOIAccess()
         {
-            IEnumerable<POIAccessDTO> poiAccessDTO = await _POIAccessService.BrowseAllAsync();
+            IEnumerable<POIAccessDTO> poiAccessesDTO = await _POIAccessService.BrowseAllAsync();
 
-            if (poiAccessDTO == null)
+            if (poiAccessesDTO == null)
             {
                 return NotFound();
             }
 
-            return Json(poiAccessDTO);
+            return Json(poiAccessesDTO);
         }
 
         [HttpDelete("{id}")]
@@ -87,7 +86,7 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePOIAccess([FromBody] UpdatePOIAccess poi, int id)
+        public async Task<IActionResult> UpdatePOIAccess([FromBody] UpdatePOIAccess poiAccess, int id)
         {
             POIAccessDTO poiAccessDTO = await _POIAccessService.GetAsync(id);
 
@@ -96,22 +95,16 @@ namespace SocialMap.WebAPI.Controllers
                 return NotFound();
             }
 
-            if (poi == null)
+            if (poiAccess == null)
             {
                 return BadRequest();
             }
 
-            POIAccessDTO poiDTO = new POIAccessDTO()
-            {
-                Id = id,
-                POIId = poi.POIId,
-                AppUserId = poi.AppUserId,
-                IsAccpeted = poi.IsAccpeted
-            };
+            poiAccessDTO.IsAccpeted = poiAccess.IsAccpeted;
 
-            await _POIAccessService.UpdateAsync(poiDTO);
+            await _POIAccessService.UpdateAsync(poiAccessDTO);
 
-            return Json(poi);
+            return Json(poiAccessDTO);
         }
     }
 }

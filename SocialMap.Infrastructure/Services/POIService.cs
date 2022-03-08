@@ -19,9 +19,39 @@ namespace SocialMap.Infrastructure.Services
             _POIRepository = POIRepository;
         }
 
-        private POIDTO MakeDTO(POI p)
+        private POIDTO ToDTO(POI p)
         {
-            POIDTO poiDTO = new POIDTO()
+            ICollection<LikeDTO> likesDTO = new List<LikeDTO>();
+            if (p.Likes != null)
+            {
+                foreach (Like l in p.Likes)
+                {
+                    likesDTO.Add(new LikeDTO()
+                    {
+                        Id = l.Id,
+                        AppUserId = l.AppUserId,
+                        POIId = l.POIId
+                    });
+                }
+            }
+
+            return new POIDTO()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                X = p.X,
+                Y = p.Y,
+                Description = p.Description,
+                IsGlobal = p.IsGlobal,
+                AppUserId = p.AppUserId,
+                CategoryId = p.CategoryId,
+                Likes = likesDTO
+            };
+        }
+
+        private POI ToDomain(POIDTO p)
+        {
+            return new POI()
             {
                 Id = p.Id,
                 Name = p.Name,
@@ -32,36 +62,24 @@ namespace SocialMap.Infrastructure.Services
                 AppUserId = p.AppUserId,
                 CategoryId = p.CategoryId
             };
-            return poiDTO;
         }
 
         public async Task<POIDTO> AddAsync(POIDTO poi)
         {
-            POI p = new POI()
-            {
-                Id = poi.Id,
-                Name = poi.Name,
-                X = poi.X,
-                Y = poi.Y,
-                Description = poi.Description,
-                IsGlobal = poi.IsGlobal,
-                AppUserId = poi.AppUserId,
-                CategoryId = poi.CategoryId
-            };
+            var z = await _POIRepository.AddAsync(ToDomain(poi));
+            return z != null ? await Task.FromResult(ToDTO(z)) : null;
+        }
 
-            var z = await _POIRepository.AddAsync(p);
-
-            if (z == null)
-            {
-                return null;
-            }
-            return MakeDTO(z);
+        public async Task<POIDTO> GetAsync(int id)
+        {
+            var z = await _POIRepository.GetAsync(id);
+            return z != null ? await Task.FromResult(ToDTO(z)) : null;
         }
 
         public async Task<IEnumerable<POIDTO>> BrowseAllAsync()
         {
             var z = await _POIRepository.BrowseAllAsync();
-            return z.Select(x => MakeDTO(x));
+            return z != null ? z.Select(x => ToDTO(x)) : null;
         }
 
         public async Task DelAsync(int id)
@@ -69,33 +87,10 @@ namespace SocialMap.Infrastructure.Services
             await _POIRepository.DelAsync(id);
         }
 
-        public async Task<POIDTO> GetAsync(int id)
-        {
-            var z = await _POIRepository.GetAsync(id);
-
-            if (z == null)
-            {
-                return null;
-            }
-            return MakeDTO(z);
-        }
-
         public async Task UpdateAsync(POIDTO poi)
         {
-            POI p = new POI()
-            {
-                Id = poi.Id,
-                Name = poi.Name,
-                X = poi.X,
-                Y = poi.Y,
-                Description = poi.Description,
-                IsGlobal = poi.IsGlobal,
-                AppUserId = poi.AppUserId,
-                CategoryId = poi.CategoryId
-            };
-
-            await _POIRepository.UpdateAsync(p);
+            await _POIRepository.UpdateAsync(ToDomain(poi));
         }
     }
-    }
+}
 

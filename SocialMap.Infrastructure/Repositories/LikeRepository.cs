@@ -19,15 +19,22 @@ namespace SocialMap.Infrastructure.Repositories
 
         public async Task<Like> AddAsync(Like like)
         {
+            foreach(var l in _appDbContext.Likes)
+            {
+                if(l.AppUserId == like.AppUserId && l.POIId == like.POIId)
+                {
+                    return null;
+                }
+            }
+
             try
             {
                 _appDbContext.Likes.Add(like);
                 _appDbContext.SaveChanges();
                 return await Task.FromResult(like);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //await Task.FromException(ex);
                 return null;
             }
         }

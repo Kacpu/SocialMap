@@ -1,8 +1,8 @@
-﻿using SocialMap.Core.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +12,12 @@ namespace SocialMap.Infrastructure.Repositories
     public class CategoryRepository : ICategoryRepository
     {
         private AppDbContext _appDbContext;
+
         public CategoryRepository(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
+
         public async Task<Category> AddAsync(Category category)
         {
             try
@@ -30,11 +32,11 @@ namespace SocialMap.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<Category>> BrowseAllAsync()
+        public async Task<Category> GetAsync(int id)
         {
             try
             {
-                return await Task.FromResult(_appDbContext.Category);
+                return await Task.FromResult(_appDbContext.Category.Include(c => c.POIs).FirstOrDefault(c => c.Id == id));
             }
             catch (Exception)
             {
@@ -42,25 +44,11 @@ namespace SocialMap.Infrastructure.Repositories
             }
         }
 
-        public async Task DelAsync(int id)
+        public async Task<IEnumerable<Category>> BrowseAllAsync()
         {
             try
             {
-                _appDbContext.Category.Remove(_appDbContext.Category.FirstOrDefault(c => c.Id == id));
-                _appDbContext.SaveChanges();
-                await Task.CompletedTask;
-            }
-            catch (Exception ex)
-            {
-                await Task.FromException(ex);
-            }
-        }
-         
-        public async Task<Category> GetAsync(int id)
-        {
-            try
-            {
-                return await Task.FromResult(_appDbContext.Category.FirstOrDefault(c => c.Id == id));
+                return await Task.FromResult(_appDbContext.Category.Include(c => c.POIs));
             }
             catch (Exception)
             {
@@ -73,8 +61,23 @@ namespace SocialMap.Infrastructure.Repositories
             try
             {
                 var c = _appDbContext.Category.FirstOrDefault(x => x.Id == category.Id);
+
                 c.Name = category.Name;
-                c.POIs = category.POIs;
+
+                _appDbContext.SaveChanges();
+                await Task.CompletedTask;
+            }
+            catch (Exception ex)
+            {
+                await Task.FromException(ex);
+            }
+        }
+
+        public async Task DelAsync(int id)
+        {
+            try
+            {
+                _appDbContext.Category.Remove(_appDbContext.Category.FirstOrDefault(c => c.Id == id));
                 _appDbContext.SaveChanges();
                 await Task.CompletedTask;
             }

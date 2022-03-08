@@ -21,31 +21,19 @@ namespace SocialMap.Infrastructure.Services
         public async Task<CommentDTO> AddAsync(CommentDTO comment)
         {
             var c = await _commentRepository.AddAsync(ToDomain(comment));
-            return c != null ? ToDTO(c) : null;
+            return c != null ? await Task.FromResult(ToDTO(c)) : null;
         }
 
         public async Task<CommentDTO> GetAsync(int id)
         {
             var comment = await _commentRepository.GetAsync(id);
-
-            if (comment == null)
-            {
-                return null;
-            }
-
-            return ToDTO(comment);
+            return comment != null ? await Task.FromResult(ToDTO(comment)) : null;
         }
 
         public async Task<IEnumerable<CommentDTO>> BrowseAllAsync()
         {
             var comments = await _commentRepository.BrowseAllAsync();
-
-            if (comments == null)
-            {
-                return null;
-            }
-
-            return comments.Select(c => ToDTO(c));
+            return comments != null ? comments.Select(c => ToDTO(c)) : null;
         }
 
         public async Task UpdateAsync(CommentDTO comment)
@@ -72,7 +60,12 @@ namespace SocialMap.Infrastructure.Services
                 PublicationDate = c.PublicationDate,
                 Content = c.Content,
                 POIId = c.POIId,
-                AppUserId = c.AppUserId
+                AppUserId = c.AppUserId,
+                AppUser = c.AppUser != null ? new AppUserDTO()
+                {
+                    Id = c.AppUser.Id,
+                    UserName = c.AppUser.UserName
+                } : null
             };
         }
 

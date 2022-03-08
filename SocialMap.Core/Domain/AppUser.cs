@@ -12,5 +12,6 @@ namespace SocialMap.Core.Domain
         public ICollection<POI> POIs { get; set; }
         public ICollection<Comment> Comments { get; set; }
         public ICollection<Like> Likes { get; set; }
+        public ICollection<POIAccess> POIAccesses { get; set; }
     }
 }

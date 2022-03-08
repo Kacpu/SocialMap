@@ -8,9 +8,6 @@ namespace SocialMap.Infrastructure.Commands
 {
     public class UpdatePOIAccess
     {
-        //public int Id { get; set; }
-        public int POIId { get; set; }
-        public string AppUserId { get; set; }
         public bool IsAccpeted { get; set; }
     }
 }

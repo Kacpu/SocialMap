@@ -12,5 +12,6 @@ namespace SocialMap.Infrastructure.DTO
         public ICollection<POIDTO> POIs { get; set; }
         public ICollection<CommentDTO> Comments { get; set; }
         public ICollection<LikeDTO> Likes { get; set; }
+        public ICollection<POIAccessDTO> POIAccesses { get; set; }
     }
 }
