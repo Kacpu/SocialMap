@@ -1,8 +1,10 @@
 import React from "react";
 
-function Footer() {
+function CustomFooter() {
     return (
-        <h4>Authors 2022</h4>
+        <div>
+            Oskar Jankowski, Bartłomiej Kopyść, Kacper Tarłowski @2022
+        </div>
     );
 }
-export default Footer;
+export default CustomFooter;

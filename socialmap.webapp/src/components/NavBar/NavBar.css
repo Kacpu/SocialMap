@@ -1,0 +1,36 @@
+.logo {
+    float: left;
+    width: 120px;
+    height: 31px;
+    margin: 16px 24px 16px 0;
+    background: rgb(255, 0, 0);
+  }
+
+  .ant-row-rtl .logo {
+    float: right;
+    margin: 16px 0 16px 24px;
+  }
+    [data-theme="dark"] .site-layout-content {
+      background: #141414;
+    }
+
+  .navMenu {
+    float:left;
+  }
+
+  .navMenu .leftMenu {
+    float: left;
+  }
+
+  .navMenu .rightMenu{
+    float: right;
+  }
+
+  .navMenu .ant-menu-item{
+    padding: 0px 5px;
+  }
+
+  .navMenu .ant-menu-horizontal {
+    border-bottom: none;
+  }
+
