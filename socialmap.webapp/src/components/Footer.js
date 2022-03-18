@@ -1,10 +1,20 @@
-import React from "react";
+import {
+    Box,
+    Container,
+    Text,
+    useColorModeValue,
+} from '@chakra-ui/react';
 
-function CustomFooter() {
+export default function SmallWithSocial() {
     return (
-        <div>
-            Oskar Jankowski, Bartłomiej Kopyść, Kacper Tarłowski @2022
-        </div>
+        <Box
+            bg={useColorModeValue('gray.700', 'gray.700')}
+            color={useColorModeValue('gray.200', 'gray.200')}>
+            <Container
+                py={3}
+            >
+                <Text align={'center'}>© 2022 Bartłomiej Kopyść, Kacper Tarłowski, Oskar Jankowski</Text>
+            </Container>
+        </Box>
     );
 }
-export default CustomFooter;
