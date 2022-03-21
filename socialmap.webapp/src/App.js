@@ -5,7 +5,8 @@ import NavBar from "./components/NavBar/NavBar";
 import CustomFooter from "./components/Footer";
 import {Routes, Route} from "react-router-dom";
 import './index.css';
-import PrivatePage from "./components/PrivatePage";
+import PrivatePage from "./Pages/PrivatePage";
+import ApiTest from "./Pages/ApiTest";
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                 <Route element={<NavBar />}>
                     <Route path='/' element={<Map />} />
                     <Route path='/private' element={<PrivatePage />}/>
+                    <Route path='/apitest' element={<ApiTest />} />
                 </Route>
             </Routes>
             <CustomFooter/>

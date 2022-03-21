@@ -31,7 +31,8 @@ export default function NavBar() {
     const links = [{id: 0, name: "Add point", url: '/addpoint', restricted: true},
         {id: 1, name: "About", url: '/about', restricted: false},
         {id: 2, name: "Contact Us", url: '/contact', restricted: false},
-        {id: 3, name: "PrivateTest", url: '/private', restricted: false}]
+        {id: 3, name: "PrivateTest", url: '/private', restricted: false},
+        {id: 4, name: "ApiTest", url: '/apitest', restricted: false}]
 
     const buttons = [{id: 0, name: "Log In", onClick: () => loginWithRedirect(), signed: false},
         {id: 1, name: "Sign Up", onClick: () => loginWithRedirect({screen_hint: 'signup'}), signed: false},

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SocialMap.Infrastructure.Commands;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SocialMap.WebAPI.Controllers
 {
@@ -46,6 +47,7 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetComment(int id)
         {
             CommentDTO commentDTO = await _commentService.GetAsync(id);
