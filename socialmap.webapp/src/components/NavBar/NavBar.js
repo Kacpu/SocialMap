@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
+import {Link as RouterLink, Outlet} from "react-router-dom";
 import {
     Box,
     Stack,
@@ -10,125 +11,100 @@ import {
     useColorModeValue,
     Link
 } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
+import {HamburgerIcon} from "@chakra-ui/icons";
 import mapIcon from "../../icons/map-icon.png";
 //import "./NavBar.css";
 
 import Logo from "./Logo";
+import {useAuth0} from "@auth0/auth0-react";
 
 export default function NavBar() {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const handleToggle = () => (isOpen ? onClose() : onOpen());
+    const {loginWithRedirect, logout, user, isAuthenticated, isLoading} = useAuth0();
 
-    //Stan logowania
-    const [isSigned, setIsSigned] = useState(false);
+    const {isOpen, onOpen, onClose} = useDisclosure();
+    const handleToggle = () => (isOpen ? onClose() : onOpen());
 
     const linkColor = useColorModeValue('gray.200', 'gray.200');
     const linkHoverColor = useColorModeValue('blue.300', 'blue.300');
     const bgColor = useColorModeValue('gray.700', 'gray.700');
 
-    const start_links_names = ["About", "Contact Us"]
-    const start_links_urls = ["about", "contact"]
+    const links = [{id: 0, name: "Add point", url: '/addpoint', restricted: true},
+        {id: 1, name: "About", url: '/about', restricted: false},
+        {id: 2, name: "Contact Us", url: '/contact', restricted: false},
+        {id: 3, name: "PrivateTest", url: '/private', restricted: false}]
 
-    const signed_links_names = ["Add point", ...start_links_names]
-    const signed_links_urls = ["addpoint", ...start_links_urls]
+    const buttons = [{id: 0, name: "Log In", onClick: () => loginWithRedirect(), signed: false},
+        {id: 1, name: "Sign Up", onClick: () => loginWithRedirect({screen_hint: 'signup'}), signed: false},
+        {id: 2, name: "Log Out", onClick: () => logout({returnTo: window.location.origin}), signed: true}]
 
-    const start_buttons = ["Sign in", "Sign up"]
-    const signed_buttons = ["Logout"]
-
-    
-    //Prosty przełącznik
-    function sign(){
-        if(isSigned){
-            setIsSigned(false);
-        } else{
-            setIsSigned(true);
-        }
-    }
-
-
-    const linkItems = start_links_names.map((name,index) =>
-        <Link color={linkColor}
-            fontSize='lg'
-            href={start_links_urls[index]}
-            _hover={{
-                textDecoration: 'none',
-                color: linkHoverColor,
-            }}>{name}
+    const linkItems = links.map((link) =>
+        ((link.restricted && !isLoading && isAuthenticated) || !link.restricted) &&
+        <Link as={RouterLink} to={link.url}
+              key={link.id}
+              color={linkColor}
+              fontSize='lg'
+              href={link.url}
+              _hover={{
+                  textDecoration: 'none',
+                  color: linkHoverColor,
+              }}>
+            {link.name}
         </Link>
     );
 
-    const singedLinkItems = signed_links_names.map((name,index) =>
-        <Link color={linkColor}
-            fontSize='lg'
-            href={signed_links_urls[index]}
-            _hover={{
-                textDecoration: 'none',
-                color: linkHoverColor,
-            }}>{name}
-        </Link>
-    );
-
-    const buttonItems = start_buttons.map((name) =>
+    const buttonItems = buttons.map((button) =>
+        (!isLoading && ((!button.signed && !isAuthenticated) || (button.signed && isAuthenticated))) &&
         <Button
+            key={button.id}
             color={linkColor}
             variant="outline"
-            _hover={{ bg: linkHoverColor, borderColor: linkHoverColor, color: bgColor }}
-            onClick={sign}
+            _hover={{bg: linkHoverColor, borderColor: linkHoverColor, color: bgColor}}
+            onClick={button.onClick}
         >
-            {name}
+            {button.name}
         </Button>
     );
 
-    const signedButtonItems = signed_buttons.map((name, index) =>
-    <Button
-        color={linkColor}
-        variant="outline"
-        _hover={{ bg: linkHoverColor, borderColor: linkHoverColor, color: bgColor }}
-        onClick={sign}
-    >
-        {name}
-    </Button>
-);
-
-
     return (
-        <Flex
-            as="nav"
-            align="center"
-            justify="space-between"
-            wrap="wrap"
-            padding={3}
-            bg={bgColor}
-        >
-            <Logo />
-            <Box display={{ base: "block", md: "none" }} onClick={handleToggle}>
-                <Button variant="outline" color={linkColor}>
-                    <HamburgerIcon />
-                </Button>
-            </Box>
-
-            <Stack
-                direction={{ base: "column", md: "row" }}
-                display={{ base: isOpen ? "flex" : "none", md: "flex" }}
-                width={{ base: "full", md: "auto" }}
-                alignItems="center"
-                flexGrow={1}
-                mt={{ base: 5, md: 0 }}
-                paddingLeft={isOpen ? 0 : 5}
-                spacing={5}
+        <React.Fragment>
+            <Flex
+                as="nav"
+                align="center"
+                justify="space-between"
+                wrap="wrap"
+                padding={3}
+                bg={bgColor}
             >
-                {isSigned ? singedLinkItems : linkItems}
-            </Stack>
+                <Logo/>
+                <Box display={{base: "block", md: "none"}} onClick={handleToggle}>
+                    <Button variant="outline" color={linkColor}>
+                        <HamburgerIcon/>
+                    </Button>
+                </Box>
 
-            <Stack
-                direction={{ base: "column", md: "row" }}
-                display={{ base: isOpen ? "flex" : "none", md: "block" }}
-                width={{ base: "full", md: "auto" }}
-                mt={{ base: 5, md: 0 }}
-            >
-                {isSigned ? signedButtonItems : buttonItems}
-            </Stack>
-        </Flex>
+                <Stack
+                    direction={{base: "column", md: "row"}}
+                    display={{base: isOpen ? "flex" : "none", md: "flex"}}
+                    width={{base: "full", md: "auto"}}
+                    alignItems="center"
+                    flexGrow={1}
+                    mt={{base: 5, md: 0}}
+                    paddingLeft={isOpen ? 0 : 5}
+                    spacing={5}
+                >
+                    {linkItems}
+                </Stack>
+
+                <Stack
+                    direction={{base: "column", md: "row"}}
+                    display={{base: isOpen ? "flex" : "none", md: "block"}}
+                    width={{base: "full", md: "auto"}}
+                    mt={{base: 5, md: 0}}
+                >
+                    {buttonItems}
+                </Stack>
+            </Flex>
+            <Outlet/>
+        </React.Fragment>
     );
 }
