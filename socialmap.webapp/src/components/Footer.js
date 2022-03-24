@@ -4,6 +4,7 @@ import {
     Text,
     useColorModeValue,
 } from '@chakra-ui/react';
+import './Footer.css';
 
 export default function SmallWithSocial() {
     return (
