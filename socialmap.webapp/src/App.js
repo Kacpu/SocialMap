@@ -8,6 +8,7 @@ import './index.css';
 import PrivatePage from "./Pages/PrivatePage";
 import ApiTest from "./Pages/ApiTest";
 import ContactUs from "./Pages/ContactUs";
+import AddPoint from "./Pages/AddPoint/AddPoint";
 
 
 //Wczenisej bylo Route z Navbarem. Musialem to zmienic by footer ladnie sie kleil konca strony
@@ -19,7 +20,7 @@ function App() {
                 <div className="MainContent">
                     <Routes>
                         <Route path='/' element={<Map />} />
-                        <Route path='/addpoint' />
+                        <Route path='/addpoint' element={<AddPoint />} />
                         <Route path='/about' />
                         <Route path='/contact' element={<ContactUs />} />
                         <Route path='/private' element={<PrivatePage />} />

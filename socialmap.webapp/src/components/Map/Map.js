@@ -23,9 +23,10 @@ function LocationMarker() {
     )
 }
 
-function Map() {
+function Map(props) {
     return (
-        <MapContainer center={[ 52.22983, 21.01173 ]} zoom={12} scrollWheelZoom={true} className={"leaflet-container"}>
+        <MapContainer center={[ 52.22983, 21.01173 ]} zoom={12} scrollWheelZoom={true} className={"leaflet-container"} height={'200px'} style={{height: props.heigh ? '100%' : props.height}}
+        >
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -39,6 +40,7 @@ function Map() {
             ))}
             <LocationMarker />
         </MapContainer>
+        
     );
 }
 export default Map;
