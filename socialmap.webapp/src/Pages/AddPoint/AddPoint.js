@@ -15,7 +15,8 @@ import {
   Text,
   useColorModeValue,
   Link,
-  Textarea
+  Textarea,
+  Switch
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form'
 import { useState } from 'react';
@@ -99,6 +100,15 @@ function AddPoint() {
                 </InputGroup>
                 <FormErrorMessage>
                   {errors.description && errors.description.message}
+                </FormErrorMessage>
+              </FormControl>
+
+              <FormControl isInvalid={errors.isPrivate} display='flex' alignItems='center'>
+                <FormLabel htmlFor='isPrivate' mb='0'>Private</FormLabel>
+                <Switch id='name'
+                  {...register("isPrivate", {})} />
+                <FormErrorMessage>
+                  {errors.isPrivate && errors.isPrivate.message}
                 </FormErrorMessage>
               </FormControl>
 
