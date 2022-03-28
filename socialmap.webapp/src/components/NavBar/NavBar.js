@@ -45,6 +45,7 @@ export default function NavBar() {
               color={linkColor}
               fontSize='lg'
               href={link.url}
+              onClick={isOpen ? handleToggle : null}
               _hover={{
                   textDecoration: 'none',
                   color: linkHoverColor,

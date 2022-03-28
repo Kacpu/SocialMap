@@ -39,7 +39,7 @@ function AddPoint() {
 
 
   function onSubmit(data) {
-    let obj = JSON.stringify(data, null, 2)
+    let obj = JSON.stringify(data, null, 3)
     alert(obj);
   }
 
@@ -115,9 +115,9 @@ function AddPoint() {
 
             <Stack spacing={5}>
               <FormControl>
-                <FormLabel htmlFor='location'>Location</FormLabel>
+                <FormLabel htmlFor='findLocation'>Location</FormLabel>
                 <InputGroup>
-                  <Input id="location" type="text" placeholder='find location' />
+                  <Input id="findLocation" type="text" placeholder='find location' />
                   <InputRightElement h={'full'}>
                     <Button
                       variant={'ghost'}
@@ -131,11 +131,14 @@ function AddPoint() {
               </FormControl>
 
               <Map height={'400px'} />
-              <Text>
-                ul. Sample 123
-              </Text>
-            </Stack>
 
+              <FormControl>
+                <Input id='location' type="text" placeholder='ul. Sample 123' disabled={true}
+                value="Sample123"
+                  {...register("location", {})} />
+              </FormControl>
+
+            </Stack>
           </Box>
 
           <Stack spacing={10} pt={2}>
