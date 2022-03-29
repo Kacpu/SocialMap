@@ -51,7 +51,8 @@ function AddPoint() {
 
   function onSubmit(data) {
     let obj = JSON.stringify(data, null, 3)
-    alert(obj);
+    //obj.isGlobal = !obj.isGlobal;
+    alert(obj)
   }
 
   const {
@@ -128,11 +129,11 @@ function AddPoint() {
               </FormControl>
 
               <FormControl isInvalid={errors.isPrivate} display='flex' alignItems='center'>
-                <FormLabel htmlFor='isPrivate' mb='0'>Private</FormLabel>
-                <Switch id='name'
-                  {...register("isPrivate", {})} />
+                <FormLabel htmlFor='isGlobal' mb='0'>Global</FormLabel>
+                <Switch id='isGlobal'
+                  {...register("isGlobal", {})} />
                 <FormErrorMessage>
-                  {errors.isPrivate && errors.isPrivate.message}
+                  {errors.isGlobal && errors.isGlobal.message}
                 </FormErrorMessage>
               </FormControl>
 
