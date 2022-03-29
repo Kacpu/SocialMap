@@ -16,6 +16,7 @@ import {
   useColorModeValue,
   Link,
   Textarea,
+  Select,
   Switch
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form'
@@ -23,6 +24,9 @@ import { useState } from 'react';
 import { SearchIcon } from '@chakra-ui/icons';
 import Map from '../../components/Map/Map'
 import { withAuthenticationRequired } from '@auth0/auth0-react';
+
+import { categoryData } from '../../mocks/CategoryMock';
+
 
 
 function InfoBadge(props) {
@@ -36,8 +40,14 @@ function InfoBadge(props) {
 }
 
 
+
 function AddPoint() {
 
+  console.log(categoryData)
+
+  const categoryList = categoryData.map((category) =>
+    <option key={category.id} value={category.id}>{category.name}</option>
+  );
 
   function onSubmit(data) {
     let obj = JSON.stringify(data, null, 3)
@@ -79,7 +89,7 @@ function AddPoint() {
 
               <FormControl isInvalid={errors.name}>
                 <FormLabel htmlFor='name' >Name</FormLabel>
-                <Input id='name' type="text" placeholder='wonderfull name'
+                <Input id='name' type="text" placeholder='Give a wonderfull name'
                   {...register("name", {
                     required: "This is required",
                     minLength: { value: 3, message: "Minimum length should be 4" }
@@ -88,11 +98,11 @@ function AddPoint() {
                   {errors.name && errors.name.message}
                 </FormErrorMessage>
               </FormControl>
-    
+
               <FormControl isInvalid={errors.description}>
                 <FormLabel htmlFor="description">Description</FormLabel>
                 <InputGroup>
-                  <Textarea id='description' placeholder="amazing plot"
+                  <Textarea id='description' placeholder="Write amazing description"
                     {...register("description", {
                       required: "This is required",
                       minLength: { value: 5, message: "Minimum length should be 5" }
@@ -100,6 +110,20 @@ function AddPoint() {
                 </InputGroup>
                 <FormErrorMessage>
                   {errors.description && errors.description.message}
+                </FormErrorMessage>
+              </FormControl>
+
+              <FormControl isInvalid={errors.category}>
+                <FormLabel htmlFor='category'>Category</FormLabel>
+                <Select id='category' placeholder='Select category'
+                  {...register("category", {
+                    required: "This is required"
+                  }
+                  )}>
+                  {categoryList}
+                </Select>
+                <FormErrorMessage>
+                  {errors.category && errors.category.message}
                 </FormErrorMessage>
               </FormControl>
 
@@ -144,7 +168,7 @@ function AddPoint() {
 
               <FormControl>
                 <Input id='location' type="text" placeholder='ul. Sample 123' disabled={true}
-                value="Sample123"
+                  value="Sample123"
                   {...register("location", {})} />
               </FormControl>
 
