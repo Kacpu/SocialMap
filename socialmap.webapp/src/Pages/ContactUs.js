@@ -42,8 +42,8 @@ export default function Contact() {
         onCopy();
     }
     return (
+        
         <Flex
-            minH={'100vh'}
             justify={'center'}
             bg={useColorModeValue('gray.50', 'gray.800')}>
 
