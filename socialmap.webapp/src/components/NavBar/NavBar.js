@@ -28,7 +28,7 @@ export default function NavBar() {
     const linkHoverColor = useColorModeValue('blue.300', 'blue.300');
     const bgColor = useColorModeValue('gray.700', 'gray.700');
 
-    const links = [{id: 0, name: "Add point", url: '/addpoint', restricted: true},
+    const links = [{id: 0, name: "Add point", url: '/addpoint', restricted: false},
         {id: 1, name: "About", url: '/about', restricted: false},
         {id: 2, name: "Contact Us", url: '/contact', restricted: false},
         {id: 3, name: "PrivateTest", url: '/private', restricted: false},
