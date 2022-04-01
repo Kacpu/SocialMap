@@ -1,5 +1,5 @@
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, useColorModeValue, Stack, Heading } from '@chakra-ui/react'
-
+import PointToAccept from "../components/PointToAccept";
 export default function ModeratorPanel() {
 
     const boxColor = useColorModeValue('gray.600', 'gray.700');
@@ -18,7 +18,15 @@ export default function ModeratorPanel() {
 
                     <TabPanels>
                         <TabPanel>
-                            <p>Points</p>
+                            <Stack spacing={5}>
+                                <PointToAccept
+                                    id={'1431'}
+                                    name={'zabawny punkt'} />
+                                
+                                <PointToAccept
+                                    id={'2331'}
+                                    name={'sdfsny punkt'} />
+                            </Stack>
                         </TabPanel>
                         <TabPanel>
                             <p>Category</p>
