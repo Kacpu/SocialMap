@@ -9,6 +9,8 @@ import PrivatePage from "./Pages/PrivatePage";
 import ApiTest from "./Pages/ApiTest";
 import ContactUs from "./Pages/ContactUs";
 import AddPoint from "./Pages/AddPoint/AddPoint";
+import ModeratorPanel from "./Pages/ModeratorPanel";
+import {Box, useColorModeValue} from '@chakra-ui/react';
 
 
 //Wczenisej bylo Route z Navbarem. Musialem to zmienic by footer ladnie sie kleil konca strony
@@ -17,16 +19,17 @@ function App() {
         <React.Fragment>
             <div className="BodyDiv">
                 <NavBar />
-                <div className="MainContent">
+                <Box className="MainContent" bgColor={useColorModeValue('gray.700', 'gray.800')}>
                     <Routes>
                         <Route path='/' element={<Map />} />
+                        <Route path='/moderatorpanel' element={<ModeratorPanel/>} />
                         <Route path='/addpoint' element={<AddPoint />} />
                         <Route path='/about' />
                         <Route path='/contact' element={<ContactUs />} />
                         <Route path='/private' element={<PrivatePage />} />
                         <Route path='/apitest' element={<ApiTest />} />
                     </Routes>
-                </div>
+                </Box>
                 <CustomFooter className="Footer" />
             </div>
         </React.Fragment>

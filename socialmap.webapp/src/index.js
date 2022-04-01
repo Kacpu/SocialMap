@@ -5,6 +5,7 @@ import App from './App';
 import {ChakraProvider} from '@chakra-ui/react'
 import {Auth0Provider} from "@auth0/auth0-react";
 import {BrowserRouter} from "react-router-dom";
+import theme from "./theme";
 
 const domain = process.env.REACT_APP_AUTH0_DOMAIN;
 const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID;
@@ -17,7 +18,7 @@ ReactDOM.render(
         redirectUri={window.location.origin}
         audience={audience}
     >
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
             <BrowserRouter>
                 <App/>
             </BrowserRouter>
