@@ -1,4 +1,27 @@
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.input-container {
+    z-index: 1;
+    position: absolute;
+    top: 12px;
+    left: 60px;
+}
+
 .leaflet-container {
     width: 100%;
-    height: 100vh;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.99999;
+}
+
+.pin-icon {
+    height: 80%;
+    background-color: white;
+    fill: #1A202C;
 }

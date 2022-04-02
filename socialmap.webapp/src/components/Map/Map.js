@@ -1,8 +1,11 @@
 import React, {useState} from "react";
 import {MapContainer, TileLayer, Marker, Popup, useMapEvents} from 'react-leaflet';
 import './Map.js.css'
-import {POIData} from "../../POIData";
+import MapMarkers from "./MapMarkers";
+import {ReactComponent as Pin} from '../../icons/pin-icon.svg'
+import {ReactComponent as Arrow} from '../../icons/arrow-right.svg'
 import leaflet from 'leaflet'
+import {InputGroup, InputLeftElement, Input, InputRightElement, Button, Box} from "@chakra-ui/react";
 
 function LocationMarker() {
     const [position, setPosition] = useState(null)
@@ -22,24 +25,46 @@ function LocationMarker() {
         </Marker>
     )
 }
-
 function Map(props) {
+    const [value, setValue] = React.useState('')
+    const [name, setName] = React.useState('')
+    const handleChange = (event) => {
+        setValue(event.target.value)
+    }
+    const handleClick = () => {
+        setName(value)
+    }
     return (
-        <MapContainer center={[ 52.22983, 21.01173 ]} zoom={12} scrollWheelZoom={true} className={"leaflet-container"} height={'200px'} style={{height: props.heigh ? '100%' : props.height}}
-        >
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            />
-            {POIData.map(data => (
-                <Marker key={data.Id} position={[data.X, data.Y]}>
-                    <Popup>
-                        {data.Name}
-                    </Popup>
-                </Marker>
-            ))}
-            <LocationMarker />
-        </MapContainer>
+        <Box className={"map-container"}>
+            <InputGroup className={"input-container"} minWidth={"300px"} width={"25%"} borderStyle={"solid"} borderColor={"#1A202C"}>
+                <InputLeftElement
+                    pointerEvents='none'
+                    children={<Pin className={"pin-icon"} />}
+                />
+                <Input
+                    variant='outline'
+                    textColor={"black"}
+                    placeholder='Point name'
+                    _placeholder={{ opacity: 1, color: 'gray.500' }}
+                    value={value}
+                    backgroundColor={"white"}
+                    onChange={handleChange}
+                />
+                <InputRightElement marginRight={"7px"}>
+                    <Button height={"75%"} size='sm' onClick={handleClick}>
+                        <Arrow className={"pin-icon"}/>
+                    </Button>
+                </InputRightElement>
+            </InputGroup>
+            <MapContainer  className={"leaflet-container"} center={[ 52.22983, 21.01173 ]} zoom={12} scrollWheelZoom={true} height={'200px'} style={{height: props.heigh ? '100%' : props.height}}>
+                <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+                {MapMarkers(name)}
+                {/*<LocationMarker />*/}
+            </MapContainer>
+        </Box>
         
     );
 }

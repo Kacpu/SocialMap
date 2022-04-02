@@ -1,0 +1,22 @@
+.popup-title {
+    text-align: center;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.popup-likes-container {
+    text-align: right;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.popup-like-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.popup-like {
+    margin: auto 10px auto auto;
+}
