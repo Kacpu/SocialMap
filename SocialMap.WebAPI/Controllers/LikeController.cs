@@ -21,6 +21,7 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddLike([FromBody] CreateLike like)
         {
             if (like == null)
@@ -72,6 +73,8 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
+        //author
         public async Task<IActionResult> DeleteLike(int id)
         {
             LikeDTO likeDTO = await _likeService.GetAsync(id);

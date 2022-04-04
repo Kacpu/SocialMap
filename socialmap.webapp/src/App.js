@@ -7,19 +7,30 @@ import {Routes, Route} from "react-router-dom";
 import './index.css';
 import PrivatePage from "./Pages/PrivatePage";
 import ApiTest from "./Pages/ApiTest";
+import { MsalProvider } from "@azure/msal-react";
+import PrivateRoute from "./auth/PrivateRoute";
 
-function App() {
+function App({ pca }) {
     return (
-        <React.Fragment>
-            <Routes>
-                <Route element={<NavBar />}>
-                    <Route path='/' element={<Map />} />
-                    <Route path='/private' element={<PrivatePage />}/>
-                    <Route path='/apitest' element={<ApiTest />} />
-                </Route>
-            </Routes>
-            <CustomFooter/>
-        </React.Fragment>
+        <MsalProvider instance={pca}>
+            <React.Fragment>
+                <Routes>
+                    <Route element={<NavBar />}>
+                        <Route path='/' element={<Map />} />
+                        <Route
+                            path="/private"
+                            element={
+                                <PrivateRoute>
+                                    <PrivatePage />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route path='/apitest' element={<ApiTest />} />
+                    </Route>
+                </Routes>
+                <CustomFooter/>
+            </React.Fragment>
+        </MsalProvider>
     );
 }
 

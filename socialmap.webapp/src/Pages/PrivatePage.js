@@ -1,9 +1,18 @@
 import React from 'react';
-import { withAuthenticationRequired } from '@auth0/auth0-react';
+import { useMsalAuthentication } from "@azure/msal-react";
+import {InteractionType} from "@azure/msal-browser";
+import {loginRequest} from "../authConfig";
 
-const PrivatePage = () => <h3>To jest strona prywatna.</h3>;
+// export function PrivatePage() {
+//     const {login, result, error} = useMsalAuthentication(InteractionType.Popup, loginRequest);
+//
+//     return (
+//         <React.Fragment>
+//             {result && <p>Anyone can see this paragraph.</p>}
+//         </React.Fragment>
+//     );
+// }
 
-export default withAuthenticationRequired(PrivatePage, {
-    // Show a message while the user waits to be redirected to the login page.
-    onRedirecting: () => <div>Redirecting you to the login page...</div>,
-});
+export default function PrivatePage() {
+    return <h3>Hello world! I am private ^^</h3>
+}

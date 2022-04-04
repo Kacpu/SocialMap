@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
 using SocialMap.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,6 +37,7 @@ namespace SocialMap.WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategory(int id)
         {
+
             CategoryDTO z = await _categoryService.GetAsync(id);
 
             if (z == null)
@@ -42,10 +45,12 @@ namespace SocialMap.WebAPI.Controllers
                 return NotFound();
             }
 
+
             return Json(z);
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddCategory([FromBody] CreateCategory createCategory)
         {
             if (createCategory == null)
@@ -69,6 +74,8 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
+        //mod
         public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategory updateCategory, int id)
         {
             CategoryDTO categoryDTO = await _categoryService.GetAsync(id);
@@ -91,6 +98,8 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
+        //mod
         public async Task<IActionResult> DeleteCategory(int id)
         {
             CategoryDTO categoryDTO = await _categoryService.GetAsync(id);

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using SocialMap.Infrastructure.Commands;
 using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
+using Microsoft.Identity.Web.Resource;
 
 namespace SocialMap.WebAPI.Controllers
 {
@@ -21,6 +23,7 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddComment([FromBody] CreateComment comment)
         {
             if (comment == null)
@@ -56,6 +59,7 @@ namespace SocialMap.WebAPI.Controllers
             {
                 return NotFound();
             }
+            commentDTO.AppUserId = User.Identity.Name;
 
             return Json(commentDTO);
         }
@@ -74,6 +78,8 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
+        //author, mod
         public async Task<IActionResult> UpdateComment([FromBody] UpdateComment comment, int id)
         {
             CommentDTO commentDTO = await _commentService.GetAsync(id);
@@ -96,6 +102,8 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
+        //author, mod
         public async Task<IActionResult> DeleteComment(int id)
         {
             CommentDTO commentDTO = await _commentService.GetAsync(id);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
 using SocialMap.Infrastructure.Services;
@@ -20,6 +21,7 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddPOI([FromBody] CreatePOI poi)
         {
             if (poi == null)
@@ -75,6 +77,7 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeletePOI(int id)
         {
             POIDTO poiDTO = await _POIService.GetAsync(id);
@@ -90,6 +93,7 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdatePOI([FromBody] UpdatePOI poi, int id)
         {
             POIDTO poiDTO = await _POIService.GetAsync(id);

@@ -17,9 +17,40 @@ import mapIcon from "../../icons/map-icon.png";
 
 import Logo from "./Logo";
 import {useAuth0} from "@auth0/auth0-react";
+import {
+    AuthenticatedTemplate,
+    UnauthenticatedTemplate,
+    useMsal,
+    useIsAuthenticated,
+    useAccount
+} from "@azure/msal-react";
+import {loginRequest, b2cPolicies} from "../../authConfig";
+import {BrowserUtils} from "@azure/msal-browser";
 
 export default function NavBar() {
-    const {loginWithRedirect, logout, user, isAuthenticated, isLoading} = useAuth0();
+    // const {loginWithRedirect, logout, user, isAuthenticated, isLoading} = useAuth0();
+
+    const {instance} = useMsal();
+    const isAuthenticated = useIsAuthenticated();
+    const accountInfo = useAccount();
+
+    const handleLogin = () => {
+        instance.loginRedirect(loginRequest)
+            .catch((error) => console.log(error))
+    }
+
+    const handleSignUp = () => {
+        instance.loginRedirect(b2cPolicies.authorities.signUp)
+            .catch((error) => console.log(error))
+    }
+
+    const handleLogout = () => {
+        instance.logoutRedirect({
+            account: instance.getActiveAccount(),
+            onRedirectNavigate: () => !BrowserUtils.isInIframe()
+        })
+            .catch((error) => console.log(error))
+    }
 
     const {isOpen, onOpen, onClose} = useDisclosure();
     const handleToggle = () => (isOpen ? onClose() : onOpen());
@@ -34,12 +65,12 @@ export default function NavBar() {
         {id: 3, name: "PrivateTest", url: '/private', restricted: false},
         {id: 4, name: "ApiTest", url: '/apitest', restricted: false}]
 
-    const buttons = [{id: 0, name: "Log In", onClick: () => loginWithRedirect(), signed: false},
-        {id: 1, name: "Sign Up", onClick: () => loginWithRedirect({screen_hint: 'signup'}), signed: false},
-        {id: 2, name: "Log Out", onClick: () => logout({returnTo: window.location.origin}), signed: true}]
+    const buttons = [{id: 0, name: "Sign In", onClick: handleLogin, signed: false},
+        {id: 1, name: "Sign Up", onClick: handleSignUp, signed: false},
+        {id: 2, name: "Log Out", onClick: handleLogout, signed: true}]
 
     const linkItems = links.map((link) =>
-        ((link.restricted && !isLoading && isAuthenticated) || !link.restricted) &&
+        ((link.restricted && isAuthenticated) || !link.restricted) &&
         <Link as={RouterLink} to={link.url}
               key={link.id}
               color={linkColor}
@@ -54,7 +85,7 @@ export default function NavBar() {
     );
 
     const buttonItems = buttons.map((button) =>
-        (!isLoading && ((!button.signed && !isAuthenticated) || (button.signed && isAuthenticated))) &&
+        ((!button.signed && !isAuthenticated) || (button.signed && isAuthenticated)) &&
         <Button
             key={button.id}
             color={linkColor}
@@ -96,12 +127,23 @@ export default function NavBar() {
                     {linkItems}
                 </Stack>
 
+                {
+                    accountInfo &&
+                    <Text color={linkColor} fontSize='lg' marginRight='30px'>
+                        Hello {accountInfo.name}
+                    </Text>
+                }
+
+                {accountInfo && console.log(accountInfo)}
+
                 <Stack
                     direction={{base: "column", md: "row"}}
                     display={{base: isOpen ? "flex" : "none", md: "block"}}
                     width={{base: "full", md: "auto"}}
                     mt={{base: 5, md: 0}}
                 >
+
+
                     {buttonItems}
                 </Stack>
             </Flex>
