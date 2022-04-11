@@ -24,62 +24,87 @@ import {
     Center,
     Spacer
 } from '@chakra-ui/react';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 
 export default function PointToAccept(props) {
     const [expand, setExpand] = useState(false);
 
-    const downIcon= () =>
+    const downIcon = () =>
     (
-        <ChevronDownIcon align w={10} h={10} bgColor={'blue'} />
+        <ChevronDownIcon align w={10} h={10} />
     );
 
-    const upIcon=() =>
+    const upIcon = () =>
     (
-        <ChevronUpIcon align w={10} h={10} bgColor={'blue'} />
+        <ChevronUpIcon align w={10} h={10} />
     )
 
-    const handleToggle= () => ( setExpand(!expand) );
+    const handleToggle = () => (setExpand(!expand));
 
+    function makeBox(textData) {
+        return (
+            <Box border={'1px'} bgColor={'gray.700'} rounded={'md'} mb={1}>
+                <Text ml={2} mr={2} mt={1} mb={1}>{textData}</Text>
+            </Box>
+        );
+    }
 
     return (
         <Box>
-            <Stack bgColor={'gray.600'} border={'1px'} borderColor= {'transparent'}rounded={'lg'} px={5} py={2}
-            _hover={{
-                borderColor: 'white',
-                cursor: 'pointer'
-            }}
-            onClick={handleToggle}>
+            <Stack bgColor={'gray.600'} border={'1px'} borderColor={'transparent'} roundedTop={'lg'} px={5} py={2}
+                _hover={{
+                    borderColor: 'white',
+                    cursor: 'pointer'
+                }}
+                onClick={handleToggle}>
                 <Flex>
-                    <Box bgColor="green">
+                    <Box >
                         <HStack>
                             <Text>ID: </Text>
-                            <Text>{props.id}</Text>
+                            {makeBox(props.id)}
                         </HStack>
 
                         <HStack mt={2}>
                             <Text>Name: </Text>
-                            <Text>{props.name}</Text>
+                            {makeBox(props.name)}
                         </HStack>
                     </Box>
                     <Spacer />
-                    <Box display={'flex'} bgColor="red" alignItems={'center'} justifyContent={'center'} >
+                    <Box display={'flex'} alignItems={'center'} justifyContent={'center'} >
                         {expand ? upIcon() : downIcon()}
                     </Box>
                 </Flex>
             </Stack>
             <Box display={expand ? '' : 'none'}>
-                <Stack bgColor={'gray.600'}>
-                    <Text>Author</Text>
-                    <Text>Category</Text>
-                    <Text>X</Text>
-                    <Text>Y</Text>
-                    <Text>MAP</Text>
-                    <Text>Description</Text>
-                    <Text>IsGlobal</Text>
-                    <Button>Accept</Button>
-                    <Button>Reject</Button>
+                <Stack bgColor={'gray.600'} roundedBottom={'lg'}>
+                    <Box mt={2} mb={2} ml={5} mr={'5'}>
+                        <HStack pb={2}>
+                            <Text mb={1}>Author:</Text>
+                            {makeBox(props.author)}
+                        </HStack>
+                        <HStack pb={2}>
+                            <Text mb={1}>Category: </Text>
+                            {makeBox(props.category)}
+                        </HStack>
+                        <HStack pb={2}>
+                            <Text mb={1}>X:</Text>
+                            {makeBox(props.x)}
+                        </HStack>
+                        <HStack pb={2}> 
+                            <Text mb={1}>Y:</Text>
+                            {makeBox(props.y)}
+                        </HStack>
+                        
+                        <Text mb={1}>MAP: </Text>
+                        <Text mb={1}>Description: </Text>
+                        {makeBox(props.description)}
+                        <Text>IsGlobal: {props.isGlobal}</Text>
+                    </Box>
+                    <Box display='flex' pb={5}>
+                        <Button colorScheme={'green'} w={'50%'} ml={5} mr={2}>Accept</Button>
+                        <Button w={'50%'} mr={5} ml={2} colorScheme={'red'}>Reject</Button>
+                    </Box>
                 </Stack>
             </Box>
         </Box>

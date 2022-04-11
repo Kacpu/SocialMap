@@ -86,7 +86,7 @@ export default function AddPoint() {
                 //bg={useColorModeValue('gray.50', 'gray.800')}
             >
 
-                <Stack spacing={5} mx={'auto'} maxW={'700px'} w={'100%'} py={12} px={0}>
+                <Stack spacing={5} mx={'auto'} maxW={'700px'} w={'90%'} py={12} px={0}>
                     <Stack align={'center'}>
                         <Heading fontSize={'4xl'} textAlign={'center'} color={'gray.100'}>
                             Add new interesting Point!
