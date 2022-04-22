@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useAuth0} from "@auth0/auth0-react";
+import Userfront from "@userfront/react";
 
 export default function ApiTest() {
     const [like, setLike] = useState('');
@@ -12,10 +13,9 @@ export default function ApiTest() {
     useEffect(() => {
         (async () => {
             try {
-                const token = await getAccessTokenSilently();
                 const response = await fetch(`${serverUrl}/like/1`, {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${Userfront.tokens.accessToken}`,
                     },
                 });
                 const responseData = await response.json();
@@ -42,11 +42,11 @@ export default function ApiTest() {
 
     const getComment = async () => {
         try {
-            const token = await getAccessTokenSilently();
+            //const token = await getAccessTokenSilently();
 
             const response = await fetch(`${serverUrl}/comment/2`, {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${Userfront.tokens.accessToken}`,
                     },
                 });
 
@@ -66,14 +66,14 @@ export default function ApiTest() {
                 {JSON.stringify(like, null, 5)}
             </div>
             <br/>
-            <button type={"button"} onClick={getPOI} style={{margin: '10px', background: 'bisque', padding: '5px'}}>
+            <button type={"button"} onClick={getPOI} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
                 GET POI (not auth)
             </button>
             <div>
                 {JSON.stringify(poi, null, 5)}
             </div>
             <br/>
-            <button type={"button"} onClick={getComment} style={{margin: '10px', background: 'bisque', padding: '5px'}}>
+            <button type={"button"} onClick={getComment} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
                 GET Comment (auth)
             </button>
             <div>

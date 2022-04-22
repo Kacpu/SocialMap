@@ -14,34 +14,47 @@ import {
 import {HamburgerIcon} from "@chakra-ui/icons";
 import mapIcon from "../../icons/map-icon.png";
 //import "./NavBar.css";
-
+import { useNavigate } from "react-router-dom";
+import Userfront from "@userfront/react";
 import Logo from "./Logo";
 import {useAuth0} from "@auth0/auth0-react";
+import isAuthenticated from "../../auth/isAuthenticated";
+
+//Userfront.init("pn4xgmpn");
 
 export default function NavBar() {
-    const {loginWithRedirect, logout, user, isAuthenticated, isLoading} = useAuth0();
-
+    // const {loginWithRedirect, logout, user, isAuthenticated, isLoading} = useAuth0();
+    let navigate = useNavigate();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const handleToggle = () => (isOpen ? onClose() : onOpen());
+    // const userData = JSON.stringify(Userfront.user, null, 2);
 
     const linkColor = useColorModeValue('gray.200', 'gray.200');
     const linkHoverColor = useColorModeValue('blue.300', 'blue.300');
     const bgColor = useColorModeValue('gray.800', 'gray.700');
 
-    const links = [{id: 0, name: "Add point", url: '/addpoint', restricted: false},
-        {id: 1, name: "About", url: '/about', restricted: false},
-        {id: 2, name: "Contact Us", url: '/contact', restricted: false},
-        {id: 3, name: "PrivateTest", url: '/private', restricted: false},
-        {id: 4, name: "ApiTest", url: '/apitest', restricted: false},
-        {id: 5, name: "Moderator", url: '/moderatorpanel', restricted: false}
+    const handleLogin = () => {
+        navigate('/login');
+    }
+
+    const handleSignUp = () => {
+        navigate('/signup')
+    }
+
+    const links = [{id: 0, name: "Add point", url: '/addpoint', protect: false},
+        {id: 1, name: "About", url: '/about', protect: false},
+        {id: 2, name: "Contact Us", url: '/contact', protect: false},
+        {id: 3, name: "PrivateTest", url: '/private', protect: false},
+        {id: 4, name: "ApiTest", url: '/apitest', protect: false},
+        {id: 5, name: "Moderator", url: '/moderatorpanel', protect: false}
     ]
 
-    const buttons = [{id: 0, name: "Log In", onClick: () => loginWithRedirect(), signed: false},
-        {id: 1, name: "Sign Up", onClick: () => loginWithRedirect({screen_hint: 'signup'}), signed: false},
-        {id: 2, name: "Log Out", onClick: () => logout({returnTo: window.location.origin}), signed: true}]
+    const buttons = [{id: 0, name: "Log In", onClick: handleLogin, signed: false},
+        {id: 1, name: "Sign Up", onClick: handleSignUp, signed: false},
+        {id: 2, name: "Log Out", onClick: Userfront.logout, signed: true}]
 
     const linkItems = links.map((link) =>
-        ((link.restricted && !isLoading && isAuthenticated) || !link.restricted) &&
+        ((link.protect && isAuthenticated()) || !link.protect) &&
         <Link as={RouterLink} to={link.url}
               key={link.id}
               color={linkColor}
@@ -57,7 +70,7 @@ export default function NavBar() {
     );
 
     const buttonItems = buttons.map((button) =>
-        (!isLoading && ((!button.signed && !isAuthenticated) || (button.signed && isAuthenticated))) &&
+        ((!button.signed && !isAuthenticated()) || (button.signed && isAuthenticated())) &&
         <Button
             key={button.id}
             color={linkColor}
@@ -98,6 +111,16 @@ export default function NavBar() {
                 >
                     {linkItems}
                 </Stack>
+
+                {
+                    isAuthenticated() &&
+                    <Text color={linkColor} fontSize='lg' marginRight='30px'>
+                        Hello {Userfront.user.name}
+                    </Text>
+                }
+
+                {isAuthenticated() && console.log(Userfront.user)}
+                {/*console.log(Userfront.user) &&*/}
 
                 <Stack
                     direction={{base: "column", md: "row"}}
