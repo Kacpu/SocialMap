@@ -1,14 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json.Linq;
+using SocialMap.Infrastructure.Repositories;
+using SocialMap.Infrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace SocialMap.WebAPI.Helpers
+namespace SocialMap.WebAPI.Transformations
 {
-    public class RolesClaimTransformation : IClaimsTransformation
+    public class RoleClaimTransformation : IClaimsTransformation
     {
         public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
         {
@@ -25,7 +27,7 @@ namespace SocialMap.WebAPI.Helpers
                 roleValue = "anonimus";
             }
             
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity();
+            ClaimsIdentity claimsIdentity = new();
             var claimType = "role";
             if (!principal.HasClaim(claim => claim.Type == claimType))
             {

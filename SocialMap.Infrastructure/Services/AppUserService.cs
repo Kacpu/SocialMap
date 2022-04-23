@@ -1,6 +1,8 @@
 ﻿using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
+using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
+using SocialMap.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,68 +13,44 @@ namespace SocialMap.Infrastructure.Services
 {
     public class AppUserService : IAppUserService
     {
-        private readonly IAppUserRepository _AppUserRepository;
+        private readonly IAppUserRepository _appUserRepository;
 
         public AppUserService(IAppUserRepository AppUserRepository)
         {
-            _AppUserRepository = AppUserRepository;
+            _appUserRepository = AppUserRepository;
         }
 
-        public async Task<AppUserDTO> GetAsync(string id)
+        public async Task<AppUserDTO> AddAsync(CreateAppUser createUser)
         {
-            var u = await _AppUserRepository.GetAsync(id);
-            return u != null ? await Task.FromResult(ToDTO(u)) : null;
+            var u = createUser.ToDomain();
+            u = await _appUserRepository.AddAsync(u);
+            return await Task.FromResult(u.ToDTO());
         }
 
-        public async Task<IEnumerable<AppUserDTO>> BrowseAllAsync()
+        public async Task<AppUserDTO> GetAsync(int id)
         {
-            var users = await _AppUserRepository.BrowseAllAsync();
-            return users != null ? users.Select(u => ToDTO(u)) : null;
+            var u = await _appUserRepository.GetAsync(id);
+
+            if (u is null)
+                throw new NotFoundException("user not found");
+
+            return await Task.FromResult(u.ToDTO());
         }
 
-        private AppUserDTO ToDTO(AppUser u)
+        public async Task<AppUserDTO> GetByUuidAsync(string uuid)
         {
-            ICollection<POIDTO> poisDTO = new List<POIDTO>();
-            if (u.POIs != null)
-            {
-                foreach (POI p in u.POIs)
-                {
-                    poisDTO.Add(new POIDTO
-                    {
-                        Id = p.Id,
-                        Name = p.Name,
-                        X = p.X,
-                        Y = p.Y,
-                        Description = p.Description,
-                        IsGlobal = p.IsGlobal,
-                        AppUserId = p.AppUserId,
-                        CategoryId = p.CategoryId
-                    });
-                }
-            }
+            var u = await _appUserRepository.GetByUuidAsync(uuid);
 
-            ICollection<POIAccessDTO> poiAccessesDTO = new List<POIAccessDTO>();
-            if(u.POIAccesses != null)
-            {
-                foreach(POIAccess p in u.POIAccesses)
-                {
-                    poiAccessesDTO.Add(new POIAccessDTO()
-                    {
-                        Id = p.Id,
-                        AppUserId = p.AppUserId,
-                        POIId = p.POIId,
-                        IsAccpeted = p.IsAccpeted
-                    });
-                }
-            }
+            if (u is null)
+                throw new NotFoundException("user not found");
 
-            return new AppUserDTO()
-            {
-                Id = u.Id,
-                UserName = u.UserName,
-                POIs = poisDTO,
-                POIAccesses = poiAccessesDTO
-            };
+            return await Task.FromResult(u.ToDTO());
+        }
+
+        public async Task<IEnumerable<AppUserDTO>> GetAllAsync()
+        {
+            var users = await _appUserRepository.GetAllAsync();
+            return await Task.FromResult(users.Select(u => u.ToDTO()));
         }
     }
 }

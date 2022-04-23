@@ -29,7 +29,7 @@ namespace SocialMap.Infrastructure.Services
                     likesDTO.Add(new LikeDTO()
                     {
                         Id = l.Id,
-                        AppUserId = l.AppUserId,
+                        //AppUserId = l.AppUserId,
                         POIId = l.POIId
                     });
                 }
@@ -43,8 +43,8 @@ namespace SocialMap.Infrastructure.Services
                 Y = p.Y,
                 Description = p.Description,
                 IsGlobal = p.IsGlobal,
-                AppUserId = p.AppUserId,
-                CategoryId = p.CategoryId,
+                //AppUserId = p.AppUserId,
+                //CategoryId = p.CategoryId,
                 Likes = likesDTO
             };
         }
@@ -59,7 +59,7 @@ namespace SocialMap.Infrastructure.Services
                 Y = p.Y,
                 Description = p.Description,
                 IsGlobal = p.IsGlobal,
-                AppUserId = p.AppUserId,
+                //AppUserId = p.AppUserId,
                 CategoryId = p.CategoryId
             };
         }

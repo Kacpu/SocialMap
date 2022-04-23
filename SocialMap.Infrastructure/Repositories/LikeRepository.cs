@@ -21,10 +21,10 @@ namespace SocialMap.Infrastructure.Repositories
         {
             foreach(var l in _appDbContext.Likes)
             {
-                if(l.AppUserId == like.AppUserId && l.POIId == like.POIId)
-                {
-                    return null;
-                }
+                //if(l.AppUserId == like.AppUserId && l.POIId == like.POIId)
+                //{
+                //    return null;
+                //}
             }
 
             try

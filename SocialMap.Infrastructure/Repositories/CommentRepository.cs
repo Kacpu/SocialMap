@@ -11,7 +11,7 @@ namespace SocialMap.Infrastructure.Repositories
 {
     public class CommentRepository : ICommentRepository
     {
-        private AppDbContext _appDbContext;
+        private readonly AppDbContext _appDbContext;
 
         public CommentRepository(AppDbContext appDbContext)
         {
@@ -20,57 +20,45 @@ namespace SocialMap.Infrastructure.Repositories
 
         public async Task<Comment> AddAsync(Comment comment)
         {
-            try
-            {
-                _appDbContext.Comments.Add(comment);
-                _appDbContext.SaveChanges();
-                return await Task.FromResult(comment);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            _appDbContext.Comments.Add(comment);
+            await _appDbContext.SaveChangesAsync();
+            return await Task.FromResult(comment);
         }
 
         public async Task<Comment> GetAsync(int id)
         {
-            return await Task.FromResult(_appDbContext.Comments.Include(c => c.AppUser).FirstOrDefault(c => c.Id == id));
+            var c = await _appDbContext.Comments.Include(x => x.AppUser).FirstOrDefaultAsync(x => x.Id == id);
+            return await Task.FromResult(c);
         }
 
-        public async Task<IEnumerable<Comment>> BrowseAllAsync()
+        public async Task<IEnumerable<Comment>> GetAllAsync(int? userId, int? poiId)
         {
-            return await Task.FromResult(_appDbContext.Comments.Include(c => c.AppUser).OrderByDescending(c => c.PublicationDate));
+            var c = _appDbContext.Comments.AsQueryable();
+
+            if(userId != null)
+            {
+                c = c.Where(x => x.AppUserId == userId);
+            }
+
+            if(poiId != null)
+            {
+                c = c.Where(x => x.POIId == poiId);
+            }
+
+            c = c.Include(c => c.AppUser).OrderByDescending(c => c.PublicationDate);
+
+            return await Task.FromResult(c);
         }
 
-        public async Task UpdateAsync(Comment comment)
+        public async Task UpdateAsync()
         {
-            try
-            {
-                var cToUpdate = _appDbContext.Comments.FirstOrDefault(c => c.Id == comment.Id);
-
-                cToUpdate.Content = comment.Content;
-
-                _appDbContext.SaveChanges();
-                await Task.CompletedTask;
-            }
-            catch (Exception ex)
-            {
-                await Task.FromException(ex);
-            }
+             await _appDbContext.SaveChangesAsync();
         }
 
-        public async Task DelAsync(Comment comment)
+        public async Task DelAsync(int id)
         {
-            try
-            {
-                _appDbContext.Remove(_appDbContext.Comments.FirstOrDefault(c => c.Id == comment.Id));
-                _appDbContext.SaveChanges();
-                await Task.CompletedTask;
-            }
-            catch (Exception ex)
-            {
-                await Task.FromException(ex);
-            }
+            _appDbContext.Remove(_appDbContext.Comments.FirstOrDefault(c => c.Id == id));
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

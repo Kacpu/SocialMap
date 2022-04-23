@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SocialMap.Infrastructure.Repositories;
 
 namespace SocialMap.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220423170348_userIdChanges2")]
+    partial class userIdChanges2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,10 +23,8 @@ namespace SocialMap.Infrastructure.Migrations
 
             modelBuilder.Entity("SocialMap.Core.Domain.AppUser", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
@@ -60,8 +60,9 @@ namespace SocialMap.Infrastructure.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Content")
                         .HasColumnType("nvarchar(max)");
@@ -88,15 +89,14 @@ namespace SocialMap.Infrastructure.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("POIId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.HasIndex("POIId");
 
@@ -110,8 +110,9 @@ namespace SocialMap.Infrastructure.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
@@ -151,18 +152,17 @@ namespace SocialMap.Infrastructure.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsAccepted")
+                    b.Property<bool>("IsAccpeted")
                         .HasColumnType("bit");
 
                     b.Property<int>("POIId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.HasIndex("POIId");
 
@@ -172,7 +172,7 @@ namespace SocialMap.Infrastructure.Migrations
             modelBuilder.Entity("SocialMap.Core.Domain.Comment", b =>
                 {
                     b.HasOne("SocialMap.Core.Domain.AppUser", "AppUser")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -190,12 +190,6 @@ namespace SocialMap.Infrastructure.Migrations
 
             modelBuilder.Entity("SocialMap.Core.Domain.Like", b =>
                 {
-                    b.HasOne("SocialMap.Core.Domain.AppUser", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SocialMap.Core.Domain.POI", null)
                         .WithMany("Likes")
                         .HasForeignKey("POIId")
@@ -222,12 +216,6 @@ namespace SocialMap.Infrastructure.Migrations
 
             modelBuilder.Entity("SocialMap.Core.Domain.POIAccess", b =>
                 {
-                    b.HasOne("SocialMap.Core.Domain.AppUser", null)
-                        .WithMany("POIAccesses")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SocialMap.Core.Domain.POI", null)
                         .WithMany("POIAccesses")
                         .HasForeignKey("POIId")
@@ -237,12 +225,6 @@ namespace SocialMap.Infrastructure.Migrations
 
             modelBuilder.Entity("SocialMap.Core.Domain.AppUser", b =>
                 {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Likes");
-
-                    b.Navigation("POIAccesses");
-
                     b.Navigation("POIs");
                 });
 

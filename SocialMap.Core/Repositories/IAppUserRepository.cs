@@ -9,8 +9,10 @@ namespace SocialMap.Core.Repositories
 {
     public interface IAppUserRepository
     {
-        Task<AppUser> GetAsync(string id);
-        Task<IEnumerable<AppUser>> BrowseAllAsync();
+        Task<AppUser> AddAsync(AppUser user);
+        Task<AppUser> GetAsync(int id);
+        Task<AppUser> GetByUuidAsync(string uuid);
+        Task<IEnumerable<AppUser>> GetAllAsync();
         //Task UpdateAsync(AppUser appUser);
         //Task DelAsync(AppUser appUser);
     }

@@ -61,8 +61,8 @@ namespace SocialMap.Infrastructure.Services
                         Y = p.Y,
                         Description = p.Description,
                         IsGlobal = p.IsGlobal,
-                        AppUserId = p.AppUserId,
-                        CategoryId = p.CategoryId
+                        //AppUserId = p.AppUserId,
+                        //CategoryId = p.CategoryId
                     });
                 }
             }

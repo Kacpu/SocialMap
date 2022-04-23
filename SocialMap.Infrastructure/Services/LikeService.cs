@@ -62,7 +62,7 @@ namespace SocialMap.Infrastructure.Services
             {
                 Id = l.Id,
                 POIId = l.POIId,
-                AppUserId = l.AppUserId,
+                //AppUserId = l.AppUserId,
             };
         }
 
@@ -72,7 +72,7 @@ namespace SocialMap.Infrastructure.Services
             {
                 Id = lDTO.Id,
                 POIId = lDTO.POIId,
-                AppUserId = lDTO.AppUserId
+                //AppUserId = lDTO.AppUserId
             };
         }
     }

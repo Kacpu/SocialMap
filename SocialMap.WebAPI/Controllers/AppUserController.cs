@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
 using SocialMap.Infrastructure.Services;
 using System;
@@ -17,26 +18,36 @@ namespace SocialMap.WebAPI.Controllers
             _AppUserService = AppUserService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAppUser(string id)
+        [HttpPost]
+        public async Task<IActionResult> AddAppUser([FromBody] CreateAppUser createAppUser)
         {
-            AppUserDTO z = await _AppUserService.GetAsync(id);
-            if (z == null)
-            {
-                return NotFound();
-            }
-            return Json(z);
+            if (createAppUser is null || string.IsNullOrEmpty(createAppUser.Record?.UserUuid))
+                return BadRequest();
+
+            var user = await _AppUserService.AddAsync(createAppUser);
+
+            return CreatedAtAction(nameof(GetAppUser), new { id = user.Id }, user);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAppUser(int id)
+        {
+            AppUserDTO u = await _AppUserService.GetAsync(id);
+            return Json(u);
         }
 
         [HttpGet]
-        public async Task<IActionResult> BrowseAllAsync()
+        public async Task<IActionResult> GetAllAppUsers(string uuid)
         {
-            IEnumerable<AppUserDTO> z = await _AppUserService.BrowseAllAsync();
-            if (z == null)
+            if (!string.IsNullOrEmpty(uuid))
             {
-                return NotFound();
+                var u = await _AppUserService.GetByUuidAsync(uuid);
+                return Json(u);
+            } else
+            {
+                var u = await _AppUserService.GetAllAsync();
+                return Json(u);
             }
-            return Json(z);
         }
     }
 }

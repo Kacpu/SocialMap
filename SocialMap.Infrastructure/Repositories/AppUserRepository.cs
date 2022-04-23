@@ -11,17 +11,19 @@ namespace SocialMap.Infrastructure.Repositories
 {
     public class AppUserRepository : IAppUserRepository
     {
-        private AppDbContext _appDbContext;
+        private readonly AppDbContext _appDbContext;
         public AppUserRepository(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
 
-        public async Task<AppUser> GetAsync(string id)
+        public async Task<AppUser> AddAsync(AppUser user)
         {
             try
             {
-                return await Task.FromResult(_appDbContext.Users.Include(u => u.POIs).Include(u => u.POIAccesses).FirstOrDefault(c => c.Id == id));
+                _appDbContext.AppUsers.Add(user);
+                await _appDbContext.SaveChangesAsync();
+                return await Task.FromResult(user);
             }
             catch (Exception)
             {
@@ -29,11 +31,35 @@ namespace SocialMap.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<AppUser>> BrowseAllAsync()
+        public async Task<AppUser> GetAsync(int id)
         {
             try
             {
-                return await Task.FromResult(_appDbContext.Users.Include(u => u.POIs).Include(u => u.POIAccesses));
+                return await Task.FromResult(await _appDbContext.AppUsers.FirstOrDefaultAsync(x => x.Id == id));
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<AppUser> GetByUuidAsync(string uuid)
+        {
+            try
+            {
+                return await Task.FromResult(await _appDbContext.AppUsers.FirstOrDefaultAsync(x => x.UserfrontId == uuid));
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<AppUser>> GetAllAsync()
+        {
+            try
+            {
+                return await Task.FromResult(_appDbContext.AppUsers.AsEnumerable());
             }
             catch (Exception)
             {

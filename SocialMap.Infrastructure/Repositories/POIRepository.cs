@@ -66,7 +66,7 @@ namespace SocialMap.Infrastructure.Repositories
                 _appDbContext.SaveChanges();
                 await Task.CompletedTask;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
                 //await Task.FromException(ex);

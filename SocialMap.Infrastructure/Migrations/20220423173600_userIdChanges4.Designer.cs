@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SocialMap.Infrastructure.Repositories;
 
 namespace SocialMap.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220423173600_userIdChanges4")]
+    partial class userIdChanges4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,8 +98,6 @@ namespace SocialMap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
-
                     b.HasIndex("POIId");
 
                     b.ToTable("Likes");
@@ -162,8 +162,6 @@ namespace SocialMap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
-
                     b.HasIndex("POIId");
 
                     b.ToTable("POIAccess");
@@ -172,7 +170,7 @@ namespace SocialMap.Infrastructure.Migrations
             modelBuilder.Entity("SocialMap.Core.Domain.Comment", b =>
                 {
                     b.HasOne("SocialMap.Core.Domain.AppUser", "AppUser")
-                        .WithMany("Comments")
+                        .WithMany()
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -190,12 +188,6 @@ namespace SocialMap.Infrastructure.Migrations
 
             modelBuilder.Entity("SocialMap.Core.Domain.Like", b =>
                 {
-                    b.HasOne("SocialMap.Core.Domain.AppUser", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SocialMap.Core.Domain.POI", null)
                         .WithMany("Likes")
                         .HasForeignKey("POIId")
@@ -222,12 +214,6 @@ namespace SocialMap.Infrastructure.Migrations
 
             modelBuilder.Entity("SocialMap.Core.Domain.POIAccess", b =>
                 {
-                    b.HasOne("SocialMap.Core.Domain.AppUser", null)
-                        .WithMany("POIAccesses")
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SocialMap.Core.Domain.POI", null)
                         .WithMany("POIAccesses")
                         .HasForeignKey("POIId")
@@ -237,12 +223,6 @@ namespace SocialMap.Infrastructure.Migrations
 
             modelBuilder.Entity("SocialMap.Core.Domain.AppUser", b =>
                 {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Likes");
-
-                    b.Navigation("POIAccesses");
-
                     b.Navigation("POIs");
                 });
 

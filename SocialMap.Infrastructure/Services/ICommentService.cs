@@ -1,4 +1,5 @@
-﻿using SocialMap.Infrastructure.DTO;
+﻿using SocialMap.Infrastructure.Commands;
+using SocialMap.Infrastructure.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace SocialMap.Infrastructure.Services
 {
     public interface ICommentService
     {
-        Task<CommentDTO> AddAsync(CommentDTO comment);
+        Task<CommentDTO> AddAsync(CreateComment comment, int authorId);
         Task<CommentDTO> GetAsync(int id);
-        Task<IEnumerable<CommentDTO>> BrowseAllAsync();
-        Task UpdateAsync(CommentDTO comment);
-        Task DelAsync(CommentDTO comment);
+        Task<IEnumerable<CommentDTO>> GetAllAsync(int? userId = null, int? poiId = null);
+        Task<CommentDTO> UpdateAsync(int id, UpdateComment comment);
+        Task DelAsync(int id);
     }
 }

@@ -21,92 +21,49 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddComment([FromBody] CreateComment comment)
         {
-            if (comment == null)
+            if (comment == null || string.IsNullOrEmpty(comment.Content) || comment.POIId == 0)
             {
                 return BadRequest();
             }
 
-            CommentDTO commentDTO = new CommentDTO()
-            {
-                Content = comment.Content,
-                POIId = comment.POIId,
-                AppUserId = comment.AppUserId,
-                PublicationDate = DateTime.Now
-            };
-
-            var c = await _commentService.AddAsync(commentDTO);
-
-            if (c == null)
-            {
-                return BadRequest();
-            }
+            var c = await _commentService.AddAsync(comment, Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "id").Value));
 
             return CreatedAtAction(nameof(GetComment), new { id = c.Id }, c);
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<IActionResult> GetComment(int id)
         {
-            CommentDTO commentDTO = await _commentService.GetAsync(id);
-
-            if (commentDTO == null)
-            {
-                return NotFound();
-            }
-
-            return Json(commentDTO);
+            CommentDTO c = await _commentService.GetAsync(id);
+            return Json(c);
         }
 
         [HttpGet]
-        public async Task<IActionResult> BrowseAllComments()
+        public async Task<IActionResult> GetAllComments(int? userId, int? poiId)
         {
-            IEnumerable<CommentDTO> commentsDTO = await _commentService.BrowseAllAsync();
-
-            if (commentsDTO == null)
-            {
-                return NotFound();
-            }
-
-            return Json(commentsDTO);
+            IEnumerable<CommentDTO> c = await _commentService.GetAllAsync(userId, poiId);
+            return Json(c);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateComment([FromBody] UpdateComment comment, int id)
         {
-            CommentDTO commentDTO = await _commentService.GetAsync(id);
-
-            if (commentDTO == null)
-            {
-                return NotFound();
-            }
-
-            if (comment == null)
+            if (comment == null || string.IsNullOrEmpty(comment.Content))
             {
                 return BadRequest();
             }
 
-            commentDTO.Content = comment.Content ?? commentDTO.Content;
-
-            await _commentService.UpdateAsync(commentDTO);
-
-            return Json(commentDTO);
+            var c = await _commentService.UpdateAsync(id, comment);
+            return Json(c);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
-            CommentDTO commentDTO = await _commentService.GetAsync(id);
-
-            if (commentDTO == null)
-            {
-                return NotFound();
-            }
-
-            await _commentService.DelAsync(commentDTO);
-
+            await _commentService.DelAsync(id);
             return Ok();
         }
     }

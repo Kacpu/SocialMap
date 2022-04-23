@@ -25,8 +25,8 @@ namespace SocialMap.Infrastructure.Services
             {
                 Id = p.Id,
                 POIId = p.POIId,
-                AppUserId = p.AppUserId,
-                IsAccpeted = p.IsAccpeted
+                //AppUserId = p.AppUserId,
+                //IsAccpeted = p.IsAccpeted
             };
         }
 
@@ -36,8 +36,8 @@ namespace SocialMap.Infrastructure.Services
             {
                 Id = p.Id,
                 POIId = p.POIId,
-                AppUserId = p.AppUserId,
-                IsAccpeted = p.IsAccpeted
+                //AppUserId = p.AppUserId,
+                //IsAccpeted = p.IsAccpeted
             };
         }
 

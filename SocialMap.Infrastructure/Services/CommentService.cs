@@ -1,6 +1,8 @@
 ﻿using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
+using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
+using SocialMap.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,73 +14,67 @@ namespace SocialMap.Infrastructure.Services
     public class CommentService : ICommentService
     {
         private readonly ICommentRepository _commentRepository;
+        private readonly IPOIRepository _poiRepository;
 
-        public CommentService(ICommentRepository commentRepository)
+        public CommentService(ICommentRepository commentRepository, IPOIRepository poiRepository)
         {
             _commentRepository = commentRepository;
+            _poiRepository = poiRepository;
         }
 
-        public async Task<CommentDTO> AddAsync(CommentDTO comment)
+        public async Task<CommentDTO> AddAsync(CreateComment createComment, int authorId)
         {
-            var c = await _commentRepository.AddAsync(ToDomain(comment));
-            return c != null ? await Task.FromResult(ToDTO(c)) : null;
+            //var poi = await _poiRepository.GetAsync(createComment.POIId);
+
+            //if(poi is null)
+            //{
+            //    throw new NotFoundException("commented poi dose not found");
+            //}
+
+            var c = createComment.ToDomain();
+            c.AppUserId = authorId;
+            c = await _commentRepository.AddAsync(c);
+            return await Task.FromResult(c.ToDTO());
         }
 
         public async Task<CommentDTO> GetAsync(int id)
         {
-            var comment = await _commentRepository.GetAsync(id);
-            return comment != null ? await Task.FromResult(ToDTO(comment)) : null;
+            var c = await _commentRepository.GetAsync(id);
+
+            if (c is null)
+                throw new NotFoundException("comment not found");
+
+            return await Task.FromResult(c.ToDTO());
         }
 
-        public async Task<IEnumerable<CommentDTO>> BrowseAllAsync()
+        public async Task<IEnumerable<CommentDTO>> GetAllAsync(int? userId, int? poiId)
         {
-            var comments = await _commentRepository.BrowseAllAsync();
-            return comments != null ? comments.Select(c => ToDTO(c)) : null;
+            var comments = await _commentRepository.GetAllAsync(userId, poiId);
+
+            return await Task.FromResult(comments.Select(c => c.ToDTO()));
         }
 
-        public async Task UpdateAsync(CommentDTO comment)
+        public async Task<CommentDTO> UpdateAsync(int id, UpdateComment updateComment)
         {
-            if (comment != null)
-            {
-                await _commentRepository.UpdateAsync(ToDomain(comment));
-            }
+            var c = await _commentRepository.GetAsync(id);
+
+            if (c is null)
+                throw new NotFoundException("comment does not exist");
+
+            c.Content = updateComment.Content;
+
+            await _commentRepository.UpdateAsync();
+            return await Task.FromResult(c.ToDTO());
         }
 
-        public async Task DelAsync(CommentDTO comment)
+        public async Task DelAsync(int id)
         {
-            if (comment != null)
-            {
-                await _commentRepository.DelAsync(ToDomain(comment));
-            }
-        }
+            var c = await _commentRepository.GetAsync(id);
 
-        private CommentDTO ToDTO(Comment c)
-        {
-            return new CommentDTO()
-            {
-                Id = c.Id,
-                PublicationDate = c.PublicationDate,
-                Content = c.Content,
-                POIId = c.POIId,
-                AppUserId = c.AppUserId,
-                AppUser = c.AppUser != null ? new AppUserDTO()
-                {
-                    Id = c.AppUser.Id,
-                    UserName = c.AppUser.UserName
-                } : null
-            };
-        }
+            if (c is null)
+                throw new NotFoundException("comment dose not exist");
 
-        private Comment ToDomain(CommentDTO cDTO)
-        {
-            return new Comment()
-            {
-                Id = cDTO.Id,
-                PublicationDate = cDTO.PublicationDate,
-                Content = cDTO.Content,
-                POIId = cDTO.POIId,
-                AppUserId = cDTO.AppUserId
-            };
+            await _commentRepository.DelAsync(c.Id);
         }
     }
 }

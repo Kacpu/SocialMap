@@ -10,6 +10,5 @@ namespace SocialMap.Infrastructure.Commands
     {
         public string Content { get; set; }
         public int POIId { get; set; }
-        public string AppUserId { get; set; }
     }
 }

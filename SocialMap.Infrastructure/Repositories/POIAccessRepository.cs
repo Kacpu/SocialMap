@@ -20,18 +20,18 @@ namespace SocialMap.Infrastructure.Repositories
         public async Task<POIAccess> AddAsync(POIAccess poiAccess)
         {
             var poi = _appDbContext.POI.FirstOrDefault(p => p.Id == poiAccess.POIId);
-            if (poi != null && poi.AppUserId == poiAccess.AppUserId)
-            {
-                return null;
-            }
+            //if (poi != null && poi.AppUserId == poiAccess.AppUserId)
+            //{
+            //    return null;
+            //}
 
-            foreach (var pa in _appDbContext.POIAccess)
-            {
-                if (pa.AppUserId == poiAccess.AppUserId && pa.POIId == poiAccess.POIId)
-                {
-                    return null;
-                }
-            }
+            //foreach (var pa in _appDbContext.POIAccess)
+            //{
+            //    if (pa.AppUserId == poiAccess.AppUserId && pa.POIId == poiAccess.POIId)
+            //    {
+            //        return null;
+            //    }
+            //}
 
             try
             {
@@ -68,7 +68,7 @@ namespace SocialMap.Infrastructure.Repositories
             {
                 var z = _appDbContext.POIAccess.FirstOrDefault(x => x.Id == poiAccess.Id);
 
-                z.IsAccpeted = poiAccess.IsAccpeted;
+                //z.IsAccpeted = poiAccess.IsAccpeted;
 
                 _appDbContext.SaveChanges();
                 await Task.CompletedTask;
