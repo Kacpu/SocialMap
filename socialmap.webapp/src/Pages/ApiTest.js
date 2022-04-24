@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {useAuth0} from "@auth0/auth0-react";
 import Userfront from "@userfront/react";
 
 export default function ApiTest() {
@@ -8,25 +7,23 @@ export default function ApiTest() {
     const [comment, setComment] = useState('');
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
-    const {getAccessTokenSilently} = useAuth0();
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const response = await fetch(`${serverUrl}/like/1`, {
-                    headers: {
-                        Authorization: `Bearer ${Userfront.tokens.accessToken}`,
-                    },
-                });
-                const responseData = await response.json();
-                console.log(responseData)
-                setLike(responseData);
-            } catch (e) {
-                setLike('żeś się nie zalogował nieładnie');
-                console.error(e);
-            }
-        })();
-    }, [getAccessTokenSilently, serverUrl]);
+    // useEffect(() => {
+    //     (async () => {
+    //         try {
+    //             const response = await fetch(`${serverUrl}/like/1`, {
+    //                 headers: {
+    //                     Authorization: `Bearer ${Userfront.tokens.accessToken}`,
+    //                 },
+    //             });
+    //             const responseData = await response.json();
+    //             console.log(responseData)
+    //             setLike(responseData);
+    //         } catch (e) {
+    //             setLike('żeś się nie zalogował nieładnie');
+    //             console.error(e);
+    //         }
+    //     })();
+    // }, [getAccessTokenSilently, serverUrl]);
 
 
     const getPOI = async () => {
@@ -40,14 +37,20 @@ export default function ApiTest() {
         }
     };
 
-    const getComment = async () => {
+    const addComment = async () => {
         try {
             //const token = await getAccessTokenSilently();
 
-            const response = await fetch(`${serverUrl}/comment/2`, {
+            const response = await fetch(`${serverUrl}/comment`, {
+                    method: "POST",
                     headers: {
                         Authorization: `Bearer ${Userfront.tokens.accessToken}`,
+                        'Content-Type': 'application/json',
                     },
+                    body: JSON.stringify({
+                        content: 'trying comment',
+                        poiId: 22
+                    })
                 });
 
             const responseData = await response.json();
@@ -73,8 +76,8 @@ export default function ApiTest() {
                 {JSON.stringify(poi, null, 5)}
             </div>
             <br/>
-            <button type={"button"} onClick={getComment} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
-                GET Comment (auth)
+            <button type={"button"} onClick={addComment} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
+                POST Comment (auth)
             </button>
             <div>
                 {JSON.stringify(comment, null, 5)}

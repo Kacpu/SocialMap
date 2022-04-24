@@ -17,7 +17,6 @@ import mapIcon from "../../icons/map-icon.png";
 import { useNavigate } from "react-router-dom";
 import Userfront from "@userfront/react";
 import Logo from "./Logo";
-import {useAuth0} from "@auth0/auth0-react";
 import isAuthenticated from "../../auth/isAuthenticated";
 
 //Userfront.init("pn4xgmpn");
@@ -46,7 +45,8 @@ export default function NavBar() {
         {id: 2, name: "Contact Us", url: '/contact', protect: false},
         {id: 3, name: "PrivateTest", url: '/private', protect: false},
         {id: 4, name: "ApiTest", url: '/apitest', protect: false},
-        {id: 5, name: "Moderator", url: '/moderatorpanel', protect: false}
+        {id: 5, name: "Moderator", url: '/moderatorpanel', protect: false},
+        {id: 6, name: Userfront.user.name, url: '/profile', protect: true}
     ]
 
     const buttons = [{id: 0, name: "Log In", onClick: handleLogin, signed: false},
@@ -109,14 +109,15 @@ export default function NavBar() {
                     paddingLeft={isOpen ? 0 : 5}
                     spacing={5}
                 >
-                    {linkItems}
+                    {linkItems.slice(0,6)}
                 </Stack>
 
                 {
                     isAuthenticated() &&
-                    <Text color={linkColor} fontSize='lg' marginRight='30px'>
-                        Hello {Userfront.user.name}
-                    </Text>
+                    <Text fontSize='lg' marginRight='30px'>Hello {linkItems[6]}</Text>
+                    // <Text color={linkColor} fontSize='lg' marginRight='30px'>
+                    //     Hello {Userfront.user.name}
+                    // </Text>
                 }
 
                 {isAuthenticated() && console.log(Userfront.user)}
