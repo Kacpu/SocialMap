@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SocialMap.Infrastructure.Commands;
 using Microsoft.AspNetCore.Authorization;
+using SocialMap.WebAPI.Extensions;
 
 namespace SocialMap.WebAPI.Controllers
 {
@@ -29,7 +30,7 @@ namespace SocialMap.WebAPI.Controllers
                 return BadRequest();
             }
 
-            var c = await _commentService.AddAsync(comment, Convert.ToInt32(User.Claims.FirstOrDefault(x => x.Type == "id").Value));
+            var c = await _commentService.AddAsync(comment, User.GetId());
 
             return CreatedAtAction(nameof(GetComment), new { id = c.Id }, c);
         }

@@ -11,12 +11,10 @@ namespace SocialMap.WebAPI.Transformations
 {
     public class UserIdClaimTransformation : IClaimsTransformation
     {
-        //private readonly AppDbContext _appDbContext;
         private readonly IAppUserService _appUserService;
 
         public UserIdClaimTransformation(IAppUserService appUserService)
         {
-            //_appDbContext = appDbContext;
             _appUserService = appUserService;
         }
 
@@ -26,13 +24,13 @@ namespace SocialMap.WebAPI.Transformations
 
             try
             {
-                string uuid = principal.Claims.First(c => c.Type == "uuid").Value;
+                string uuid = principal.Claims.First(c => c.Type == "userUuid").Value;
                 var user = await _appUserService.GetByUuidAsync(uuid);
                 userIdValue = user.Id;
             }
             catch
             {
-                throw new Exception("Can not get app user");
+                throw new Exception("Can not get app user from UserId claim transform");
             }
 
             ClaimsIdentity claimsIdentity = new();

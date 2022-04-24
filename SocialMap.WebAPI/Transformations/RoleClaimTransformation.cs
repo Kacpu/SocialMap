@@ -20,7 +20,7 @@ namespace SocialMap.WebAPI.Transformations
             {
                 roleValue = principal.Claims.First(c => c.Type == "authorization").Value;
                 JObject roleJson = JObject.Parse(roleValue);
-                roleValue = (string) roleJson["pn4xgmpn"]["roles"][0];
+                roleValue = (string) roleJson["xbr78p4n"]["roles"][0];
             }
             catch
             {

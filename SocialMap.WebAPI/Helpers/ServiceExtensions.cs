@@ -35,7 +35,8 @@ namespace SocialMap.WebAPI.Helpers
                         NameClaimType = "uuid",
                         IssuerSigningKey = RsaTransformation.GetRsaKey(rsabase),
                         ValidateIssuer = true,
-                        ValidIssuer = "userfront"
+                        ValidIssuer = "userfront",
+                        ValidateAudience = false
                     };
                 });
         }
