@@ -47,6 +47,7 @@ namespace SocialMap.WebAPI.Helpers
             {
                 options.AddPolicy("Admin", policy => policy.RequireClaim("role", "admin"));
                 options.AddPolicy("Editor", policy => policy.RequireClaim("role", "editor"));
+                options.AddPolicy("SuperUser", policy => policy.RequireClaim("role", "admin", "editor"));
             });
         }
     }

@@ -28,6 +28,7 @@ namespace SocialMap.WebAPI.Middlewares
             {
                 BadRequestException => StatusCodes.Status400BadRequest,
                 NotFoundException => StatusCodes.Status404NotFound,
+                ForbidException => StatusCodes.Status403Forbidden,
                 _ => StatusCodes.Status500InternalServerError
             };
             var response = new

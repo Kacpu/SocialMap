@@ -57,7 +57,8 @@ namespace SocialMap.Infrastructure.Repositories
 
         public async Task DelAsync(int id)
         {
-            _appDbContext.Remove(_appDbContext.Comments.FirstOrDefault(c => c.Id == id));
+            var cToDelete = await _appDbContext.Comments.FirstOrDefaultAsync(c => c.Id == id);
+            _appDbContext.Remove(cToDelete);
             await _appDbContext.SaveChangesAsync();
         }
     }

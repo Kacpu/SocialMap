@@ -13,7 +13,7 @@ namespace SocialMap.Infrastructure.Services
         Task<CommentDTO> AddAsync(CreateComment comment, int authorId);
         Task<CommentDTO> GetAsync(int id);
         Task<IEnumerable<CommentDTO>> GetAllAsync(int? userId = null, int? poiId = null);
-        Task<CommentDTO> UpdateAsync(int id, UpdateComment comment);
-        Task DelAsync(int id);
+        Task<CommentDTO> UpdateAsync(int id, UpdateComment comment, int? authorId = null);
+        Task DelAsync(int id, int? authorId = null);
     }
 }

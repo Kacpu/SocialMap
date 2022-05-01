@@ -14,27 +14,28 @@ namespace SocialMap.WebAPI.Transformations
     {
         public Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
         {
-            string roleValue;
-
-            try
-            {
-                roleValue = principal.Claims.First(c => c.Type == "authorization").Value;
-                JObject roleJson = JObject.Parse(roleValue);
-                roleValue = (string) roleJson["xbr78p4n"]["roles"][0];
-            }
-            catch
-            {
-                roleValue = "anonimus";
-            }
-            
-            ClaimsIdentity claimsIdentity = new();
             var claimType = "role";
+
             if (!principal.HasClaim(claim => claim.Type == claimType))
             {
+                string roleValue;
+
+                try
+                {
+                    roleValue = principal.Claims.First(c => c.Type == "authorization").Value;
+                    JObject roleJson = JObject.Parse(roleValue);
+                    roleValue = (string)roleJson["xbr78p4n"]["roles"][0];
+                }
+                catch
+                {
+                    roleValue = "anonim";
+                }
+
+                ClaimsIdentity claimsIdentity = new();
                 claimsIdentity.AddClaim(new Claim(claimType, roleValue));
+                principal.AddIdentity(claimsIdentity);
             }
 
-            principal.AddIdentity(claimsIdentity);
             return Task.FromResult(principal);
         }
     }

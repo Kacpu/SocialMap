@@ -2,6 +2,7 @@
 using SocialMap.Core.Repositories;
 using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
+using SocialMap.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,61 +13,111 @@ namespace SocialMap.Infrastructure.Services
 {
     public class POIAccessService : IPOIAccessService
     {
-        private readonly IPOIAccessRepository _POIAccessRepository;
+        private readonly IPOIAccessRepository _poiAccessRepository;
+        private readonly IPOIRepository _poiRepository;
+        private readonly IAppUserRepository _appUserRepository;
 
-        public POIAccessService(IPOIAccessRepository POIAccessRepository)
+        public POIAccessService(IPOIAccessRepository poiAccessRepository, IPOIRepository poiRepository, IAppUserRepository appUserRepository)
         {
-            _POIAccessRepository = POIAccessRepository;
+            _poiAccessRepository = poiAccessRepository;
+            _poiRepository = poiRepository;
+            _appUserRepository = appUserRepository;
         }
 
-        private POIAccessDTO ToDTO(POIAccess p)
+        public async Task<POIAccessDTO> AddAsync(CreatePOIAccess createPoiAccess, int issuerId)
         {
-            return new POIAccessDTO()
+            var poi = await _poiRepository.GetAsync(createPoiAccess.POIId);
+
+            if (poi is null)
             {
-                Id = p.Id,
-                POIId = p.POIId,
-                //AppUserId = p.AppUserId,
-                //IsAccpeted = p.IsAccpeted
-            };
-        }
+                throw new BadRequestException("poi was not found");
+            }
 
-        private POIAccess ToDomain(POIAccessDTO p)
-        {
-            return new POIAccess()
+            if (poi.AppUserId != issuerId)
             {
-                Id = p.Id,
-                POIId = p.POIId,
-                //AppUserId = p.AppUserId,
-                //IsAccpeted = p.IsAccpeted
-            };
-        }
+                throw new ForbidException("you are not an author of poi");
+            }
 
-        public async Task<POIAccessDTO> AddAsync(POIAccessDTO poiAccess)
-        {
-            var z = await _POIAccessRepository.AddAsync(ToDomain(poiAccess));
-            return z != null ? await Task.FromResult(ToDTO(z)) : null;
+            var user = await _appUserRepository.GetAsync(createPoiAccess.InvitedUserId);
+
+            if (user is null)
+            {
+                throw new BadRequestException("invited user was not found");
+            }
+
+            if (poi.AppUserId == createPoiAccess.InvitedUserId)
+            {
+                throw new BadRequestException("issuer can not be invited user");
+            }
+
+            var check_pa = await _poiAccessRepository.BrowseAllAsync(invitedUserId: createPoiAccess.InvitedUserId, poiId: createPoiAccess.POIId);
+            if(check_pa.Any())
+            {
+                throw new BadRequestException("such poi access already exists");
+            }
+
+            var pa = await _poiAccessRepository.AddAsync(createPoiAccess.ToDomain());
+            return await Task.FromResult(pa.ToDTO());
         }
 
         public async Task<POIAccessDTO> GetAsync(int id)
         {
-            var z = await _POIAccessRepository.GetAsync(id);
-            return z != null ? await Task.FromResult(ToDTO(z)) : null;
+            var pa = await _poiAccessRepository.GetAsync(id);
+
+            if(pa is null)
+            {
+                throw new NotFoundException("poi access not found");
+            }
+
+            return await Task.FromResult(pa.ToDTO());
         }
 
-        public async Task<IEnumerable<POIAccessDTO>> BrowseAllAsync()
+        public async Task<IEnumerable<POIAccessDTO>> GetAllAsync(int? invitedUserId, int? poiId, int? issuerId, bool? isAccepted, int authUserId)
         {
-            var z = await _POIAccessRepository.BrowseAllAsync();
-            return z != null ? z.Select(x => ToDTO(x)) : null;
+            var pas = await _poiAccessRepository.BrowseAllAsync(invitedUserId, poiId, issuerId, isAccepted);
+            
+            foreach(var pa in pas)
+            {
+                if(authUserId != pa.AppUserId && authUserId != pa.POI.AppUserId)
+                {
+                    throw new ForbidException("you have no permission to get these poi accesses");
+                }
+            }
+
+            return await Task.FromResult(pas.Select(c => c.ToDTO()));
         }
 
-        public async Task DelAsync(int id)
+        public async Task<POIAccessDTO> UpdateAsync(int poiAccessId, UpdatePOIAccess updatePOIAccess, int authUserId)
         {
-            await _POIAccessRepository.DelAsync(id);
+            var pa = await _poiAccessRepository.GetAsync(poiAccessId);
+
+            if (pa is null)
+                throw new NotFoundException("poi access not found");
+
+            if (pa.AppUserId != authUserId && pa.POI.AppUserId != authUserId)
+                throw new ForbidException("you do not have permission to change this poi access");
+
+            pa.IsAccepted = updatePOIAccess.IsAccepted ?? pa.IsAccepted;
+
+            await _poiAccessRepository.UpdateAsync();
+            return await Task.FromResult(pa.ToDTO());
         }
 
-        public async Task UpdateAsync(POIAccessDTO poiAccess)
+        public async Task DelAsync(int id, int authUserId)
         {
-            await _POIAccessRepository.UpdateAsync(ToDomain(poiAccess));
+            var pa = await _poiAccessRepository.GetAsync(id);
+
+            if(pa is null)
+            {
+                throw new NotFoundException("poi access not found");
+            }
+
+            if (pa.AppUserId != authUserId && pa.POI.AppUserId != authUserId)
+            {
+                throw new ForbidException("you do not have permission to delete this poi access");
+            }
+
+            await _poiAccessRepository.DelAsync(id);
         }
     }
 }

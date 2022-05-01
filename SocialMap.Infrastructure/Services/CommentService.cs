@@ -24,12 +24,12 @@ namespace SocialMap.Infrastructure.Services
 
         public async Task<CommentDTO> AddAsync(CreateComment createComment, int authorId)
         {
-            //var poi = await _poiRepository.GetAsync(createComment.POIId);
+            var poi = await _poiRepository.GetAsync(createComment.POIId);
 
-            //if(poi is null)
-            //{
-            //    throw new NotFoundException("commented poi dose not found");
-            //}
+            if (poi is null)
+            {
+                throw new BadRequestException("commented poi does not found");
+            }
 
             var c = createComment.ToDomain();
             c.AppUserId = authorId;
@@ -54,12 +54,15 @@ namespace SocialMap.Infrastructure.Services
             return await Task.FromResult(comments.Select(c => c.ToDTO()));
         }
 
-        public async Task<CommentDTO> UpdateAsync(int id, UpdateComment updateComment)
+        public async Task<CommentDTO> UpdateAsync(int id, UpdateComment updateComment, int? authorId)
         {
             var c = await _commentRepository.GetAsync(id);
 
             if (c is null)
                 throw new NotFoundException("comment does not exist");
+
+            if (authorId != null && c.AppUserId != authorId)
+                throw new ForbidException("you do not have permission to change this comment");
 
             c.Content = updateComment.Content;
 
@@ -67,12 +70,15 @@ namespace SocialMap.Infrastructure.Services
             return await Task.FromResult(c.ToDTO());
         }
 
-        public async Task DelAsync(int id)
+        public async Task DelAsync(int id, int? authorId)
         {
             var c = await _commentRepository.GetAsync(id);
 
             if (c is null)
-                throw new NotFoundException("comment dose not exist");
+                throw new NotFoundException("comment does not exist");
+
+            if (authorId != null && c.AppUserId != authorId)
+                throw new ForbidException("you do not have permission to delete this comment");
 
             await _commentRepository.DelAsync(c.Id);
         }

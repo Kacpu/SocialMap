@@ -44,8 +44,40 @@ namespace SocialMap.Infrastructure.DTO
             {
                 Id = comment.Id,
                 Content = comment.Content,
-                PublicationDate = comment.PublicationDate,
+                PublicationDate = new DateDTO(comment.PublicationDate),
                 AuthorName = comment.AppUser?.UserName
+            };
+        }
+
+        public static POIAccess ToDomain(this CreatePOIAccess createPOIAccess)
+        {
+            return new POIAccess()
+            {
+                POIId = createPOIAccess.POIId,
+                AppUserId = createPOIAccess.InvitedUserId
+            };
+        }
+
+        public static POIAccessDTO ToDTO(this POIAccess poiAccess)
+        {
+            return new POIAccessDTO()
+            {
+                Id = poiAccess.Id,
+                AppUserId = poiAccess.AppUserId,
+                POIId = poiAccess.POIId,
+                IsAccpeted = poiAccess.IsAccepted,
+                IssueDate = new DateDTO(poiAccess.IssueDate),
+                InvitedUserName = poiAccess.AppUser?.UserName,
+                IssuerName = poiAccess.POI?.AppUser?.UserName,
+                POIDTO = poiAccess.POI?.ToDTO()
+            };
+        }
+
+        public static POIDTO ToDTO(this POI poi)
+        {
+            return new POIDTO()
+            {
+                Id = poi.Id
             };
         }
     }

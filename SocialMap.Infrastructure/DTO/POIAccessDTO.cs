@@ -10,7 +10,12 @@ namespace SocialMap.Infrastructure.DTO
     {
         public int Id { get; set; }
         public int POIId { get; set; }
-        public string AppUserId { get; set; }
+        public int AppUserId { get; set; }
         public bool IsAccpeted { get; set; }
+        public DateDTO IssueDate {get; set;}
+
+        public string IssuerName { get; set; }
+        public string InvitedUserName { get; set; }
+        public POIDTO POIDTO {get; set;}
     }
 }

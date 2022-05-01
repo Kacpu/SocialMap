@@ -1,4 +1,5 @@
-﻿using SocialMap.Core.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
 using System;
 using System.Collections.Generic;
@@ -19,78 +20,56 @@ namespace SocialMap.Infrastructure.Repositories
 
         public async Task<POIAccess> AddAsync(POIAccess poiAccess)
         {
-            var poi = _appDbContext.POI.FirstOrDefault(p => p.Id == poiAccess.POIId);
-            //if (poi != null && poi.AppUserId == poiAccess.AppUserId)
-            //{
-            //    return null;
-            //}
-
-            //foreach (var pa in _appDbContext.POIAccess)
-            //{
-            //    if (pa.AppUserId == poiAccess.AppUserId && pa.POIId == poiAccess.POIId)
-            //    {
-            //        return null;
-            //    }
-            //}
-
-            try
-            {
-                _appDbContext.POIAccess.Add(poiAccess);
-                _appDbContext.SaveChanges();
-                return await Task.FromResult(_appDbContext.POIAccess.FirstOrDefault(x => x.Id == poiAccess.Id));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            _appDbContext.POIAccess.Add(poiAccess);
+            await _appDbContext.SaveChangesAsync();
+            return await Task.FromResult(poiAccess);
         }
 
         public async Task<POIAccess> GetAsync(int id)
         {
-            try
-            {
-                return await Task.FromResult(_appDbContext.POIAccess.FirstOrDefault(x => x.Id == id));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            var pa = await _appDbContext.POIAccess.Include(x => x.POI).ThenInclude(p => p.AppUser)
+                .Include(x => x.AppUser).FirstOrDefaultAsync(x => x.Id == id);
+
+            return await Task.FromResult(pa);
         }
 
-        public async Task<IEnumerable<POIAccess>> BrowseAllAsync()
+        public async Task<IEnumerable<POIAccess>> BrowseAllAsync(int? invitedUserId, int? poiId, int? issuerId, bool? isAccepted)
         {
-            return await Task.FromResult(_appDbContext.POIAccess);
+            var pa = _appDbContext.POIAccess.AsQueryable();
+
+            if(invitedUserId != null)
+            {
+                pa = pa.Where(x => x.AppUserId == invitedUserId);
+            }
+
+            if (poiId != null)
+            {
+                pa = pa.Where(x => x.POIId == poiId);
+            }
+
+            if (issuerId != null)
+            {
+                pa = pa.Where(x => x.POI.AppUserId == issuerId);
+            }
+
+            if (isAccepted != null)
+            {
+                pa = pa.Where(x => x.IsAccepted == isAccepted);
+            }
+
+            return await Task.FromResult(pa.Include(x => x.POI).ThenInclude(p => p.AppUser).Include(x => x.AppUser));
         }
 
-        public async Task UpdateAsync(POIAccess poiAccess)
+        public async Task UpdateAsync()
         {
-            try
-            {
-                var z = _appDbContext.POIAccess.FirstOrDefault(x => x.Id == poiAccess.Id);
-
-                //z.IsAccpeted = poiAccess.IsAccpeted;
-
-                _appDbContext.SaveChanges();
-                await Task.CompletedTask;
-            }
-            catch (Exception ex)
-            {
-                await Task.FromException(ex);
-            }
+            await _appDbContext.SaveChangesAsync();
         }
 
         public async Task DelAsync(int id)
         {
-            try
-            {
-                _appDbContext.Remove(_appDbContext.POIAccess.FirstOrDefault(x => x.Id == id));
-                _appDbContext.SaveChanges();
-                await Task.CompletedTask;
-            }
-            catch (Exception ex)
-            {
-                await Task.FromException(ex);
-            }
+            var paToDelete = await _appDbContext.POIAccess.FirstOrDefaultAsync(x => x.Id == id);
+            _appDbContext.Remove(paToDelete);
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

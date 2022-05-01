@@ -50,6 +50,7 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateComment([FromBody] UpdateComment comment, int id)
         {
             if (comment == null || string.IsNullOrEmpty(comment.Content))
@@ -57,15 +58,20 @@ namespace SocialMap.WebAPI.Controllers
                 return BadRequest();
             }
 
-            var c = await _commentService.UpdateAsync(id, comment);
+            int? authorId = User.IsAdmin() || User.IsMod() ? null : User.GetId();
+            var c = await _commentService.UpdateAsync(id, comment, authorId);
+            
             return Json(c);
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteComment(int id)
         {
-            await _commentService.DelAsync(id);
-            return Ok();
+            int? authorId = User.IsAdmin() || User.IsMod() ? null : User.GetId();
+            await _commentService.DelAsync(id, authorId);
+
+            return NoContent();
         }
     }
 }
