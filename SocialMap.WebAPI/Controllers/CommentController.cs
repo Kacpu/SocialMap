@@ -25,12 +25,14 @@ namespace SocialMap.WebAPI.Controllers
         [Authorize]
         public async Task<IActionResult> AddComment([FromBody] CreateComment comment)
         {
-            if (comment == null || string.IsNullOrEmpty(comment.Content) || comment.POIId == 0)
+            if (comment == null || string.IsNullOrEmpty(comment.Content) || comment.PoiId == 0)
             {
                 return BadRequest();
             }
 
-            var c = await _commentService.AddAsync(comment, User.GetId());
+            comment.CreatorId = User.GetId();
+
+            var c = await _commentService.AddAsync(comment);
 
             return CreatedAtAction(nameof(GetComment), new { id = c.Id }, c);
         }
@@ -45,8 +47,13 @@ namespace SocialMap.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllComments(int? userId, int? poiId)
         {
-            IEnumerable<CommentDTO> c = await _commentService.GetAllAsync(userId, poiId);
-            return Json(c);
+            if (userId != null && userId != User.GetId() && !User.IsAdmin() && !User.IsMod())
+            {
+                return Forbid();
+            }
+
+            IEnumerable<CommentDTO> cs = await _commentService.GetAllAsync(userId, poiId);
+            return Json(cs);
         }
 
         [HttpPut("{id}")]

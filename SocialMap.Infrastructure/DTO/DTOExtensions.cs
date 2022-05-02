@@ -14,8 +14,8 @@ namespace SocialMap.Infrastructure.DTO
         {
             return new AppUser()
             {
-                UserfrontId = createAppUser.Record.UserUuid,
-                UserName = createAppUser.Record.Name
+                UserfrontId = createAppUser.Record?.UserUuid,
+                UserName = createAppUser.Record?.Name
             };
         }
 
@@ -29,11 +29,29 @@ namespace SocialMap.Infrastructure.DTO
             };
         }
 
+        public static Category ToDomain(this CreateCategory c)
+        {
+            return new Category()
+            {
+                Name = c.Name
+            };
+        }
+
+        public static CategoryDTO ToDTO(this Category c)
+        {
+            return new CategoryDTO()
+            {
+                Id = c.Id,
+                Name = c.Name
+            };
+        }
+
         public static Comment ToDomain(this CreateComment createComment)
         {
             return new Comment()
             {
-                POIId = createComment.POIId,
+                AppUserId = createComment.CreatorId,
+                POIId = createComment.PoiId,
                 Content = createComment.Content
             };
         }
@@ -103,12 +121,22 @@ namespace SocialMap.Infrastructure.DTO
             };
         }
 
-        public static CategoryDTO ToDTO(this Category c)
+        public static Like ToDomain(this CreateLike l)
         {
-            return new CategoryDTO()
+            return new Like()
             {
-                Id = c.Id,
-                Name = c.Name
+                AppUserId = l.AppUserId,
+                POIId = l.PoiId
+            };
+        }
+
+        public static LikeDTO ToDTO(this Like l)
+        {
+            return new LikeDTO()
+            {
+                Id = l.Id,
+                PoiId = l.POIId,
+                AppUserId = l.AppUserId
             };
         }
     }

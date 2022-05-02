@@ -19,52 +19,27 @@ namespace SocialMap.Infrastructure.Repositories
 
         public async Task<AppUser> AddAsync(AppUser user)
         {
-            try
-            {
-                _appDbContext.AppUsers.Add(user);
-                await _appDbContext.SaveChangesAsync();
-                return await Task.FromResult(user);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            _appDbContext.AppUsers.Add(user);
+            await _appDbContext.SaveChangesAsync();
+            return await Task.FromResult(user);
         }
 
         public async Task<AppUser> GetAsync(int id)
         {
-            try
-            {
-                return await Task.FromResult(await _appDbContext.AppUsers.FirstOrDefaultAsync(x => x.Id == id));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            var u = await _appDbContext.AppUsers.FirstOrDefaultAsync(x => x.Id == id);
+            return await Task.FromResult(u);
         }
 
         public async Task<AppUser> GetByUuidAsync(string uuid)
         {
-            try
-            {
-                return await Task.FromResult(await _appDbContext.AppUsers.FirstOrDefaultAsync(x => x.UserfrontId == uuid));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            var u = await _appDbContext.AppUsers.FirstOrDefaultAsync(x => x.UserfrontId == uuid);
+            return await Task.FromResult(u);
         }
 
         public async Task<IEnumerable<AppUser>> GetAllAsync()
         {
-            try
-            {
-                return await Task.FromResult(_appDbContext.AppUsers.AsEnumerable());
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            var us = _appDbContext.AppUsers;
+            return await Task.FromResult(us);
         }
     }
 }

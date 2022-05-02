@@ -104,12 +104,12 @@ namespace SocialMap.Infrastructure.Services
                 throw new NotFoundException("poi access not found");
             }
 
-            if (pa.AppUserId != authUserId && pa.POI.AppUserId != authUserId)
+            if (pa.AppUserId != authUserId && pa.POI?.AppUserId != authUserId)
             {
                 throw new ForbidException("you do not have permission to delete this poi access");
             }
 
-            await _poiAccessRepository.DelAsync(id);
+            await _poiAccessRepository.DelAsync(pa.Id);
         }
     }
 }

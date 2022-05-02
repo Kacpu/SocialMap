@@ -11,8 +11,7 @@ namespace SocialMap.Core.Repositories
     {
         Task<Like> AddAsync(Like like);
         Task<Like> GetAsync(int id);
-        Task<IEnumerable<Like>> BrowseAllAsync();
-        //Task UpdateAsync(Like like);
-        Task DelAsync(Like like);
+        Task<IEnumerable<Like>> BrowseAllAsync(int? userId = null, int? poiId = null);
+        Task DelAsync(int id);
     }
 }

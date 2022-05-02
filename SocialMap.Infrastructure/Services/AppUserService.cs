@@ -22,6 +22,12 @@ namespace SocialMap.Infrastructure.Services
 
         public async Task<AppUserDTO> AddAsync(CreateAppUser createUser)
         {
+            var check_u = await _appUserRepository.GetByUuidAsync(createUser.Record?.UserUuid);
+            if (check_u != null)
+            {
+                throw new BadRequestException("such app user already exists");
+            }
+
             var u = createUser.ToDomain();
             u = await _appUserRepository.AddAsync(u);
             return await Task.FromResult(u.ToDTO());
@@ -32,7 +38,9 @@ namespace SocialMap.Infrastructure.Services
             var u = await _appUserRepository.GetAsync(id);
 
             if (u is null)
+            {
                 throw new NotFoundException("user not found");
+            }
 
             return await Task.FromResult(u.ToDTO());
         }
@@ -42,7 +50,9 @@ namespace SocialMap.Infrastructure.Services
             var u = await _appUserRepository.GetByUuidAsync(uuid);
 
             if (u is null)
+            {
                 throw new NotFoundException("user not found");
+            }
 
             return await Task.FromResult(u.ToDTO());
         }
@@ -50,6 +60,7 @@ namespace SocialMap.Infrastructure.Services
         public async Task<IEnumerable<AppUserDTO>> GetAllAsync()
         {
             var users = await _appUserRepository.GetAllAsync();
+
             return await Task.FromResult(users.Select(u => u.ToDTO()));
         }
     }

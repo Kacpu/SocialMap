@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
 using SocialMap.Infrastructure.Services;
+using SocialMap.WebAPI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,25 +22,17 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddLike([FromBody] CreateLike like)
         {
-            if (like == null)
+            if (like == null || like.PoiId == 0)
             {
                 return BadRequest();
             }
 
-            LikeDTO likeDTO = new LikeDTO()
-            {
-                POIId = like.POIId,
-                AppUserId = like.AppUserId
-            };
+            like.AppUserId = User.GetId();
 
-            var l = await _likeService.AddAsync(likeDTO);
-
-            if (l == null)
-            {
-                return BadRequest();
-            }
+            var l = await _likeService.AddAsync(like);
 
             return CreatedAtAction(nameof(GetLike), new { id = l.Id }, l);
         }
@@ -48,42 +41,37 @@ namespace SocialMap.WebAPI.Controllers
         [Authorize]
         public async Task<IActionResult> GetLike(int id)
         {
-            LikeDTO likeDTO = await _likeService.GetAsync(id);
+            LikeDTO l = await _likeService.GetAsync(id);
 
-            if (likeDTO == null)
+            if (l.AppUserId != User.GetId() && !User.IsAdmin() && !User.IsMod())
             {
-                return NotFound();
+                return Forbid();
             }
 
-            return Json(likeDTO);
+            return Json(l);
         }
 
         [HttpGet]
-        public async Task<IActionResult> BrowseAllLikes()
+        [Authorize]
+        public async Task<IActionResult> BrowseAllLikes(int? userId, int? poiId)
         {
-            IEnumerable<LikeDTO> likesDTO = await _likeService.BrowseAllAsync();
-
-            if (likesDTO == null)
+            if(userId != null && userId != User.GetId() && !User.IsAdmin() && !User.IsMod())
             {
-                return NotFound();
+                return Forbid();
             }
 
-            return Json(likesDTO);
+            IEnumerable<LikeDTO> ls = await _likeService.BrowseAllAsync(userId, poiId);
+            return Json(ls);
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteLike(int id)
         {
-            LikeDTO likeDTO = await _likeService.GetAsync(id);
+            int? authorId = User.IsAdmin() || User.IsMod() ? null : User.GetId();
+            await _likeService.DelAsync(id, authorId);
 
-            if (likeDTO == null)
-            {
-                return NotFound();
-            }
-
-            await _likeService.DelAsync(likeDTO);
-
-            return Ok();
+            return NoContent();
         }
     }
 }

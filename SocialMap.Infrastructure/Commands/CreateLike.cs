@@ -8,7 +8,7 @@ namespace SocialMap.Infrastructure.Commands
 {
     public class CreateLike
     {
-        public string AppUserId { get; set; }
-        public int POIId { get; set; }
+        public int AppUserId { get; set; }
+        public int PoiId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SocialMap.Core.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
 using System;
 using System.Collections.Generic;
@@ -19,48 +20,39 @@ namespace SocialMap.Infrastructure.Repositories
 
         public async Task<Like> AddAsync(Like like)
         {
-            foreach(var l in _appDbContext.Likes)
-            {
-                //if(l.AppUserId == like.AppUserId && l.POIId == like.POIId)
-                //{
-                //    return null;
-                //}
-            }
-
-            try
-            {
-                _appDbContext.Likes.Add(like);
-                _appDbContext.SaveChanges();
-                return await Task.FromResult(like);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            _appDbContext.Likes.Add(like);
+            await _appDbContext.SaveChangesAsync();
+            return await Task.FromResult(like);
         }
 
         public async Task<Like> GetAsync(int id)
         {
-            return await Task.FromResult(_appDbContext.Likes.FirstOrDefault(l => l.Id == id));
+            var l = await _appDbContext.Likes.FirstOrDefaultAsync(l => l.Id == id);
+            return await Task.FromResult(l);
         }
 
-        public async Task<IEnumerable<Like>> BrowseAllAsync()
+        public async Task<IEnumerable<Like>> BrowseAllAsync(int? userId, int? poiId)
         {
-            return await Task.FromResult(_appDbContext.Likes);
+            var ls = _appDbContext.Likes.AsQueryable();
+
+            if(userId != null)
+            {
+                ls = ls.Where(l => l.AppUserId == userId);
+            }
+
+            if (poiId != null)
+            {
+                ls = ls.Where(l => l.POIId == poiId);
+            }
+
+            return await Task.FromResult(ls);
         }
 
-        public async Task DelAsync(Like like)
+        public async Task DelAsync(int id)
         {
-            try
-            {
-                _appDbContext.Remove(_appDbContext.Likes.FirstOrDefault(l => l.Id == like.Id));
-                _appDbContext.SaveChanges();
-                await Task.CompletedTask;
-            }
-            catch (Exception ex)
-            {
-                await Task.FromException(ex);
-            }
+            var l = await _appDbContext.Likes.FirstOrDefaultAsync(l => l.Id == id);
+            _appDbContext.Remove(l);
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

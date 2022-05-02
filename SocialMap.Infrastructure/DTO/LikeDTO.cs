@@ -9,7 +9,7 @@ namespace SocialMap.Infrastructure.DTO
     public class LikeDTO
     {
         public int Id { get; set; }
-        public string AppUserId { get; set; }
-        public int POIId { get; set; }
+        public int AppUserId { get; set; }
+        public int PoiId { get; set; }
     }
 }

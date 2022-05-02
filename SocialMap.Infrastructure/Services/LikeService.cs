@@ -1,6 +1,8 @@
 ﻿using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
+using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
+using SocialMap.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +14,36 @@ namespace SocialMap.Infrastructure.Services
     public class LikeService : ILikeService
     {
         private readonly ILikeRepository _likeRepository;
+        private readonly IPOIRepository _poiRepository;
 
-        public LikeService(ILikeRepository likeRepository)
+        public LikeService(ILikeRepository likeRepository, IPOIRepository poiRepository)
         {
             _likeRepository = likeRepository;
+            _poiRepository = poiRepository;
         }
 
-        public async Task<LikeDTO> AddAsync(LikeDTO like)
+        public async Task<LikeDTO> AddAsync(CreateLike createLike)
         {
-            var l = await _likeRepository.AddAsync(ToDomain(like));
-            return l != null ? ToDTO(l) : null;
+            var poi = await _poiRepository.GetAsync(createLike.PoiId);
+
+            if (poi is null)
+            {
+                throw new BadRequestException("liked poi not found");
+            }
+
+            if(poi.AppUserId == createLike.AppUserId)
+            {
+                throw new BadRequestException("issuer can not be liked poi creator");
+            }
+
+            var check_l = await _likeRepository.BrowseAllAsync(createLike.AppUserId, createLike.PoiId);
+            if (check_l.Any())
+            {
+                throw new BadRequestException("such like already exists");
+            }
+
+            var l = await _likeRepository.AddAsync(createLike.ToDomain());
+            return await Task.FromResult(l.ToDTO());
         }
 
         public async Task<LikeDTO> GetAsync(int id)
@@ -30,50 +52,34 @@ namespace SocialMap.Infrastructure.Services
 
             if (like == null)
             {
-                return null;
+                throw new NotFoundException("like not found");
             }
 
-            return ToDTO(like);
+            return await Task.FromResult(like.ToDTO());
         }
 
-        public async Task<IEnumerable<LikeDTO>> BrowseAllAsync()
+        public async Task<IEnumerable<LikeDTO>> BrowseAllAsync(int? userId, int? poiId)
         {
-            var likes = await _likeRepository.BrowseAllAsync();
+            var likes = await _likeRepository.BrowseAllAsync(userId, poiId);
 
-            if (likes == null)
+            return await Task.FromResult(likes.Select(x => x.ToDTO()));
+        }
+
+        public async Task DelAsync(int id, int? authId)
+        {
+            var l = await _likeRepository.GetAsync(id);
+
+            if (l is null)
             {
-                return null;
+                throw new NotFoundException("like not found");
             }
 
-            return likes.Select(c => ToDTO(c));
-        }
-
-        public async Task DelAsync(LikeDTO like)
-        {
-            if (like != null)
+            if (authId != null && l.AppUserId != authId)
             {
-                await _likeRepository.DelAsync(ToDomain(like));
+                throw new ForbidException("you do not have permission to delete this like");
             }
-        }
 
-        private LikeDTO ToDTO(Like l)
-        {
-            return new LikeDTO()
-            {
-                Id = l.Id,
-                POIId = l.POIId,
-                //AppUserId = l.AppUserId,
-            };
-        }
-
-        private Like ToDomain(LikeDTO lDTO)
-        {
-            return new Like()
-            {
-                Id = lDTO.Id,
-                POIId = lDTO.POIId,
-                //AppUserId = lDTO.AppUserId
-            };
+            await _likeRepository.DelAsync(l.Id);
         }
     }
 }

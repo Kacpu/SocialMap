@@ -22,18 +22,16 @@ namespace SocialMap.Infrastructure.Services
             _poiRepository = poiRepository;
         }
 
-        public async Task<CommentDTO> AddAsync(CreateComment createComment, int authorId)
+        public async Task<CommentDTO> AddAsync(CreateComment createComment)
         {
-            var poi = await _poiRepository.GetAsync(createComment.POIId);
+            var poi = await _poiRepository.GetAsync(createComment.PoiId);
 
             if (poi is null)
             {
                 throw new BadRequestException("commented poi not found");
             }
 
-            var c = createComment.ToDomain();
-            c.AppUserId = authorId;
-            c = await _commentRepository.AddAsync(c);
+            var c = await _commentRepository.AddAsync(createComment.ToDomain());
             return await Task.FromResult(c.ToDTO());
         }
 
@@ -42,7 +40,9 @@ namespace SocialMap.Infrastructure.Services
             var c = await _commentRepository.GetAsync(id);
 
             if (c is null)
+            {
                 throw new NotFoundException("comment not found");
+            }
 
             return await Task.FromResult(c.ToDTO());
         }
@@ -59,10 +59,14 @@ namespace SocialMap.Infrastructure.Services
             var c = await _commentRepository.GetAsync(id);
 
             if (c is null)
+            {
                 throw new NotFoundException("comment not found");
+            }
 
             if (authorId != null && c.AppUserId != authorId)
+            {
                 throw new ForbidException("you do not have permission to change this comment");
+            }
 
             c.Content = updateComment.Content;
 
@@ -75,10 +79,14 @@ namespace SocialMap.Infrastructure.Services
             var c = await _commentRepository.GetAsync(id);
 
             if (c is null)
-                throw new NotFoundException("comment does not exist");
+            {
+                throw new NotFoundException("comment not found");
+            }
 
             if (authorId != null && c.AppUserId != authorId)
+            {
                 throw new ForbidException("you do not have permission to delete this comment");
+            }
 
             await _commentRepository.DelAsync(c.Id);
         }

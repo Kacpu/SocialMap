@@ -1,4 +1,5 @@
-﻿using SocialMap.Infrastructure.DTO;
+﻿using SocialMap.Infrastructure.Commands;
+using SocialMap.Infrastructure.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,9 @@ namespace SocialMap.Infrastructure.Services
 {
     public interface ILikeService
     {
-        Task<LikeDTO> AddAsync(LikeDTO like);
+        Task<LikeDTO> AddAsync(CreateLike like);
         Task<LikeDTO> GetAsync(int id);
-        Task<IEnumerable<LikeDTO>> BrowseAllAsync();
-        //Task UpdateAsync(LikeDTO like);
-        Task DelAsync(LikeDTO like);
+        Task<IEnumerable<LikeDTO>> BrowseAllAsync(int? userId = null, int? poiId = null);
+        Task DelAsync(int id, int? authId = null);
     }
 }

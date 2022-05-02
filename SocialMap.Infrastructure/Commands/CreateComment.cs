@@ -9,7 +9,8 @@ namespace SocialMap.Infrastructure.Commands
 {
     public class CreateComment
     {
+        public int CreatorId { get; set; }
+        public int PoiId { get; set; }
         public string Content { get; set; }
-        public int POIId { get; set; }
     }
 }

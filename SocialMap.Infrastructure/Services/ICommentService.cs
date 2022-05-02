@@ -10,7 +10,7 @@ namespace SocialMap.Infrastructure.Services
 {
     public interface ICommentService
     {
-        Task<CommentDTO> AddAsync(CreateComment comment, int authorId);
+        Task<CommentDTO> AddAsync(CreateComment comment);
         Task<CommentDTO> GetAsync(int id);
         Task<IEnumerable<CommentDTO>> GetAllAsync(int? userId = null, int? poiId = null);
         Task<CommentDTO> UpdateAsync(int id, UpdateComment comment, int? authorId = null);
