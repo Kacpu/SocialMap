@@ -13,7 +13,7 @@ namespace SocialMap.Infrastructure.Services
 
         Task<POIAccessDTO> AddAsync(CreatePOIAccess poiAccess, int issuerId);
         Task<POIAccessDTO> GetAsync(int id);
-        Task<IEnumerable<POIAccessDTO>> GetAllAsync(int? invitedUserId, int? poiId, int? issuerId, bool? isAccepted, int authUserId);
+        Task<IEnumerable<POIAccessDTO>> GetAllAsync(int? invitedUserId = null, int? poiId = null, int? issuerId = null, bool? isAccepted = null);
         Task<POIAccessDTO> UpdateAsync(int id, UpdatePOIAccess updatePOIAccess, int authUserId);
         Task DelAsync(int id, int authUserId);
     }

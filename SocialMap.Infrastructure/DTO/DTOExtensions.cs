@@ -73,11 +73,42 @@ namespace SocialMap.Infrastructure.DTO
             };
         }
 
-        public static POIDTO ToDTO(this POI poi)
+        public static POI ToDomain(this CreatePOI p)
+        {
+            return new POI()
+            {
+                Name = p.Name,
+                X = p.X,
+                Y = p.Y,
+                Description = p.Description,
+                IsGlobal = p.IsGlobal,
+            };
+        }
+
+        public static POIDTO ToDTO(this POI p)
         {
             return new POIDTO()
             {
-                Id = poi.Id
+                Id = p.Id,
+                Name = p.Name,
+                X = p.X,
+                Y = p.Y,
+                Description = p.Description,
+                IsGlobal = p.IsGlobal,
+                IsAccepted = p.IsAccepted,
+                CreatorId = p.AppUserId,
+                CreatorName = p.AppUser?.UserName,
+                LikesNumber = p.Likes?.Count ?? 0,
+                CategoryDTOs = p.Categories?.Select(c => c.ToDTO())
+            };
+        }
+
+        public static CategoryDTO ToDTO(this Category c)
+        {
+            return new CategoryDTO()
+            {
+                Id = c.Id,
+                Name = c.Name
             };
         }
     }

@@ -72,17 +72,9 @@ namespace SocialMap.Infrastructure.Services
             return await Task.FromResult(pa.ToDTO());
         }
 
-        public async Task<IEnumerable<POIAccessDTO>> GetAllAsync(int? invitedUserId, int? poiId, int? issuerId, bool? isAccepted, int authUserId)
+        public async Task<IEnumerable<POIAccessDTO>> GetAllAsync(int? invitedUserId, int? poiId, int? issuerId, bool? isAccepted)
         {
             var pas = await _poiAccessRepository.BrowseAllAsync(invitedUserId, poiId, issuerId, isAccepted);
-            
-            foreach(var pa in pas)
-            {
-                if(authUserId != pa.AppUserId && authUserId != pa.POI.AppUserId)
-                {
-                    throw new ForbidException("you have no permission to get these poi accesses");
-                }
-            }
 
             return await Task.FromResult(pas.Select(c => c.ToDTO()));
         }
@@ -94,7 +86,7 @@ namespace SocialMap.Infrastructure.Services
             if (pa is null)
                 throw new NotFoundException("poi access not found");
 
-            if (pa.AppUserId != authUserId && pa.POI.AppUserId != authUserId)
+            if (pa.AppUserId != authUserId && pa.POI?.AppUserId != authUserId)
                 throw new ForbidException("you do not have permission to change this poi access");
 
             pa.IsAccepted = updatePOIAccess.IsAccepted ?? pa.IsAccepted;

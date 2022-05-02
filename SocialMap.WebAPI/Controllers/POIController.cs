@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
 using SocialMap.Infrastructure.Services;
+using SocialMap.WebAPI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,38 +14,25 @@ namespace SocialMap.WebAPI.Controllers
     [Route("[Controller]")]
     public class POIController : Controller
     {
-        private readonly IPOIService _POIService;
+        private readonly IPOIService _poiService;
+        private readonly IPOIAccessService _poiAccessService;
 
-        public POIController(IPOIService POIService)
+        public POIController(IPOIService poiService, IPOIAccessService poiAccessService)
         {
-            _POIService = POIService;
+            _poiService = poiService;
+            _poiAccessService = poiAccessService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPOI([FromBody] CreatePOI poi)
+        [Authorize]
+        public async Task<IActionResult> AddPOI([FromBody] CreatePOI createPoi)
         {
-            if (poi == null)
+            if (createPoi == null || string.IsNullOrEmpty(createPoi.Name) || createPoi.X == 0 || createPoi.Y == 0)
             {
                 return BadRequest();
             }
-
-            POIDTO poiDTO = new POIDTO()
-            {
-                Name = poi.Name,
-                X = poi.X,
-                Y = poi.Y,
-                Description = poi.Description,
-                IsGlobal = poi.IsGlobal,
-                AppUserId = poi.AppUserId,
-                CategoryId = poi.CategoryId
-            };
-
-            var p = await _POIService.AddAsync(poiDTO);
-
-            if (p == null)
-            {
-                return BadRequest();
-            }
+           
+            var p = await _poiService.AddAsync(createPoi, User.GetId());
 
             return CreatedAtAction(nameof(GetPOI), new { id = p.Id }, p);
         }
@@ -51,69 +40,64 @@ namespace SocialMap.WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPOI(int id)
         {
-            POIDTO poiDTO = await _POIService.GetAsync(id);
+            POIDTO p = await _poiService.GetAsync(id);
 
-            if (poiDTO == null)
+            if((!p.IsGlobal || !p.IsAccepted) && (!User.IsAdmin() && !User.IsMod()) && p.CreatorId != User.GetId())
             {
-                return NotFound();
+                var perm = await _poiAccessService.GetAllAsync(poiId: p.Id, invitedUserId: User.GetId());
+                if (!perm.Any())
+                {
+                    return Forbid();
+                }
             }
 
-            return Json(poiDTO);
+            return Json(p);
         }
 
         [HttpGet]
-        public async Task<IActionResult> BrowseAllPOI()
+        public async Task<IActionResult> BrowseAllPOI(int? creatorId, bool? isGlobal, bool? isAccepted)
         {
-            IEnumerable<POIDTO> poisDTO = await _POIService.BrowseAllAsync();
+            IEnumerable<POIDTO> poisDTO;
 
-            if (poisDTO == null)
+            if (User.IsAdmin() || User.IsMod())
             {
-                return NotFound();
+                poisDTO = await _poiService.BrowseAllAsync(creatorId, isGlobal, isAccepted);
+            }
+            else if (User.Identity.IsAuthenticated)
+            {
+                poisDTO = await _poiService.GetAllForUserAsync(User.GetId());
+            }
+            else
+            {
+                poisDTO = await _poiService.BrowseAllAsync(IsGlobal: true, IsAccepted: true);
             }
 
             return Json(poisDTO);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePOI(int id)
-        {
-            POIDTO poiDTO = await _POIService.GetAsync(id);
-
-            if (poiDTO == null)
-            {
-                return NotFound();
-            }
-
-            await _POIService.DelAsync(poiDTO.Id);
-
-            return Ok();
-        }
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePOI([FromBody] UpdatePOI poi, int id)
+        [Authorize]
+        public async Task<IActionResult> UpdatePOI([FromBody] UpdatePOI updatePoi, int id)
         {
-            POIDTO poiDTO = await _POIService.GetAsync(id);
-
-            if (poiDTO == null)
-            {
-                return NotFound();
-            }
-
-            if (poi == null)
+            if (updatePoi == null)
             {
                 return BadRequest();
             }
 
-            poiDTO.Name = poi.Name ?? poiDTO.Name;
-            poiDTO.X = poi.X;
-            poiDTO.Y = poi.Y;
-            poiDTO.Description = poi.Description ?? poiDTO.Description;
-            poiDTO.IsGlobal = poi.IsGlobal;
-            poiDTO.CategoryId = poi.CategoryId;
+            int? authorId = User.IsAdmin() || User.IsMod() ? null : User.GetId();
+            var p = await _poiService.UpdateAsync(id, updatePoi, authorId);
 
-            await _POIService.UpdateAsync(poiDTO);
+            return Json(p);
+        }
 
-            return Json(poiDTO);
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeletePOI(int id)
+        {
+            int? authorId = User.IsAdmin() || User.IsMod() ? null : User.GetId();
+            await _poiService.DelAsync(id, authorId);
+
+            return NoContent();
         }
     }
 }

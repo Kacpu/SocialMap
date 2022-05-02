@@ -28,7 +28,7 @@ namespace SocialMap.Infrastructure.Services
 
             if (poi is null)
             {
-                throw new BadRequestException("commented poi does not found");
+                throw new BadRequestException("commented poi not found");
             }
 
             var c = createComment.ToDomain();
@@ -59,7 +59,7 @@ namespace SocialMap.Infrastructure.Services
             var c = await _commentRepository.GetAsync(id);
 
             if (c is null)
-                throw new NotFoundException("comment does not exist");
+                throw new NotFoundException("comment not found");
 
             if (authorId != null && c.AppUserId != authorId)
                 throw new ForbidException("you do not have permission to change this comment");

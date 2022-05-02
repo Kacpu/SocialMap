@@ -12,6 +12,7 @@ namespace SocialMap.Core.Repositories
         Task<Category> AddAsync(Category category);
         Task<Category> GetAsync(int id);
         Task<IEnumerable<Category>> BrowseAllAsync();
+        Task<IEnumerable<Category>> GetByIdsAsync(List<int> ids);
         Task UpdateAsync(Category category);
         Task DelAsync(int id);
     }

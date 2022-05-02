@@ -44,6 +44,8 @@ namespace SocialMap.Infrastructure.Repositories
             }
         }
 
+       
+
         public async Task<IEnumerable<Category>> BrowseAllAsync()
         {
             try
@@ -53,6 +55,19 @@ namespace SocialMap.Infrastructure.Repositories
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        public async Task<IEnumerable<Category>> GetByIdsAsync(List<int> ids)
+        {
+            if(ids != null)
+            {
+                var c = _appDbContext.Category.Where(c => ids.Any(id => id == c.Id));
+                return await Task.FromResult(c);
+            }
+            else
+            {
+                return await Task.FromResult(new List<Category>());
             }
         }
 

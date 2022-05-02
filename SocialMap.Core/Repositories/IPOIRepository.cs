@@ -11,8 +11,9 @@ namespace SocialMap.Core.Repositories
     {
         Task<POI> AddAsync(POI poi);
         Task<POI> GetAsync(int id);
-        Task<IEnumerable<POI>> BrowseAllAsync();
-        Task UpdateAsync(POI poi);
+        Task<IEnumerable<POI>> BrowseAllAsync(int? creatorId = null, bool? IsGlobal = null, bool? IsAccepted = null);
+        Task<IEnumerable<POI>> GetAllAccessedAsync(int userId);
+        Task UpdateAsync();
         Task DelAsync(int id);
     }
 }

@@ -2,6 +2,7 @@
 using SocialMap.Core.Repositories;
 using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
+using SocialMap.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,85 +13,105 @@ namespace SocialMap.Infrastructure.Services
 {
     public class POIService : IPOIService
     {
-        private readonly IPOIRepository _POIRepository;
+        private readonly IPOIRepository _poiRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public POIService(IPOIRepository POIRepository)
+        public POIService(IPOIRepository poiRepository, ICategoryRepository categoryRepository)
         {
-            _POIRepository = POIRepository;
+            _poiRepository = poiRepository;
+            _categoryRepository = categoryRepository;
         }
 
-        private POIDTO ToDTO(POI p)
+        public async Task<POIDTO> AddAsync(CreatePOI createPOI, int creatorId)
         {
-            ICollection<LikeDTO> likesDTO = new List<LikeDTO>();
-            if (p.Likes != null)
-            {
-                foreach (Like l in p.Likes)
-                {
-                    likesDTO.Add(new LikeDTO()
-                    {
-                        Id = l.Id,
-                        //AppUserId = l.AppUserId,
-                        POIId = l.POIId
-                    });
-                }
-            }
+            var p = createPOI.ToDomain();
 
-            return new POIDTO()
-            {
-                Id = p.Id,
-                Name = p.Name,
-                X = p.X,
-                Y = p.Y,
-                Description = p.Description,
-                IsGlobal = p.IsGlobal,
-                //AppUserId = p.AppUserId,
-                //CategoryId = p.CategoryId,
-                Likes = likesDTO
-            };
-        }
+            p.AppUserId = creatorId;
 
-        private POI ToDomain(POIDTO p)
-        {
-            return new POI()
-            {
-                Id = p.Id,
-                Name = p.Name,
-                X = p.X,
-                Y = p.Y,
-                Description = p.Description,
-                IsGlobal = p.IsGlobal,
-                //AppUserId = p.AppUserId,
-                CategoryId = p.CategoryId
-            };
-        }
+            var cs = await _categoryRepository.GetByIdsAsync(createPOI.CategoriesId);
+            p.Categories = cs.ToList();
 
-        public async Task<POIDTO> AddAsync(POIDTO poi)
-        {
-            var z = await _POIRepository.AddAsync(ToDomain(poi));
-            return z != null ? await Task.FromResult(ToDTO(z)) : null;
+            p = await _poiRepository.AddAsync(p);
+            return await Task.FromResult(p.ToDTO());
         }
 
         public async Task<POIDTO> GetAsync(int id)
         {
-            var z = await _POIRepository.GetAsync(id);
-            return z != null ? await Task.FromResult(ToDTO(z)) : null;
+            var p = await _poiRepository.GetAsync(id);
+
+            if (p is null)
+            {
+                throw new NotFoundException("poi not found");
+            }
+
+            return await Task.FromResult(p.ToDTO());
         }
 
-        public async Task<IEnumerable<POIDTO>> BrowseAllAsync()
+        public async Task<IEnumerable<POIDTO>> BrowseAllAsync(int? creatorId, bool? IsGlobal, bool? IsAccepted)
         {
-            var z = await _POIRepository.BrowseAllAsync();
-            return z != null ? z.Select(x => ToDTO(x)) : null;
+            var ps = await _poiRepository.BrowseAllAsync(creatorId, IsGlobal, IsAccepted);
+
+            return await Task.FromResult(ps.Select(x => x.ToDTO()));
         }
 
-        public async Task DelAsync(int id)
+        public async Task<IEnumerable<POIDTO>> GetAllForUserAsync(int userId)
         {
-            await _POIRepository.DelAsync(id);
+            var ps = await _poiRepository.BrowseAllAsync();
+            ps = ps.Where(x => x.AppUserId == userId || (x.IsGlobal == true && x.IsAccepted == true));
+
+            var aps = await _poiRepository.GetAllAccessedAsync(userId);
+
+            ps = ps.Union(aps);
+
+            return await Task.FromResult(ps.Select(x => x.ToDTO()));
         }
 
-        public async Task UpdateAsync(POIDTO poi)
+        public async Task<POIDTO> UpdateAsync(int id, UpdatePOI updatePoi, int? authId)
         {
-            await _POIRepository.UpdateAsync(ToDomain(poi));
+            var p = await _poiRepository.GetAsync(id);
+
+            if(p is null)
+            {
+                throw new NotFoundException("poi not found");
+            }
+
+            if (authId != null && p.AppUserId != authId)
+            {
+                throw new ForbidException("you do not have permission to change this poi");
+            }
+
+            p.Name = !string.IsNullOrEmpty(updatePoi.Name) ? updatePoi.Name : p.Name;
+            p.X = updatePoi.X ?? p.X;
+            p.Y = updatePoi.Y ?? p.Y;
+            p.Description = !string.IsNullOrEmpty(updatePoi.Description) ? updatePoi.Description : p.Description;
+            p.IsGlobal = updatePoi.IsGlobal ?? p.IsGlobal;
+            p.IsAccepted = updatePoi.IsAccepted ?? p.IsAccepted;
+
+            if (updatePoi.CategoriesId != null)
+            {
+                var cs = await _categoryRepository.GetByIdsAsync(updatePoi.CategoriesId);
+                p.Categories = cs.ToList();
+            }
+
+            await _poiRepository.UpdateAsync();
+            return await Task.FromResult(p.ToDTO());
+        }
+
+        public async Task DelAsync(int id, int? authId)
+        {
+            var p = await _poiRepository.GetAsync(id);
+
+            if (p is null)
+            {
+                throw new NotFoundException("poi not found");
+            }
+
+            if (authId != null && p.AppUserId != authId)
+            {
+                throw new ForbidException("you do not have permission to delete this poi");
+            }
+
+            await _poiRepository.DelAsync(p.Id);
         }
     }
 }
-

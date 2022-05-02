@@ -11,7 +11,7 @@ namespace SocialMap.Infrastructure.Repositories
 {
     public class POIRepository : IPOIRepository
     {
-        private AppDbContext _appDbContext;
+        private readonly AppDbContext _appDbContext;
 
         public POIRepository(AppDbContext appDbContext)
         {
@@ -20,71 +20,63 @@ namespace SocialMap.Infrastructure.Repositories
 
         public async Task<POI> AddAsync(POI poi)
         {
-            try
-            {
-                _appDbContext.POI.Add(poi);
-                _appDbContext.SaveChanges();
-                return await Task.FromResult(_appDbContext.POI.FirstOrDefault(x => x.Id == poi.Id));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            _appDbContext.POI.Add(poi);
+            await _appDbContext.SaveChangesAsync();
+
+            var rp = await _appDbContext.POI.Include(x => x.AppUser).Include(x => x.Categories).FirstOrDefaultAsync(x => x.Id == poi.Id);
+            return await Task.FromResult(rp);
         }
 
         public async Task<POI> GetAsync(int id)
         {
-            try
-            {
-                return await Task.FromResult(_appDbContext.POI.Include(x => x.Likes).FirstOrDefault(x => x.Id == id));
+            var p = await _appDbContext.POI.Include(x => x.AppUser).Include(x => x.Categories).Include(x => x.Likes)
+                .AsSplitQuery().FirstOrDefaultAsync(x => x.Id == id);
 
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return await Task.FromResult(p);
         }
 
-        public async Task<IEnumerable<POI>> BrowseAllAsync()
+        public async Task<IEnumerable<POI>> BrowseAllAsync(int? creatorId, bool? isGlobal, bool? isAccepted)
         {
-            return await Task.FromResult(_appDbContext.POI.Include(x => x.Likes));
+            var p = _appDbContext.POI.AsQueryable();
+
+            if(creatorId != null)
+            {
+                p = p.Where(x => x.AppUserId == creatorId);
+            }
+
+            if(isGlobal != null)
+            {
+                p = p.Where(x => x.IsGlobal == isGlobal);
+            }
+
+            if (isAccepted != null)
+            {
+                p = p.Where(x => x.IsAccepted == isAccepted);
+            }
+
+            p = p.Include(x => x.Categories);
+
+            return await Task.FromResult(p);
         }
 
-        public async Task UpdateAsync(POI poi)
+        public async Task<IEnumerable<POI>> GetAllAccessedAsync(int userId)
         {
-            try
-            {
-                var z = _appDbContext.POI.FirstOrDefault(x => x.Id == poi.Id);
+            var pas = _appDbContext.POIAccess.Where(x => x.AppUserId == userId);
+            var pois = _appDbContext.POI.Where(p => pas.Any(pa => pa.POIId == p.Id)).Include(x => x.Categories);
 
-                z.Name = poi.Name;
-                z.X = poi.X;
-                z.Y = poi.Y;
-                z.Description = poi.Description;
-                z.IsGlobal = poi.IsGlobal;
-                z.CategoryId = poi.CategoryId;
+            return await Task.FromResult(pois);
+        }
 
-                _appDbContext.SaveChanges();
-                await Task.CompletedTask;
-            }
-            catch (Exception)
-            {
-                return;
-                //await Task.FromException(ex);
-            }
+        public async Task UpdateAsync()
+        {
+            await _appDbContext.SaveChangesAsync();
         }
 
         public async Task DelAsync(int id)
         {
-            try
-            {
-                _appDbContext.Remove(_appDbContext.POI.FirstOrDefault(x => x.Id == id));
-                _appDbContext.SaveChanges();
-                await Task.CompletedTask;
-            }
-            catch (Exception ex)
-            {
-                await Task.FromException(ex);
-            }
+            var p = await _appDbContext.POI.FirstOrDefaultAsync(x => x.Id == id);
+            _appDbContext.Remove(p);
+            await _appDbContext.SaveChangesAsync();
         }
     }
 }

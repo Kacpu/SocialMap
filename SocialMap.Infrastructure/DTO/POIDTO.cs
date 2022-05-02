@@ -14,15 +14,14 @@ namespace SocialMap.Infrastructure.DTO
         public double Y { get; set; }
         public string Description { get; set; }
 
-        public bool IsGlobal { get; set; } = false;
+        public bool IsGlobal { get; set; }
+        public bool IsAccepted { get; set; }
 
-        public string AppUserId { get; set; }
-        //public AppUser AppUser { get; set; }
+        public int CreatorId { get; set; }
+        public string CreatorName { get; set; }
 
-        public int CategoryId { get; set; }
-        //public Category Category { get; set; }
+        public IEnumerable<CategoryDTO> CategoryDTOs { get; set; }
 
-        public ICollection<LikeDTO> Likes { get; set; }
-        //public ICollection<Comment> Comments { get; set; }
+        public int LikesNumber { get; set; }
     }
 }

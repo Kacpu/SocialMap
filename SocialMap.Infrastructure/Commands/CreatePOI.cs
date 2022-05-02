@@ -12,9 +12,8 @@ namespace SocialMap.Infrastructure.Commands
         public double X { get; set; }
         public double Y { get; set; }
         public string Description { get; set; }
-        public bool IsGlobal { get; set; } = false;
+        public bool IsGlobal { get; set; }
 
-        public string AppUserId { get; set; }
-        public int CategoryId { get; set; }
+        public List<int> CategoriesId { get; set; }
     }
 }
