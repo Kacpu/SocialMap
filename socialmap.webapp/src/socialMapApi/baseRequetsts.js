@@ -1,8 +1,21 @@
-import {headers as paramHeaders, methods} from "./requestsParams";
+import {headers, headers as paramHeaders, methods} from "./requestsParams";
+import Userfront from "@userfront/react";
+Userfront.init("xbr78p4n");
 
 async function getReq(query) {
+    let headers = {}
+
+    if(Userfront.tokens.accessToken !== undefined){
+        headers = {
+            Authorization: paramHeaders.Authorization
+        };
+    }
+
     try {
-        const response = await fetch(query);
+        const response = await fetch(query, {
+            method: methods.get,
+            headers: headers,
+        });
         return response.ok ? await response.json() : null;
     } catch(e) {
         console.error(e);

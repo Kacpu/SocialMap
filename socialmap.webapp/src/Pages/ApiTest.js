@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {updateCommentSchema, createComment} from "../socialMapApi/schemas";
 import {addComment, deleteComment, getComment, getComments, updateComment} from "../socialMapApi/commentRequests";
 import {getCategories} from "../socialMapApi/categoryRequests";
+import {addPoi, getPois} from "../socialMapApi/poiRequests";
 
 export default function ApiTest() {
     const [like, setLike] = useState('');
@@ -34,7 +35,7 @@ export default function ApiTest() {
     };
 
     const getCommentsSubmit = async () => {
-        const res = await getComments(23);
+        const res = await getPois();
         setComment(res);
         console.log(res);
     };
@@ -56,7 +57,14 @@ export default function ApiTest() {
     const addCommentSubmit = async () => {
         console.log("wysyłam: ");
         console.log(comment);
-        const res = await addComment({poiId: 23, content: "halu"});
+        const res = await addPoi({
+            name: "fajne poi",
+            x: 1110,
+            y: 102,
+            description: "cdcdcdcdc",
+            isGlobal: false,
+            categoriesId: []
+        });
         console.log(res);
         setComment(res);
     };
