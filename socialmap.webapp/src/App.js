@@ -15,6 +15,7 @@ import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import PasswordReset from "./Pages/PasswordReset";
 import PrivateRoute from "./auth/PrivateRoute";
+import ProfilePage from "./Pages/ProfilePage";
 
 //Wczenisej bylo Route z Navbarem. Musialem to zmienic by footer ladnie sie kleil konca strony
 function App() {
@@ -36,6 +37,13 @@ function App() {
                                element={
                                    <PrivateRoute>
                                        <PrivatePage/>
+                                   </PrivateRoute>
+                               }
+                        />
+                        <Route path='/profile'
+                               element={
+                                   <PrivateRoute>
+                                       <ProfilePage/>
                                    </PrivateRoute>
                                }
                         />

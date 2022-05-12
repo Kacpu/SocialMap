@@ -1,62 +1,78 @@
 import React, {useEffect, useState} from 'react';
-import {useAuth0} from "@auth0/auth0-react";
-import Userfront from "@userfront/react";
+import {updateCommentSchema, createComment} from "../socialMapApi/schemas";
+import {addComment, deleteComment, getComment, getComments, updateComment} from "../socialMapApi/commentRequests";
+import {getCategories} from "../socialMapApi/categoryRequests";
 
 export default function ApiTest() {
     const [like, setLike] = useState('');
     const [poi, setPoi] = useState('');
-    const [comment, setComment] = useState('');
-    const serverUrl = process.env.REACT_APP_SERVER_URL;
+    const [comment, setComment] = useState(createComment);
 
-    const {getAccessTokenSilently} = useAuth0();
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const response = await fetch(`${serverUrl}/like/1`, {
-                    headers: {
-                        Authorization: `Bearer ${Userfront.tokens.accessToken}`,
-                    },
-                });
-                const responseData = await response.json();
-                console.log(responseData)
-                setLike(responseData);
-            } catch (e) {
-                setLike('żeś się nie zalogował nieładnie');
-                console.error(e);
-            }
-        })();
-    }, [getAccessTokenSilently, serverUrl]);
+    // useEffect(() => {
+    //     (async () => {
+    //         try {
+    //             const response = await fetch(`${serverUrl}/like/1`, {
+    //                 headers: {
+    //                     Authorization: `Bearer ${Userfront.tokens.accessToken}`,
+    //                 },
+    //             });
+    //             const responseData = await response.json();
+    //             console.log(responseData)
+    //             setLike(responseData);
+    //         } catch (e) {
+    //             setLike('żeś się nie zalogował nieładnie');
+    //             console.error(e);
+    //         }
+    //     })();
+    // }, [getAccessTokenSilently, serverUrl]);
 
 
-    const getPOI = async () => {
-        try {
-            const response = await fetch(`${serverUrl}/poi/2`);
-            const responseData = await response.json();
-            console.log(responseData)
-            setPoi(responseData);
-        } catch (e) {
-            console.error(e);
-        }
+    const getCommentSubmit = async () => {
+        const res = await getComment(43);
+        setComment(res);
+        console.log(res);
     };
 
-    const getComment = async () => {
-        try {
-            //const token = await getAccessTokenSilently();
+    const getCommentsSubmit = async () => {
+        const res = await getComments(23);
+        setComment(res);
+        console.log(res);
+    };
 
-            const response = await fetch(`${serverUrl}/comment/2`, {
-                    headers: {
-                        Authorization: `Bearer ${Userfront.tokens.accessToken}`,
-                    },
-                });
+    const getCategoriesSubmit = async () => {
+        const res = await getCategories();
+        setComment(res);
+        console.log(res);
+    };
 
-            const responseData = await response.json();
-            console.log(responseData)
-            setComment(responseData);
-        } catch (e) {
-            setComment('żeś się nie zalogował nieładnie');
-            console.error(e);
-        }
+    // useEffect(() => {
+    //     //const newo = {...comment, poiId: 1};
+    //     const newo = {poiId: 23};
+    //     setComment(prev => ({...prev, ...newo}))
+    // }, [])
+    //  useEffect(() => { setComment(prev => ({...prev, content: "halu"})) }, [])
+    // //useEffect(() => { console.log(comment) }, [comment])
+
+    const addCommentSubmit = async () => {
+        console.log("wysyłam: ");
+        console.log(comment);
+        const res = await addComment({poiId: 23, content: "halu"});
+        console.log(res);
+        setComment(res);
+    };
+
+    const updateCommentSubmit = async () => {
+        updateCommentSchema.content = "helloupdate224";
+
+        const res = await updateComment(43, updateCommentSchema);
+        console.log(res);
+        setComment(res);
+    };
+
+    const deleteCommentSubmit = async () => {
+        const res = await deleteComment(45);
+        console.log(res);
+        setComment(res);
     };
 
     return (
@@ -66,15 +82,28 @@ export default function ApiTest() {
                 {JSON.stringify(like, null, 5)}
             </div>
             <br/>
-            <button type={"button"} onClick={getPOI} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
-                GET POI (not auth)
+            <button type={"button"} onClick={getCommentSubmit} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
+                GET Comment (not auth)
             </button>
-            <div>
-                {JSON.stringify(poi, null, 5)}
-            </div>
             <br/>
-            <button type={"button"} onClick={getComment} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
-                GET Comment (auth)
+            <button type={"button"} onClick={getCommentsSubmit} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
+                GET Comments
+            </button>
+            <br/>
+            <button type={"button"} onClick={addCommentSubmit} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
+                POST Comment (auth)
+            </button>
+            <br/>
+            <button type={"button"} onClick={updateCommentSubmit} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
+                UPDATE Comment
+            </button>
+            <br/>
+            <button type={"button"} onClick={deleteCommentSubmit} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
+                DELETE Comment
+            </button>
+            <br/>
+            <button type={"button"} onClick={getCategoriesSubmit} style={{margin: '10px', background: 'rosybrown', padding: '5px'}}>
+                GET Categories
             </button>
             <div>
                 {JSON.stringify(comment, null, 5)}
