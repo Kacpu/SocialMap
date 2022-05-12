@@ -9,7 +9,6 @@ namespace SocialMap.Infrastructure.Commands
     public class CreatePOIAccess
     {
         public int POIId { get; set; }
-        public string AppUserId { get; set; }
-        public bool IsAccpeted { get; set; }
+        public int InvitedUserId { get; set; }
     }
 }

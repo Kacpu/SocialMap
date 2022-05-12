@@ -11,10 +11,10 @@ namespace SocialMap.Infrastructure.Services
     public interface IPOIAccessService
     {
 
-        Task<POIAccessDTO> AddAsync(POIAccessDTO poiAccess);
+        Task<POIAccessDTO> AddAsync(CreatePOIAccess poiAccess, int issuerId);
         Task<POIAccessDTO> GetAsync(int id);
-        Task<IEnumerable<POIAccessDTO>> BrowseAllAsync();
-        Task UpdateAsync(POIAccessDTO poiAccess);
-        Task DelAsync(int id);
+        Task<IEnumerable<POIAccessDTO>> GetAllAsync(int? invitedUserId = null, int? poiId = null, int? issuerId = null, bool? isAccepted = null);
+        Task<POIAccessDTO> UpdateAsync(int id, UpdatePOIAccess updatePOIAccess, int authUserId);
+        Task DelAsync(int id, int authUserId);
     }
 }

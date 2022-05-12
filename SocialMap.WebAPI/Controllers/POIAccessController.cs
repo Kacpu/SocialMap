@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
 using SocialMap.Infrastructure.Services;
+using SocialMap.WebAPI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,99 +14,72 @@ namespace SocialMap.WebAPI.Controllers
     [Route("[Controller]")]
     public class POIAccessController : Controller
     {
-        private readonly IPOIAccessService _POIAccessService;
+        private readonly IPOIAccessService _poiAccessService;
 
         public POIAccessController(IPOIAccessService POIAccessService)
         {
-            _POIAccessService = POIAccessService;
+            _poiAccessService = POIAccessService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPOIAccess([FromBody] CreatePOIAccess poi)
+        [Authorize]
+        public async Task<IActionResult> AddPOIAccess([FromBody] CreatePOIAccess poiAccess)
         {
-            if (poi == null)
+            if (poiAccess == null || poiAccess.POIId == 0 || poiAccess.InvitedUserId == 0)
             {
                 return BadRequest();
             }
 
-            POIAccessDTO poiDTO = new POIAccessDTO()
-            {
-                POIId = poi.POIId,
-                AppUserId = poi.AppUserId,
-                IsAccpeted = poi.IsAccpeted
-            };
-
-            var p = await _POIAccessService.AddAsync(poiDTO);
-
-            if (p == null)
-            {
-                return BadRequest();
-            }
+            var p = await _poiAccessService.AddAsync(poiAccess, User.GetId());
 
             return CreatedAtAction(nameof(GetPOIAccess), new { id = p.Id }, p);
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "SuperUser")]
         public async Task<IActionResult> GetPOIAccess(int id)
         {
-            POIAccessDTO poiAccessDTO = await _POIAccessService.GetAsync(id);
-
-            if (poiAccessDTO == null)
-            {
-                return NotFound();
-            }
-
-            return Json(poiAccessDTO);
+            POIAccessDTO pa = await _poiAccessService.GetAsync(id);
+            return Json(pa);
         }
 
         [HttpGet]
-        public async Task<IActionResult> BrowseAllPOIAccess()
+        [Authorize]
+        public async Task<IActionResult> GetAllPoiAccesses(int? invitedUserId, int? poiId, int? issuerId, bool? isAccepted)
         {
-            IEnumerable<POIAccessDTO> poiAccessesDTO = await _POIAccessService.BrowseAllAsync();
+            IEnumerable<POIAccessDTO> pas = await _poiAccessService.GetAllAsync(invitedUserId, poiId, issuerId, isAccepted);
 
-            if (poiAccessesDTO == null)
+            foreach (var pa in pas)
             {
-                return NotFound();
+                if (User.GetId() != pa.AppUserId && User.GetId() != pa.POIDTO?.CreatorId)
+                {
+                    return Forbid();
+                }
             }
 
-            return Json(poiAccessesDTO);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePOIAccess(int id)
-        {
-            POIAccessDTO poiAccessDTO = await _POIAccessService.GetAsync(id);
-
-            if (poiAccessDTO == null)
-            {
-                return NotFound();
-            }
-
-            await _POIAccessService.DelAsync(poiAccessDTO.Id);
-
-            return Ok();
+            return Json(pas);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePOIAccess([FromBody] UpdatePOIAccess poiAccess, int id)
+        [Authorize]
+        public async Task<IActionResult> UpdatePOIAccess([FromBody] UpdatePOIAccess updatePoiAccess, int id)
         {
-            POIAccessDTO poiAccessDTO = await _POIAccessService.GetAsync(id);
-
-            if (poiAccessDTO == null)
-            {
-                return NotFound();
-            }
-
-            if (poiAccess == null)
+            if(updatePoiAccess == null || updatePoiAccess.IsAccepted == null)
             {
                 return BadRequest();
             }
 
-            poiAccessDTO.IsAccpeted = poiAccess.IsAccpeted;
+            var pa = await _poiAccessService.UpdateAsync(id, updatePoiAccess, User.GetId());
+            return Json(pa);
+        }
 
-            await _POIAccessService.UpdateAsync(poiAccessDTO);
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeletePOIAccess(int id)
+        {
+            await _poiAccessService.DelAsync(id, User.GetId());
 
-            return Json(poiAccessDTO);
+            return NoContent();
         }
     }
 }

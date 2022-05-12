@@ -1,6 +1,8 @@
 ﻿using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
+using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
+using SocialMap.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,70 +20,68 @@ namespace SocialMap.Infrastructure.Services
             _categoryRepository = CategoryRepository;
         }
 
-        public async Task<CategoryDTO> AddAsync(CategoryDTO categoryDTO)
+        public async Task<CategoryDTO> AddAsync(CreateCategory createCategory)
         {
-            var c = await _categoryRepository.AddAsync(ToDomain(categoryDTO));
-            return c != null ? await Task.FromResult(ToDTO(c)) : null;
+            var check_c = await _categoryRepository.BrowseAllAsync(createCategory.Name);
+            if(check_c.Any(c => c.Name == createCategory.Name))
+            {
+                throw new BadRequestException("such category already exists");
+            }
+
+            var c = await _categoryRepository.AddAsync(createCategory.ToDomain());
+            return await Task.FromResult(c.ToDTO());
         }
 
         public async Task<CategoryDTO> GetAsync(int id)
         {
             var c = await _categoryRepository.GetAsync(id);
-            return c != null ? await Task.FromResult(ToDTO(c)) : null;
+
+            if(c is null)
+            {
+                throw new NotFoundException("category not found");
+            }
+
+            return await Task.FromResult(c.ToDTO());
         }
 
-        public async Task<IEnumerable<CategoryDTO>> BrowseAllAsync()
+        public async Task<IEnumerable<CategoryDTO>> BrowseAllAsync(string name)
         {
-            var catgeories = await _categoryRepository.BrowseAllAsync();
-            return catgeories != null ? catgeories.Select(c => ToDTO(c)) : null;
+            var cs = await _categoryRepository.BrowseAllAsync(name);
+
+            return await Task.FromResult(cs.Select(c => c.ToDTO()));
         }
 
-        public async Task UpdateAsync(CategoryDTO categoryDTO)
+        public async Task<CategoryDTO> UpdateAsync(int id, UpdateCategory updateCategory)
         {
-            await _categoryRepository.UpdateAsync(ToDomain(categoryDTO));
+            var c = await _categoryRepository.GetAsync(id);
+
+            if (c is null)
+            {
+                throw new NotFoundException("category not found");
+            }
+
+            var check_c = await _categoryRepository.BrowseAllAsync(updateCategory.Name);
+            if (check_c.Any(x => x.Name == updateCategory.Name))
+            {
+                throw new BadRequestException("such category already exists");
+            }
+
+            c.Name = updateCategory.Name;
+
+            await _categoryRepository.UpdateAsync();
+            return await Task.FromResult(c.ToDTO());
         }
 
         public async Task DelAsync(int id)
         {
-            await _categoryRepository.DelAsync(id);
-        }
+            var c = await _categoryRepository.GetAsync(id);
 
-        private CategoryDTO ToDTO(Category c)
-        {
-            ICollection<POIDTO> poisDTO = new List<POIDTO>();
-            if (c.POIs != null)
+            if (c is null)
             {
-                foreach(POI p in c.POIs)
-                {
-                    poisDTO.Add(new POIDTO
-                    {
-                        Id = p.Id,
-                        Name = p.Name,
-                        X = p.X,
-                        Y = p.Y,
-                        Description = p.Description,
-                        IsGlobal = p.IsGlobal,
-                        AppUserId = p.AppUserId,
-                        CategoryId = p.CategoryId
-                    });
-                }
+                throw new NotFoundException("category not found");
             }
 
-            return new CategoryDTO()
-            {
-                Id = c.Id,
-                Name = c.Name,
-                POIs = poisDTO
-            };
-        }
-
-        private Category ToDomain(CategoryDTO cDTO)
-        {
-            return new Category()
-            {
-                Id = cDTO.Id,
-                Name = cDTO.Name
-            };
+            await _categoryRepository.DelAsync(id);
         }
     }
 }

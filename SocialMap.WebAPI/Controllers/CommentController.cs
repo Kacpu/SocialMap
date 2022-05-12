@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SocialMap.Infrastructure.Commands;
 using Microsoft.AspNetCore.Authorization;
+using SocialMap.WebAPI.Extensions;
 
 namespace SocialMap.WebAPI.Controllers
 {
@@ -21,93 +22,63 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddComment([FromBody] CreateComment comment)
         {
-            if (comment == null)
+            if (comment == null || string.IsNullOrEmpty(comment.Content) || comment.PoiId == 0)
             {
                 return BadRequest();
             }
 
-            CommentDTO commentDTO = new CommentDTO()
-            {
-                Content = comment.Content,
-                POIId = comment.POIId,
-                AppUserId = comment.AppUserId,
-                PublicationDate = DateTime.Now
-            };
+            comment.CreatorId = User.GetId();
 
-            var c = await _commentService.AddAsync(commentDTO);
-
-            if (c == null)
-            {
-                return BadRequest();
-            }
+            var c = await _commentService.AddAsync(comment);
 
             return CreatedAtAction(nameof(GetComment), new { id = c.Id }, c);
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public async Task<IActionResult> GetComment(int id)
         {
-            CommentDTO commentDTO = await _commentService.GetAsync(id);
-
-            if (commentDTO == null)
-            {
-                return NotFound();
-            }
-
-            return Json(commentDTO);
+            CommentDTO c = await _commentService.GetAsync(id);
+            return Json(c);
         }
 
         [HttpGet]
-        public async Task<IActionResult> BrowseAllComments()
+        public async Task<IActionResult> GetAllComments(int? userId, int? poiId)
         {
-            IEnumerable<CommentDTO> commentsDTO = await _commentService.BrowseAllAsync();
-
-            if (commentsDTO == null)
+            if (userId != null && userId != User.GetId() && !User.IsAdmin() && !User.IsMod())
             {
-                return NotFound();
+                return Forbid();
             }
 
-            return Json(commentsDTO);
+            IEnumerable<CommentDTO> cs = await _commentService.GetAllAsync(userId, poiId);
+            return Json(cs);
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateComment([FromBody] UpdateComment comment, int id)
         {
-            CommentDTO commentDTO = await _commentService.GetAsync(id);
-
-            if (commentDTO == null)
-            {
-                return NotFound();
-            }
-
-            if (comment == null)
+            if (comment == null || string.IsNullOrEmpty(comment.Content))
             {
                 return BadRequest();
             }
 
-            commentDTO.Content = comment.Content ?? commentDTO.Content;
-
-            await _commentService.UpdateAsync(commentDTO);
-
-            return Json(commentDTO);
+            int? authorId = User.IsAdmin() || User.IsMod() ? null : User.GetId();
+            var c = await _commentService.UpdateAsync(id, comment, authorId);
+            
+            return Json(c);
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteComment(int id)
         {
-            CommentDTO commentDTO = await _commentService.GetAsync(id);
+            int? authorId = User.IsAdmin() || User.IsMod() ? null : User.GetId();
+            await _commentService.DelAsync(id, authorId);
 
-            if (commentDTO == null)
-            {
-                return NotFound();
-            }
-
-            await _commentService.DelAsync(commentDTO);
-
-            return Ok();
+            return NoContent();
         }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +14,9 @@ using Microsoft.OpenApi.Models;
 using SocialMap.Core.Repositories;
 using SocialMap.Infrastructure.Repositories;
 using SocialMap.Infrastructure.Services;
+using SocialMap.WebAPI.Helpers;
+using SocialMap.WebAPI.Middlewares;
+using SocialMap.WebAPI.Transformations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,18 +37,10 @@ namespace SocialMap.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("MyPolicy",
-                                  builder =>
-                                  {
-                                      builder.WithOrigins("http://localhost:3000")
-                                      .AllowAnyMethod()
-                                      .AllowAnyHeader();
-                                  });
-            });
+            services.ConfigureCors();
 
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SocialMap.WebAPI", Version = "v1" });
@@ -72,18 +68,12 @@ namespace SocialMap.WebAPI
                 options => options.UseSqlServer(Configuration.GetConnectionString("DbConnectionString"))
             );
 
-            string domain = $"https://{Configuration["Auth0:Domain"]}/";
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.Authority = domain;
-                    options.Audience = Configuration["Auth0:Audience"];
-                    // If the access token does not have a `sub` claim, `User.Identity.Name` will be `null`. Map it to a different claim by setting the NameClaimType below.
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        NameClaimType = ClaimTypes.NameIdentifier
-                    };
-                });
+            services.AddTransient<ExceptionHandlingMiddleware>();
+            services.AddTransient<IClaimsTransformation, RoleClaimTransformation>();
+            services.AddTransient<IClaimsTransformation, UserIdClaimTransformation>();
+
+            services.ConfigureAuthentication(Configuration["Userfront:JwtPublicKey"]);
+            services.ConfigurePolicies();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,11 +86,13 @@ namespace SocialMap.WebAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SocialMap.WebAPI v1"));
             }
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseCors("MyPolicy");
+            app.UseCors("CorsPolicy");
 
             app.UseAuthentication();
 

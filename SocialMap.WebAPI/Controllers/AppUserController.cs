@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
 using SocialMap.Infrastructure.Services;
+using SocialMap.WebAPI.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,32 +14,52 @@ namespace SocialMap.WebAPI.Controllers
     [Route("[Controller]")]
     public class AppUserController : Controller
     {
-        private readonly IAppUserService _AppUserService;
-        public AppUserController(IAppUserService AppUserService)
+        private readonly IAppUserService _appUserService;
+        public AppUserController(IAppUserService appUserService)
         {
-            _AppUserService = AppUserService;
+            _appUserService = appUserService;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAppUser([FromHeader] string authorization, [FromBody] CreateAppUser createAppUser)
+        {
+            if (!HeaderChecker.IsUserfrontWebhookTokenValid(authorization))
+            {
+                return Unauthorized();
+            }
+
+            if (createAppUser is null || string.IsNullOrEmpty(createAppUser.Record?.UserUuid))
+            {
+                return BadRequest();
+            }
+
+            var user = await _appUserService.AddAsync(createAppUser);
+
+            return CreatedAtAction(nameof(GetAppUser), new { id = user.Id }, user);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAppUser(string id)
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> GetAppUser(int id)
         {
-            AppUserDTO z = await _AppUserService.GetAsync(id);
-            if (z == null)
-            {
-                return NotFound();
-            }
-            return Json(z);
+            AppUserDTO u = await _appUserService.GetAsync(id);
+            return Json(u);
         }
 
         [HttpGet]
-        public async Task<IActionResult> BrowseAllAsync()
+        [Authorize(Policy = "Admin")]
+        public async Task<IActionResult> GetAllAppUsers(string uuid)
         {
-            IEnumerable<AppUserDTO> z = await _AppUserService.BrowseAllAsync();
-            if (z == null)
+            if (!string.IsNullOrEmpty(uuid))
             {
-                return NotFound();
+                var u = await _appUserService.GetByUuidAsync(uuid);
+                return Json(u);
             }
-            return Json(z);
+            else
+            {
+                var us = await _appUserService.GetAllAsync();
+                return Json(us);
+            }
         }
     }
 }

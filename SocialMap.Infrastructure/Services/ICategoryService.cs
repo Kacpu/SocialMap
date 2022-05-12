@@ -1,4 +1,5 @@
-﻿using SocialMap.Infrastructure.DTO;
+﻿using SocialMap.Infrastructure.Commands;
+using SocialMap.Infrastructure.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace SocialMap.Infrastructure.Services
 {
     public interface ICategoryService
     {
-        Task<CategoryDTO> AddAsync(CategoryDTO categoryDTO);
+        Task<CategoryDTO> AddAsync(CreateCategory createCategory);
         Task<CategoryDTO> GetAsync(int id);
-        Task<IEnumerable<CategoryDTO>> BrowseAllAsync();
-        Task UpdateAsync(CategoryDTO categoryDTO);
+        Task<IEnumerable<CategoryDTO>> BrowseAllAsync(string name = null);
+        Task<CategoryDTO> UpdateAsync(int id, UpdateCategory updateCategory);
         Task DelAsync(int id);
     }
 }

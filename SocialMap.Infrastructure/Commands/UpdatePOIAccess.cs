@@ -8,6 +8,6 @@ namespace SocialMap.Infrastructure.Commands
 {
     public class UpdatePOIAccess
     {
-        public bool IsAccpeted { get; set; }
+        public bool? IsAccepted { get; set; }
     }
 }

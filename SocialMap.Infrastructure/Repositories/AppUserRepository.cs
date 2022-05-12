@@ -11,34 +11,35 @@ namespace SocialMap.Infrastructure.Repositories
 {
     public class AppUserRepository : IAppUserRepository
     {
-        private AppDbContext _appDbContext;
+        private readonly AppDbContext _appDbContext;
         public AppUserRepository(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
         }
 
-        public async Task<AppUser> GetAsync(string id)
+        public async Task<AppUser> AddAsync(AppUser user)
         {
-            try
-            {
-                return await Task.FromResult(_appDbContext.Users.Include(u => u.POIs).Include(u => u.POIAccesses).FirstOrDefault(c => c.Id == id));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            _appDbContext.AppUsers.Add(user);
+            await _appDbContext.SaveChangesAsync();
+            return await Task.FromResult(user);
         }
 
-        public async Task<IEnumerable<AppUser>> BrowseAllAsync()
+        public async Task<AppUser> GetAsync(int id)
         {
-            try
-            {
-                return await Task.FromResult(_appDbContext.Users.Include(u => u.POIs).Include(u => u.POIAccesses));
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            var u = await _appDbContext.AppUsers.FirstOrDefaultAsync(x => x.Id == id);
+            return await Task.FromResult(u);
+        }
+
+        public async Task<AppUser> GetByUuidAsync(string uuid)
+        {
+            var u = await _appDbContext.AppUsers.FirstOrDefaultAsync(x => x.UserfrontId == uuid);
+            return await Task.FromResult(u);
+        }
+
+        public async Task<IEnumerable<AppUser>> GetAllAsync()
+        {
+            var us = _appDbContext.AppUsers;
+            return await Task.FromResult(us);
         }
     }
 }

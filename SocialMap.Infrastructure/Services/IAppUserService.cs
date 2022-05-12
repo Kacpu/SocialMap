@@ -1,4 +1,5 @@
-﻿using SocialMap.Infrastructure.DTO;
+﻿using SocialMap.Infrastructure.Commands;
+using SocialMap.Infrastructure.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,9 @@ namespace SocialMap.Infrastructure.Services
 {
     public interface IAppUserService
     {
-        Task<AppUserDTO> GetAsync(string id);
-        Task<IEnumerable<AppUserDTO>> BrowseAllAsync();
+        Task<AppUserDTO> AddAsync(CreateAppUser user);
+        Task<AppUserDTO> GetAsync(int id);
+        Task<AppUserDTO> GetByUuidAsync(string uuid);
+        Task<IEnumerable<AppUserDTO>> GetAllAsync();
     }
 }
