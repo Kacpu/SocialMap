@@ -16,6 +16,8 @@ import Signup from "./Pages/Signup";
 import PasswordReset from "./Pages/PasswordReset";
 import PrivateRoute from "./auth/PrivateRoute";
 import ProfilePage from "./Pages/ProfilePage";
+import AddCategoryModerator from "./Pages/AddCategoryModerator";
+import EditCategoryModerator from "./Pages/EditCategoryModerator";
 
 //Wczenisej bylo Route z Navbarem. Musialem to zmienic by footer ladnie sie kleil konca strony
 function App() {
@@ -30,6 +32,8 @@ function App() {
                         <Route path='/login' element={<Login/>}/>
                         <Route path='/reset' element={<PasswordReset/>}/>
                         <Route path='/moderatorpanel' element={<ModeratorPanel/>}/>
+                        <Route path='/moderatorpanel/addcategory' element={<AddCategoryModerator />} />
+                        <Route path='/moderatorpanel/editcategory' element={<EditCategoryModerator />} />
                         <Route path='/addpoint' element={<AddPoint/>}/>
                         <Route path='/about'/>
                         <Route path='/contact' element={<ContactUs/>}/>

@@ -26,6 +26,8 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import AcceptButton from '../Buttons/AcceptButton';
+import WarningButton from '../Buttons/WarningButton';
 
 export default function PointToAccept(props) {
     const [expand, setExpand] = useState(false);
@@ -44,7 +46,7 @@ export default function PointToAccept(props) {
 
     function makeBox(textData) {
         return (
-            <Box border={'1px'} bgColor={'gray.700'} rounded={'md'} mb={1}>
+            <Box border={'1px'} bgColor={'gray.700'} rounded={'md'} mb={1} borderColor={'gray.500'}>
                 <Text ml={2} mr={2} mt={1} mb={1}>{textData}</Text>
             </Box>
         );
@@ -102,8 +104,8 @@ export default function PointToAccept(props) {
                         <Text>IsGlobal: {props.isGlobal}</Text>
                     </Box>
                     <Box display='flex' pb={5}>
-                        <Button colorScheme={'green'} w={'50%'} ml={5} mr={2}>Accept</Button>
-                        <Button w={'50%'} mr={5} ml={2} colorScheme={'red'}>Reject</Button>
+                        <AcceptButton w={'50%'} ml={5} mr={2}>Accept</AcceptButton>
+                        <WarningButton w={'50%'} mr={5} ml={2}>Reject</WarningButton>
                     </Box>
                 </Stack>
             </Box>

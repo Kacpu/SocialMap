@@ -2,6 +2,7 @@
   "name": "socialmap.webapp",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://1247-185-172-211-110.eu.ngrok.io/",
   "dependencies": {
     "@auth0/auth0-react": "^1.9.0",
     "@chakra-ui/icons": "^1.1.7",
