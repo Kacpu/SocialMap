@@ -25,7 +25,7 @@ import {categoryData} from '../../mocks/CategoryMock';
 import React, {useState} from "react";
 import {Marker, Popup} from "react-leaflet";
 import {ReactComponent as Like} from "../../icons/like-icon.svg";
-import {POIMock} from "../../mocks/POIMock";
+import {POIMock} from "../../mocks/POIMock_old";
 
 
 function InfoBadge(props) {
