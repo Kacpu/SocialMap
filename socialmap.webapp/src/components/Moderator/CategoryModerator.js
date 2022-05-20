@@ -36,6 +36,12 @@ export default function CategoryModerator(props) {
         navigate("editcategory", {state: {categoryId: id}})
     }
 
+    const handleDelete = () => {
+        props.setCategoryIdToDelete(props.id);
+        props.setCategoryNameToDelete(props.name);
+        props.onOpen();
+    }
+
     return (
         <Box mt={3}>
             <Stack bgColor={'gray.600'} border={'1px'} borderColor={'transparent'} rounded={'lg'} px={5} py={2}>
@@ -54,7 +60,7 @@ export default function CategoryModerator(props) {
                         onClick={() => redirectToEdit(props.id)}>
                             Edit
                         </EditButton>
-                        <WarningButton height={"30px"} width={"80px"}>Delete</WarningButton>
+                        <WarningButton height={"30px"} width={"80px"} onClick={() => handleDelete()}>Delete</WarningButton>
                     </Flex>
                 </Flex>
             </Stack>

@@ -11,6 +11,8 @@ export default function ModeratorPanel() {
 
     const boxColor = useColorModeValue('gray.600', 'gray.700');
     const [categoryHook, setCategoryHook] = useState("");
+    const [categoryIdToDelete, setCategoryIdToDelete] = useState(undefined);
+    const [categoryNameToDelete, setCategoryNameToDelete] = useState(undefined);
     const [loading, setLoading] = useState(false);
 
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -56,6 +58,9 @@ export default function ModeratorPanel() {
         <CategoryModerator
             id={obj.id}
             name={obj.name}
+            onOpen={onOpen}
+            setCategoryIdToDelete={setCategoryIdToDelete}
+            setCategoryNameToDelete={setCategoryNameToDelete}
         />
     );
 
@@ -70,8 +75,6 @@ export default function ModeratorPanel() {
             description={obj.description}
         />
     );
-
-
 
     return (
         <Box display={'flex'} flexDirection={'column'} alignItems='center' mb={20}>
@@ -103,7 +106,7 @@ export default function ModeratorPanel() {
                                     w={"100%"}>
                                     Add Category
                                 </AddButton>
-                                <DeleteCategoryModal isOpen={isOpen} onClose={onClose}/>
+                                <DeleteCategoryModal id={categoryIdToDelete} name={categoryNameToDelete} isOpen={isOpen} onClose={onClose}/>
                                 {categories}
                             </TabPanel>
                         </TabPanels>
