@@ -6,7 +6,7 @@ import {ReactComponent as Pin} from '../../icons/pin-icon.svg'
 import {ReactComponent as Arrow} from '../../icons/arrow-right.svg'
 import leaflet from 'leaflet'
 import {InputGroup, InputLeftElement, Input, InputRightElement, Button, Box} from "@chakra-ui/react";
-import {POIMock} from "../../mocks/POIMock";
+import {POIMock} from "../../mocks/POIMock_old";
 import {ReactComponent as Like} from "../../icons/like-icon.svg";
 
 function LocationMarker() {

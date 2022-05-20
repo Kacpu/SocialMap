@@ -2,7 +2,7 @@ import React from "react";
 import {Marker, Popup} from 'react-leaflet';
 import './MapMarkers.js.css'
 import {ReactComponent as Like} from '../../icons/like-icon.svg'
-import {POIMock} from "../../mocks/POIMock";
+import {POIMock} from "../../mocks/POIMock_old";
 import {Box} from "@chakra-ui/react";
 
 function GetMarkers(name) {

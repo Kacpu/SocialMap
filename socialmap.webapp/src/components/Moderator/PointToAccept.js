@@ -44,6 +44,14 @@ export default function PointToAccept(props) {
 
     const handleToggle = () => (setExpand(!expand));
 
+    const handleAccept = () => {
+        alert("accept point!")
+    }
+
+    const handleReject = () => {
+        alert("reject!")
+    }
+
     function makeBox(textData) {
         return (
             <Box border={'1px'} bgColor={'gray.700'} rounded={'md'} mb={1} borderColor={'gray.500'}>
@@ -53,8 +61,9 @@ export default function PointToAccept(props) {
     }
 
     return (
-        <Box>
-            <Stack bgColor={'gray.600'} border={'1px'} borderColor={'transparent'} roundedTop={'lg'} px={5} py={2}
+        <Box mb={"10px"}>
+            <Stack bgColor={'gray.600'} border={'1px'} borderColor={'transparent'} roundedTop={'lg'} 
+            px={5} py={2}
                 _hover={{
                     borderColor: 'white',
                     cursor: 'pointer'
@@ -104,8 +113,8 @@ export default function PointToAccept(props) {
                         <Text>IsGlobal: {props.isGlobal}</Text>
                     </Box>
                     <Box display='flex' pb={5}>
-                        <AcceptButton w={'50%'} ml={5} mr={2}>Accept</AcceptButton>
-                        <WarningButton w={'50%'} mr={5} ml={2}>Reject</WarningButton>
+                        <AcceptButton w={'50%'} ml={5} mr={2} onClick={() => handleAccept()}>Accept</AcceptButton>
+                        <WarningButton w={'50%'} mr={5} ml={2} onClick={() => handleReject()}>Reject</WarningButton>
                     </Box>
                 </Stack>
             </Box>

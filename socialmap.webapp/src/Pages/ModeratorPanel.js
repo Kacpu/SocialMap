@@ -7,33 +7,46 @@ import { categoryData } from '../mocks/CategoryMock';
 import { useEffect, useState } from 'react';
 import AddButton from '../components/Buttons/AddButton';
 import DeleteCategoryModal from '../components/Moderator/DeleteCategoryModal';
+import InfiniteScroll from 'react-infinite-scroller';
+
 export default function ModeratorPanel() {
 
     const boxColor = useColorModeValue('gray.600', 'gray.700');
     const [categoryHook, setCategoryHook] = useState("");
-    const [categoryIdToDelete, setCategoryIdToDelete] = useState(undefined);
-    const [categoryNameToDelete, setCategoryNameToDelete] = useState(undefined);
     const [loading, setLoading] = useState(false);
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const [categoryIdToDelete, setCategoryIdToDelete] = useState(undefined);
+    const [categoryNameToDelete, setCategoryNameToDelete] = useState(undefined);
 
-    //const [searchParams, setSearchParams] = useSearchParams();
+    const [pointIdToManage, setPointIdToManage] = useState(undefined);
+    const [pointNameToManage, setPointNameToManage] = useState(undefined);
+
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const { hash } = useLocation();
 
+    const [pointsCounter, setPointsCounter] = useState(1);
+    const [hasMorePoints, setHasMorePoints] = useState(true);
+    const [pointsHook, setPointsHook] = useState(() => initialLoadPoints());
 
-    console.log(hash)
+    function initialLoadPoints() {
+        let from = 0
+        let to = pointsCounter * 2
+        let points = POIToAcceptMock.slice(from, to);
+        return points
+    }
 
-    // useEffect(() => {
-    //     //const timer = setTimeout(() => {
-    //         setCategoryHook(categoryData);
-    //         setLoading(false);
+    function loadMorePoints() {
+        let from = pointsCounter * 2;
+        let to = (pointsCounter+1)*2;
+        let points = POIToAcceptMock.slice(from, to);
+        setPointsCounter(pointsCounter+1);
+        setPointsHook([...pointsHook, ...points]);
+        if(to > POIToAcceptMock.length){
+            setHasMorePoints(false);
+        }
+    }
 
-    //     );
-    //       //}, 2000);
-    //       //return () => clearTimeout(timer);
-    // });
-
-    //mozna zmienic na categoryData
 
     const focusOnName = (name) => {
         let index = 0;
@@ -64,7 +77,7 @@ export default function ModeratorPanel() {
         />
     );
 
-    const pointsToAccept = POIToAcceptMock.map((obj) =>
+    const pointsToAccept = pointsHook.map((obj) =>
         <PointToAccept
             id={obj.Id}
             name={obj.Name}
@@ -73,6 +86,8 @@ export default function ModeratorPanel() {
             x={obj.X}
             y={obj.Y}
             description={obj.description}
+            setPointIdToManage={setPointIdToManage}
+            setPointNameToManage={setPointNameToManage}
         />
     );
 
@@ -95,7 +110,14 @@ export default function ModeratorPanel() {
                         <TabPanels>
                             <TabPanel>
                                 <Stack spacing={5}>
-                                    {pointsToAccept}
+                                    <InfiniteScroll
+                                        pageStart={0}
+                                        loadMore={loadMorePoints}
+                                        hasMore={hasMorePoints}
+                                        loader={<div className="loader" key={0}>Loading ...</div>}
+                                    >
+                                        {pointsToAccept}
+                                    </InfiniteScroll>
                                 </Stack>
                             </TabPanel>
                             <TabPanel>
@@ -106,7 +128,7 @@ export default function ModeratorPanel() {
                                     w={"100%"}>
                                     Add Category
                                 </AddButton>
-                                <DeleteCategoryModal id={categoryIdToDelete} name={categoryNameToDelete} isOpen={isOpen} onClose={onClose}/>
+                                <DeleteCategoryModal id={categoryIdToDelete} name={categoryNameToDelete} isOpen={isOpen} onClose={onClose} />
                                 {categories}
                             </TabPanel>
                         </TabPanels>
