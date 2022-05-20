@@ -44,7 +44,7 @@ export default function DeleteCategoryModal(props) {
                         <WarningButton mr={3} onClick={() => handleDelete()}>
                             Yes
                         </WarningButton>
-                        <Button>Close</Button>
+                        <Button onClick={props.onClose}>Close</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>
