@@ -34,6 +34,20 @@ const updatePoi = {
     categoriesId: []
 }
 
+const poiResponse = {
+    id: 0,
+    name: "",
+    x: 0.0,
+    y: 0.0,
+    description: "",
+    isGlobal: false,
+    isAccepted: false,
+    creatorId: 0,
+    creatorName: "",
+    likesNumber: 0,
+    categoryDTOs: []
+}
+
 const createPoiAccess = {
     poiId: 0,
     invitedUserId: 0
@@ -54,6 +68,7 @@ export {
     updateCategory,
     createPoi,
     updatePoi,
+    poiResponse,
     createPoiAccess,
     updatePoiAccess,
     createLike
