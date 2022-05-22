@@ -64,8 +64,8 @@ export default function ModeratorPanel() {
     // }
 
     function loadMoreCategories() {
-        let from = categoriesCounter * 5;
-        let to = (categoriesCounter + 1) * 5;
+        let from = categoriesCounter * 10;
+        let to = (categoriesCounter + 1) * 10;
         let points = categoryToAcceptMock.slice(from, to);
         setCategoriesCounter(categoriesCounter + 1);
         setCategoriesHook([...categoriesHook, ...points]);
@@ -75,8 +75,8 @@ export default function ModeratorPanel() {
     }
 
     function loadMorePoints() {
-        let from = pointsCounter * 5;
-        let to = (pointsCounter + 1) * 5;
+        let from = pointsCounter * 10;
+        let to = (pointsCounter + 1) * 10;
         let points = POIToAcceptMock.slice(from, to);
         setPointsCounter(pointsCounter + 1);
         setPointsHook([...pointsHook, ...points]);
