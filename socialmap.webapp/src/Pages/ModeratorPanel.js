@@ -4,6 +4,7 @@ import CategoryModerator from '../components/Moderator/CategoryModerator';
 import PointToAccept from "../components/Moderator/PointToAccept";
 import { POIToAcceptMock } from '../mocks/POIToAcceptMock';
 import { categoryData } from '../mocks/CategoryMock';
+import { categoryToAcceptMock } from '../mocks/CategoryToAcceptMock';
 import { useEffect, useState } from 'react';
 import AddButton from '../components/Buttons/AddButton';
 import DeleteCategoryModal from '../components/Moderator/DeleteCategoryModal';
@@ -67,10 +68,10 @@ export default function ModeratorPanel() {
         return index;
     };
 
-    const categories = categoryData.map((obj) =>
+    const categories = categoryToAcceptMock.map((obj) =>
         <CategoryModerator
-            id={obj.id}
-            name={obj.name}
+            id={obj.Id}
+            name={obj.Name}
             onOpen={onOpen}
             setCategoryIdToDelete={setCategoryIdToDelete}
             setCategoryNameToDelete={setCategoryNameToDelete}
