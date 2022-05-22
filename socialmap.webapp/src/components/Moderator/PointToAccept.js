@@ -28,10 +28,11 @@ import React, { useEffect, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import AcceptButton from '../Buttons/AcceptButton';
 import WarningButton from '../Buttons/WarningButton';
+import Map from "../Map/Map";
 
 export default function PointToAccept(props) {
     const [expand, setExpand] = useState(false);
-
+    const [displayMap, setDisplayMap] = useState(false);
     const downIcon = () =>
     (
         <ChevronDownIcon align w={10} h={10} />
@@ -42,7 +43,10 @@ export default function PointToAccept(props) {
         <ChevronUpIcon align w={10} h={10} />
     )
 
-    const handleToggle = () => (setExpand(!expand));
+    const handleToggle = () => {
+        setExpand(!expand);
+        setDisplayMap(!displayMap);
+    };
 
     const handleAccept = () => {
         alert("accept point!")
@@ -106,8 +110,8 @@ export default function PointToAccept(props) {
                             <Text mb={1}>Y:</Text>
                             {makeBox(props.y)}
                         </HStack>
-                        
-                        <Text mb={1}>MAP: </Text>
+                        <Text mb={1}>Map: </Text>
+                        {displayMap ? (<Box><Map diplayMarkers={false} mapCenter={[props.x, props.y]} zoom={17} showSearch={false}/> </Box>) : (<></>)}
                         <Text mb={1}>Description: </Text>
                         {makeBox(props.description)}
                         <Text>IsGlobal: {props.isGlobal}</Text>

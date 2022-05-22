@@ -17,6 +17,25 @@
     height: 30px;
 }
 
-.popup-like {
+.HStackLikes {
     margin: auto 10px auto auto;
+    width: min-content;
+    height: 100%;
+}
+
+.mapPin {
+    width: 100%;
+    height: 100%;
+}
+
+.markerHolder {
+    background-color: rgba(0, 0, 0, 0)
+}
+
+.editButton {
+    margin-left: 0px;
+    margin-top: 6px;
+    margin-bottom: auto;
+    margin-right: auto;
+    height: 100%;
 }
