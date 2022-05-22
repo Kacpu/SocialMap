@@ -44,7 +44,8 @@ export default function CategoryModerator(props) {
 
     return (
         <Box mt={3}>
-            <Stack bgColor={'gray.600'} border={'1px'} borderColor={'transparent'} rounded={'lg'} px={5} py={2}>
+            <Stack bgColor={'gray.600'} rounded={'lg'}
+            px={5} py={2} boxShadow='xl'>
                 <Flex justifyContent={"center"} alignItems={"center"}>
                     <HStack alignItems={"baseline"}>
                         <Text color={"gray.300"}>#{props.id}</Text>

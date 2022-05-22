@@ -29,8 +29,9 @@ import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import AcceptButton from '../Buttons/AcceptButton';
 import WarningButton from '../Buttons/WarningButton';
 import Map from "../Map/Map";
+import EditButton from '../Buttons/EditButton';
 
-export default function PointToAccept(props) {
+export default function PointBox(props) {
     const [expand, setExpand] = useState(false);
     const [displayMap, setDisplayMap] = useState(false);
     const downIcon = () =>
@@ -66,13 +67,20 @@ export default function PointToAccept(props) {
 
     return (
         <Box mb={"10px"}>
-            <Stack bgColor={'gray.600'} border={'1px'} borderColor={'transparent'} roundedTop={'lg'} 
+            <Stack bgColor={'gray.600'} border={'2px'} roundedTop={'lg'} 
             px={5} py={2}
+                borderColor={expand ? "yellow.400" : 'transparent'}
+                borderBottom={expand ? "hidden": ""}
+                boxShadow='xl'
+                
                 _hover={{
-                    borderColor: 'white',
+                    borderColor: 'gray.300',
+                    borderBottom: '',
                     cursor: 'pointer'
                 }}
-                onClick={handleToggle}>
+                onClick={handleToggle}
+                
+                >
                 <Flex>
                     <Box >
                         <HStack>
@@ -92,7 +100,8 @@ export default function PointToAccept(props) {
                 </Flex>
             </Stack>
             <Box display={expand ? '' : 'none'}>
-                <Stack bgColor={'gray.600'} roundedBottom={'lg'}>
+                <Stack bgColor={'gray.700'} roundedBottom={'lg'} border={"2px"} borderTop={"hidden"} borderColor={"yellow.400"}
+                boxShadow='xl'>
                     <Box mt={2} mb={2} ml={5} mr={'5'}>
                         <HStack pb={2}>
                             <Text mb={1}>Author:</Text>
@@ -116,10 +125,19 @@ export default function PointToAccept(props) {
                         {makeBox(props.description)}
                         <Text>IsGlobal: {props.isGlobal}</Text>
                     </Box>
+
+                    {props.pointType =="toAccept" ? (
                     <Box display='flex' pb={5}>
-                        <AcceptButton w={'50%'} ml={5} mr={2} onClick={() => handleAccept()}>Accept</AcceptButton>
-                        <WarningButton w={'50%'} mr={5} ml={2} onClick={() => handleReject()}>Reject</WarningButton>
+                    <AcceptButton w={'50%'} ml={5} mr={2} onClick={() => handleAccept()}>Accept</AcceptButton>
+                    <WarningButton w={'50%'} mr={5} ml={2} onClick={() => handleReject()}>Reject</WarningButton>
+                </Box>
+                    ):(
+                        <Box display='flex' pb={5}>
+                        <EditButton w={'50%'} ml={5} mr={2} onClick={() => handleAccept()}>Edit</EditButton>
+                        <WarningButton w={'50%'} mr={5} ml={2} onClick={() => handleReject()}>Remove</WarningButton>
                     </Box>
+                    )}
+
                 </Stack>
             </Box>
         </Box>
