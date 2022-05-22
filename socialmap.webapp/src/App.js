@@ -27,7 +27,7 @@ function App() {
                 <NavBar/>
                 <Box className="MainContent" bgColor={useColorModeValue('gray.700', 'gray.800')}>
                     <Routes>
-                        <Route path='/' element={<Map/>}/>
+                        <Route path='/' element={<Map diplayMarkers={true} showSearch={true} mapCenter={[52.22983, 21.01173]} zoom={12}/>}/>
                         <Route path='/signup' element={<Signup/>}/>
                         <Route path='/login' element={<Login/>}/>
                         <Route path='/reset' element={<PasswordReset/>}/>

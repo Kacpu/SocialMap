@@ -14,7 +14,7 @@ import {
 import {HamburgerIcon} from "@chakra-ui/icons";
 import mapIcon from "../../icons/map-icon.png";
 //import "./NavBar.css";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import Userfront from "@userfront/react";
 import Logo from "./Logo";
 import isAuthenticated from "../../auth/isAuthenticated";
@@ -22,7 +22,6 @@ import isAuthenticated from "../../auth/isAuthenticated";
 //Userfront.init("pn4xgmpn");
 
 export default function NavBar() {
-    // const {loginWithRedirect, logout, user, isAuthenticated, isLoading} = useAuth0();
     let navigate = useNavigate();
     const {isOpen, onOpen, onClose} = useDisclosure();
     const handleToggle = () => (isOpen ? onClose() : onOpen());
@@ -43,10 +42,9 @@ export default function NavBar() {
     const links = [{id: 0, name: "Add point", url: '/addpoint', protect: false},
         {id: 1, name: "About", url: '/about', protect: false},
         {id: 2, name: "Contact Us", url: '/contact', protect: false},
-        {id: 3, name: "PrivateTest", url: '/private', protect: false},
-        {id: 4, name: "ApiTest", url: '/apitest', protect: false},
+        //{id: 3, name: "PrivateTest", url: '/private', protect: false},
+        //{id: 4, name: "ApiTest", url: '/apitest', protect: false},
         {id: 5, name: "Moderator", url: '/moderatorpanel', protect: false},
-        {id: 6, name: Userfront.user.name, url: '/profile', protect: true}
     ]
 
     const buttons = [{id: 0, name: "Log In", onClick: handleLogin, signed: false},
@@ -68,6 +66,19 @@ export default function NavBar() {
             {link.name}
         </Link>
     );
+
+    const profileLink = <Link as={RouterLink} to={'/profile'}
+                              color={linkColor}
+                              fontSize='lg'
+                              fontWeight={'bold'}
+                              href={'/profile'}
+                              onClick={isOpen ? handleToggle : null}
+                              _hover={{
+                                  textDecoration: 'none',
+                                  color: linkHoverColor,
+                              }}>
+                            {Userfront.user.name}
+                        </Link>
 
     const buttonItems = buttons.map((button) =>
         ((!button.signed && !isAuthenticated()) || (button.signed && isAuthenticated())) &&
@@ -109,12 +120,12 @@ export default function NavBar() {
                     paddingLeft={isOpen ? 0 : 5}
                     spacing={5}
                 >
-                    {linkItems.slice(0,6)}
+                    {linkItems}
                 </Stack>
 
                 {
                     isAuthenticated() &&
-                    <Text fontSize='lg' marginRight='30px'>Hello {linkItems[6]}</Text>
+                    <Text fontSize='lg' marginRight='30px'>Hello {profileLink}</Text>
                     // <Text color={linkColor} fontSize='lg' marginRight='30px'>
                     //     Hello {Userfront.user.name}
                     // </Text>

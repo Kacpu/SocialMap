@@ -18,16 +18,14 @@ import {
     useColorModeValue
 } from '@chakra-ui/react';
 import {useForm} from 'react-hook-form'
-import {SearchIcon} from '@chakra-ui/icons';
+import {ArrowForwardIcon, EditIcon, SearchIcon} from '@chakra-ui/icons';
 import Map from '../../components/Map/Map'
-
+import L from "leaflet";
 import {categoryData} from '../../mocks/CategoryMock';
 import React, {useState} from "react";
-import {Marker, Popup} from "react-leaflet";
+import {Marker, Popup, useMap} from "react-leaflet";
 import {ReactComponent as Like} from "../../icons/like-icon.svg";
 import {POIMock} from "../../mocks/POIMock_old";
-
-
 function InfoBadge(props) {
     return (
         <Box display='flex' alignItems='baseline'>
@@ -38,10 +36,9 @@ function InfoBadge(props) {
     );
 }
 
-
 export default function AddPoint() {
-// console.log(categoryData)
     const [value, setValue] = React.useState('')
+    const [mapCenter, setMapCenter] = React.useState([52.22983, 21.01173])
 
     const [items, setItems] = useState([]);
     const [showPointList, setShowPointList] = useState(false)
@@ -69,14 +66,19 @@ export default function AddPoint() {
     const handleChange = (event) => {
         setValue(event.target.value)
     }
+    async function getData() {
+        let url = 'https://nominatim.openstreetmap.org/?addressdetails=1&q=' + value + ', Warszawa&format=json&limit=5'
+        const response = await fetch(url)
+        const data = await response.json();
+        setItems(data)
+        setShowPointList(true)
+    }
     const handleClick = () => {
-        // fetch("open.mapquestapi.com/nominatim/v1/search.php?key=mNZPR3h0A0UeNPdXA33howJhCqJwBhwQ&format=json&q=" + value + "&addressdetails=1&limit=3&viewbox=-1.99%2C52.02%2C0.78%2C50.94&exclude_place_ids=41697")
-        //     .then(res => res.json())
-        //     .then(result => {
-        //             setItems(result);
-        //         }
-        //     )
-        // setShowPointList(true);
+        getData()
+    }
+    const handleTableButtonClick = (event) => {
+        // setMapCenter(event.target.name)
+        setMapCenter(event.target.name)
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -202,16 +204,16 @@ export default function AddPoint() {
                                     shadow='md'
                                 >
                                     <TableContainer>
-                                        <Table variant='striped' colorScheme='teal'>
-                                            <Thead>
-                                                <Tr>
-                                                    <Th>Name</Th>
-                                                </Tr>
-                                            </Thead>
+                                        <Table variant='striped' colorScheme='teal' whiteSpace={'break-spaces'}>
                                             <Tbody>
-                                                {items.map(data => (
-                                                    <Tr>
-                                                        <Td>data.display_name</Td>
+                                                {items.filter(x=> x.address.city === "Warszawa").map(data => (
+                                                    <Tr key={data.place_id}>
+                                                        <Td>{data.display_name.split(',').filter(a => a.replace(/\s/g, '') !== data.address.country && a.replace(/\s/g, '') !== data.address.postcode && a.replace(/\s/g, '') !== data.address.state.replace(/\s/g, '') && a.replace(/\s/g, '') !== data.address.city_district.replace(/\s/g, '') && a.replace(/\s/g, '') !== data.address.neighbourhood  && a.replace(/\s/g, '') !== data.address.quarter.replace(/\s/g, '')).join('')}</Td>
+                                                        <Td className={'tableButton'}>
+                                                            <Button rightIcon={<ArrowForwardIcon />} colorScheme='teal' variant='solid' size='sm' onClick={handleTableButtonClick} name={[data.lat, data.lon]}>
+                                                                Go to
+                                                            </Button>
+                                                        </Td>
                                                     </Tr>
                                                 ))}
                                             </Tbody>
@@ -220,7 +222,7 @@ export default function AddPoint() {
                                 </Box>
                             </Collapse>
 
-                            <Map height={'400px'} arr={items}/>
+                            <Map height={'400px'} diplayMarkers={true} mapCenter={mapCenter} zoom={18}/>
 
                             <FormControl>
                                 <Input id='location' type="text" placeholder='ul. Sample 123' disabled={true}

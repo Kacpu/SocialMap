@@ -5,30 +5,30 @@ export const POIToAcceptMock =
     "Author": "Lynn",
     "Category": "bar",
     "IsGlobaL": true,
-    "Name": "Trucksville",
-    "description": "Cupidatat aliqua reprehenderit dolor nisi officia.",
-    "X": 9.55,
-    "Y": 7.73
+    "Name": "Szpital Kliniczny Dzieciątka Jezus",
+    "description": "Miła pani chirurg",
+    "X": 52.2258398,
+    "Y": 21.0024759
   },
   {
     "Id": 1,
     "Author": "Perkins",
     "Category": "bar",
     "IsGlobaL": true,
-    "Name": "Lacomb",
+    "Name": "Lotnisko Chopina",
     "description": "Veniam dolor ad cillum dolor do cillum aute irure ex duis cupidatat adipisicing Lorem.",
-    "X": 9.06,
-    "Y": 1.49
+    "X": 52.17139,
+    "Y": 20.97358
   },
   {
     "Id": 2,
     "Author": "Lakeisha",
     "Category": "bar",
     "IsGlobaL": true,
-    "Name": "Itmann",
+    "Name": "Centrum Nauki Kopernik",
     "description": "Non amet incididunt minim excepteur dolor commodo aute tempor ad exercitation mollit.",
-    "X": 0.88,
-    "Y": 4.62
+    "X": 52.23991,
+    "Y": 21.03178
   },
   {
     "Id": 3,
