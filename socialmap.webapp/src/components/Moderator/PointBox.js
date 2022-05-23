@@ -111,14 +111,6 @@ export default function PointBox(props) {
                             <Text mb={1}>Category: </Text>
                             {makeBox(props.category)}
                         </HStack>
-                        <HStack pb={2}>
-                            <Text mb={1}>X:</Text>
-                            {makeBox(props.x)}
-                        </HStack>
-                        <HStack pb={2}> 
-                            <Text mb={1}>Y:</Text>
-                            {makeBox(props.y)}
-                        </HStack>
                         <Text mb={1}>Map: </Text>
                         {displayMap ? (<Box><Map diplayMarkers={false} mapCenter={[props.x, props.y]} zoom={17} showSearch={false} diplayCenterMarker={true} draggable={false}/> </Box>) : (<></>)}
                         <Text mb={1}>Description: </Text>
