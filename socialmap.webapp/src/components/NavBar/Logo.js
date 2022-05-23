@@ -10,7 +10,7 @@ export default function Logo(props) {
             spacing={2}
         >
             <a href="/">
-                <img src={mapIcon} onDrag={false} />
+                <img src={mapIcon} draggable={"false"}/>
             </a>
             {/* <a href="/" >
                 <Text color={color}>Social</Text>
