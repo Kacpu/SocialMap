@@ -499,5 +499,125 @@ export const POIToAcceptMock =
     "description": "Laborum proident voluptate Lorem minim occaecat ipsum consectetur deserunt reprehenderit.",
     "X": 3.68,
     "Y": 7.72
+  },
+  {
+    "Id": 50,
+    "Author": "Helena",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "Do dolore incididunt laboris eiusmod in ipsum et ad exercitation.",
+    "X": 2.85,
+    "Y": 4.36
+  },
+  {
+    "Id": 51,
+    "Author": "Silvia",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "Dolor irure nostrud fugiat nulla in pariatur consectetur cupidatat proident ipsum laborum.",
+    "X": 8.74,
+    "Y": 4.08
+  },
+  {
+    "Id": 52,
+    "Author": "Shawna",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "In labore ea non consequat labore aliquip magna amet proident enim ut.",
+    "X": 7.76,
+    "Y": 5.12
+  },
+  {
+    "Id": 53,
+    "Author": "Alejandra",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "Veniam eiusmod aute ea officia proident cupidatat.",
+    "X": 3.87,
+    "Y": 5.39
+  },
+  {
+    "Id": 54,
+    "Author": "Staci",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "Cupidatat non non aute dolor sunt dolor reprehenderit ad ut dolore nulla ad nisi quis.",
+    "X": 0.85,
+    "Y": 7.58
+  },
+  {
+    "Id": 55,
+    "Author": "Wells",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "Ea officia minim Lorem et.",
+    "X": 7.16,
+    "Y": 2.12
+  },
+  {
+    "Id": 56,
+    "Author": "Charlene",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "Voluptate amet est tempor incididunt fugiat est enim mollit.",
+    "X": 2.66,
+    "Y": 6.69
+  },
+  {
+    "Id": 57,
+    "Author": "Preston",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "Eu adipisicing ipsum cillum veniam.",
+    "X": 1.42,
+    "Y": 6.74
+  },
+  {
+    "Id": 58,
+    "Author": "Pope",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "Fugiat occaecat id anim laborum consectetur esse enim non.",
+    "X": 1.16,
+    "Y": 1.88
+  },
+  {
+    "Id": 59,
+    "Author": "Patsy",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "Ut dolore esse do consectetur sunt labore.",
+    "X": 8.13,
+    "Y": 1.58
+  },
+  {
+    "Id": 60,
+    "Author": "Lawson",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "Aute adipisicing laboris laborum anim.",
+    "X": 8.02,
+    "Y": 9.35
+  },
+  {
+    "Id": 61,
+    "Author": "Shelton",
+    "Category": "bar",
+    "IsGlobaL": true,
+    "Name": "Szpital",
+    "description": "Cupidatat nulla irure anim aliquip aliqua anim ad.",
+    "X": 6.75,
+    "Y": 6.97
   }
 ]

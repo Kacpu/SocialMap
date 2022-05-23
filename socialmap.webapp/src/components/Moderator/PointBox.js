@@ -36,12 +36,12 @@ export default function PointBox(props) {
     const [displayMap, setDisplayMap] = useState(false);
     const downIcon = () =>
     (
-        <ChevronDownIcon align w={10} h={10} />
+        <ChevronDownIcon w={10} h={10} />
     );
 
     const upIcon = () =>
     (
-        <ChevronUpIcon align w={10} h={10} />
+        <ChevronUpIcon w={10} h={10} />
     )
 
     const handleToggle = () => {
@@ -102,7 +102,7 @@ export default function PointBox(props) {
             <Box display={expand ? '' : 'none'}>
                 <Stack bgColor={'gray.700'} roundedBottom={'lg'} border={"2px"} borderTop={"hidden"} borderColor={"yellow.400"}
                 boxShadow='xl'>
-                    <Box mt={2} mb={2} ml={5} mr={'5'}>
+                    <Box mt={2} mb={8} ml={5} mr={'5'}>
                         <HStack pb={2}>
                             <Text mb={1}>Author:</Text>
                             {makeBox(props.author)}
@@ -119,11 +119,10 @@ export default function PointBox(props) {
                             <Text mb={1}>Y:</Text>
                             {makeBox(props.y)}
                         </HStack>
-                        <Text mb={1}>Map: </Text>
+                        <Text mb={2}>Map: </Text>
                         {displayMap ? (<Box><Map diplayMarkers={false} mapCenter={[props.x, props.y]} zoom={17} showSearch={false}/> </Box>) : (<></>)}
-                        <Text mb={1}>Description: </Text>
+                        <Text mb={1} mt={5}>Description: </Text>
                         {makeBox(props.description)}
-                        <Text>IsGlobal: {props.isGlobal}</Text>
                     </Box>
 
                     {props.pointType =="toAccept" ? (
