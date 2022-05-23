@@ -81,6 +81,7 @@ export default function AddPoint() {
         let url = 'https://nominatim.openstreetmap.org/?addressdetails=1&q=' + value + ', Warszawa&format=json&limit=5'
         const response = await fetch(url)
         let data = await response.json()
+        console.log(data)
         data = data.filter(x => x.address.city === "Warszawa");
         setItems(data)
         if (data.length === 0) {
@@ -90,9 +91,10 @@ export default function AddPoint() {
         }
     }
 
-    const handleClick = () => {
-        getData()
+    const handleClick = async () => {
+        await getData()
     }
+
     const handleTableButtonClick = (event) => {
         setMapCenter(event)
         setReloadMap(true)
@@ -207,7 +209,9 @@ export default function AddPoint() {
                                     <InputRightElement h={'full'}>
                                         <Button
                                             variant={'ghost'}
-                                            onClick={handleClick}
+                                            onClick={async () => {
+                                                await handleClick()
+                                            }}
                                             color={'blue.300'}
                                         >
                                             <SearchIcon/>

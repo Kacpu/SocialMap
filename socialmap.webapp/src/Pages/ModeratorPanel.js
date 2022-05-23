@@ -384,7 +384,6 @@ export default function ModeratorPanel() {
                                                 next={loadMorePointsToAccept}
                                                 hasMore={hasMorePointsToAccept}
                                                 loader={<h4>Loading...</h4>}
-                                                scrollThreshold={0.9}
                                                 endMessage={
                                                     <p style={{textAlign: 'center'}}>
                                                         <b>No more points to accept!</b>
@@ -408,7 +407,6 @@ export default function ModeratorPanel() {
                                             next={loadMorePoints}
                                             hasMore={hasMorePoints}
                                             loader={<h4>Loading...</h4>}
-                                            scrollThreshold={0.9}
                                             endMessage={
                                                 <p style={{textAlign: 'center'}}>
                                                     <b>No more points!</b>
