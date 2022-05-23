@@ -1,22 +1,19 @@
 import Userfront from "@userfront/react";
-import {Box, Button, HStack, Stack, Text, useColorModeValue} from "@chakra-ui/react";
-import {Divider} from "antd";
-import PoiBox from "../components/PoiBox";
-import {useState} from "react";
+import {
+    Box,
+    HStack,
+    Stack,
+    Text,
+} from "@chakra-ui/react";
+import React from "react";
+import UserTable from "../components/UserPanel/UserTable";
 
 //Userfront.init("xbr78p4n");
 
 export default function ProfilePage() {
-    const [isPoiDisplay, setPoiDisplay] = useState(false);
-    const boxColor = useColorModeValue('gray.600', 'gray.700');
-
-    const displayPoi = () => {
-        setPoiDisplay(prevState => !prevState)
-    }
-
     return (
-        <Box display={'flex'} flexDirection={'column'} alignItems='center' mb={20} >
-            <Box width={'80vw'} mt={8} p={5} px={10} >
+        <Box display={'flex'} flexDirection={'column'} alignItems='center' mb={20}>
+            <Box width={'80vw'} mt={8}>
                 <Text fontSize={'32px'} fontWeight='bold' mb={6}>
                     {Userfront.user.name}
                 </Text>
@@ -30,16 +27,10 @@ export default function ProfilePage() {
                         <Text fontSize={'18px'}>{Userfront.user.userUuid}</Text>
                     </HStack>
                 </Stack>
-                <Box height={0.5} border={'none'} bg={"#32a2a8"} marginTop={10}  boxShadow={'0 3px 13px 1px gray'}>
+                <Box height={0.5} border={'none'} bg={'gray.600'} marginTop={10} boxShadow={'0 3px 10px -0.5px gray'}>
                 </Box>
             </Box>
-
-            <Button colorScheme='teal' size='sm' onClick={displayPoi}>
-                poi details
-            </Button>
-
-            {isPoiDisplay && <PoiBox poiId={40}></PoiBox>}
-
+            <UserTable/>
         </Box>
     );
 }
