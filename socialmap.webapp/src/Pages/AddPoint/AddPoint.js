@@ -1,7 +1,8 @@
 import {
     Badge,
     Box,
-    Button, Collapse,
+    Button,
+    Collapse,
     Flex,
     FormControl,
     FormErrorMessage,
@@ -12,20 +13,22 @@ import {
     InputRightElement,
     Select,
     Stack,
-    Switch, Table, TableContainer, Tbody, Td,
+    Switch,
+    Table,
+    TableContainer,
+    Tbody,
+    Td,
     Text,
-    Textarea, Th, Thead, Tr,
+    Textarea,
+    Tr,
     useColorModeValue
 } from '@chakra-ui/react';
 import {useForm} from 'react-hook-form'
-import {ArrowForwardIcon, EditIcon, SearchIcon} from '@chakra-ui/icons';
+import {ArrowForwardIcon, SearchIcon} from '@chakra-ui/icons';
 import Map from '../../components/Map/Map'
-import L from "leaflet";
 import {categoryData} from '../../mocks/CategoryMock';
-import React, {useState} from "react";
-import {Marker, Popup, useMap} from "react-leaflet";
-import {ReactComponent as Like} from "../../icons/like-icon.svg";
-import {POIMock} from "../../mocks/POIMock_old";
+import React, {useRef, useState} from "react";
+
 function InfoBadge(props) {
     return (
         <Box display='flex' alignItems='baseline'>
@@ -39,6 +42,7 @@ function InfoBadge(props) {
 export default function AddPoint() {
     const [value, setValue] = React.useState('')
     const [mapCenter, setMapCenter] = React.useState([52.22983, 21.01173])
+    const [reloadMap, setReloadMap] = React.useState(false)
 
     const [items, setItems] = useState([]);
     const [showPointList, setShowPointList] = useState(false)
@@ -52,6 +56,9 @@ export default function AddPoint() {
     );
 
     function onSubmit(data) {
+        const markerPosition = getCentralMarkerPosition()
+        //X: markerPosition.lat
+        //Y: markerPosition.lng
         let obj = JSON.stringify(data, null, 3)
 //obj.isGlobal = !obj.isGlobal;
         alert(obj)
@@ -66,19 +73,34 @@ export default function AddPoint() {
     const handleChange = (event) => {
         setValue(event.target.value)
     }
+
     async function getData() {
+        if (value.trim().length === 0)
+            return 0;
+        setItems([])
         let url = 'https://nominatim.openstreetmap.org/?addressdetails=1&q=' + value + ', Warszawa&format=json&limit=5'
         const response = await fetch(url)
-        const data = await response.json();
+        let data = await response.json()
+        data = data.filter(x => x.address.city === "Warszawa");
         setItems(data)
-        setShowPointList(true)
+        if (data.length === 0) {
+            setShowPointList(false)
+        } else {
+            setShowPointList(true)
+        }
     }
+
     const handleClick = () => {
         getData()
     }
     const handleTableButtonClick = (event) => {
-        // setMapCenter(event.target.name)
-        setMapCenter(event.target.name)
+        setMapCenter(event)
+        setReloadMap(true)
+        setTimeout(() => setReloadMap(false), 1)
+    }
+    const mapRef = useRef()
+    const getCentralMarkerPosition = () => {
+        return mapRef.current.getCentralMarkerPosition()
     }
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -206,11 +228,13 @@ export default function AddPoint() {
                                     <TableContainer>
                                         <Table variant='striped' colorScheme='teal' whiteSpace={'break-spaces'}>
                                             <Tbody>
-                                                {items.filter(x=> x.address.city === "Warszawa").map(data => (
+                                                {items.map(data => (
                                                     <Tr key={data.place_id}>
-                                                        <Td>{data.display_name.split(',').filter(a => a.replace(/\s/g, '') !== data.address.country && a.replace(/\s/g, '') !== data.address.postcode && a.replace(/\s/g, '') !== data.address.state.replace(/\s/g, '') && a.replace(/\s/g, '') !== data.address.city_district.replace(/\s/g, '') && a.replace(/\s/g, '') !== data.address.neighbourhood  && a.replace(/\s/g, '') !== data.address.quarter.replace(/\s/g, '')).join('')}</Td>
+                                                        <Td>{data.display_name.split(',').filter(a => a.replace(/\s/g, '') !== data.address.country && a.replace(/\s/g, '') !== data.address.postcode && a.replace(/\s/g, '') !== data.address.state.replace(/\s/g, '') && a.replace(/\s/g, '') !== data.address.city_district.replace(/\s/g, '') && a.replace(/\s/g, '') !== data.address.neighbourhood && a.replace(/\s/g, '') !== data.address.quarter.replace(/\s/g, '')).join('')}</Td>
                                                         <Td className={'tableButton'}>
-                                                            <Button rightIcon={<ArrowForwardIcon />} colorScheme='teal' variant='solid' size='sm' onClick={handleTableButtonClick} name={[data.lat, data.lon]}>
+                                                            <Button rightIcon={<ArrowForwardIcon/>} colorScheme='teal'
+                                                                    variant='solid' size='sm'
+                                                                    onClick={() => handleTableButtonClick([parseFloat(data.lat), parseFloat(data.lon)])}>
                                                                 Go to
                                                             </Button>
                                                         </Td>
@@ -222,14 +246,9 @@ export default function AddPoint() {
                                 </Box>
                             </Collapse>
 
-                            <Map height={'400px'} diplayMarkers={true} mapCenter={mapCenter} zoom={18}/>
-
-                            <FormControl>
-                                <Input id='location' type="text" placeholder='ul. Sample 123' disabled={true}
-                                       value="Sample123"
-                                       {...register("location", {})} />
-                            </FormControl>
-
+                            {reloadMap ? <Box className={'map-container'}/> :
+                                <Map ref={mapRef} height={'400px'} diplayMarkers={true} mapCenter={mapCenter}
+                                     diplayCenterMarker={true} zoom={17} draggable={true}/>}
                         </Stack>
                     </Box>
 

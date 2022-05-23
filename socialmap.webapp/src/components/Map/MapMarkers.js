@@ -4,7 +4,7 @@ import L from 'leaflet';
 import './MapMarkers.js.css'
 import {ReactComponent as Like} from '../../icons/like-icon.svg'
 import {ReactComponent as BluePin} from '../../icons/Pin-blue.svg'
-import {POIMock} from "../../mocks/POIMock_old";
+import {POIMock} from "../../mocks/POIMock";
 import {Box, Button, GridItem, HStack} from "@chakra-ui/react";
 import {EditIcon} from "@chakra-ui/icons";
 import Grid from "antd/es/card/Grid";

@@ -1,5 +1,5 @@
-import React from "react";
-import {MapContainer, Rectangle, TileLayer, Marker, Popup} from 'react-leaflet';
+import React, {forwardRef, useImperativeHandle, useMemo, useRef} from "react";
+import {MapContainer, Marker, Popup, TileLayer} from 'react-leaflet';
 import './Map.js.css'
 import MapMarkers from "./MapMarkers";
 import {ReactComponent as Pin} from '../../icons/pin-icon.svg'
@@ -7,12 +7,12 @@ import {ReactComponent as Arrow} from '../../icons/arrow-right.svg'
 import {Box, Button, Input, InputGroup, InputLeftElement, InputRightElement} from "@chakra-ui/react";
 import L from "leaflet";
 import {ReactComponent as RedPin} from "../../icons/Pin-red.svg";
-import {MapPanTo} from "../../Pages/AddPoint/AddPoint";
 
-function Map(props) {
+const Map = forwardRef((props, _ref) => {
     const [value, setValue] = React.useState('')
     const [poiName, setPoiName] = React.useState('')
     const [mapBounds, setMapBounds] = React.useState([[52.368, 21.271], [52.098, 20.852]])
+    const [centerMarkerPosition, setCenterMarkerPosition] = React.useState(props.mapCenter)
     const handleChange = (event) => {
         setValue(event.target.value)
     }
@@ -26,9 +26,23 @@ function Map(props) {
         iconAnchor: new L.Point(0, 40),
         className: "markerHolder"
     });
+    const markerRef = useRef(null)
+    const eventHandlers = useMemo(
+        () => ({
+            dragend() {
+                const marker = markerRef.current
+                if (marker != null) {
+                    setCenterMarkerPosition(marker.getLatLng())
+                    console.log(marker.getLatLng())
+                }
+            },
+        }),
+        [],
+    )
     const centerMarker = () => {
         return (
-            <Marker position={props.mapCenter} icon={centerIcon}>
+            <Marker position={props.mapCenter} icon={centerIcon} draggable={props.draggable} ref={markerRef}
+                    eventHandlers={eventHandlers}>
                 <Popup autoClose={false}>
                     <Box>
                         New point
@@ -37,32 +51,34 @@ function Map(props) {
             </Marker>
         );
     }
-    function getInput() {
-        return (
-            <InputGroup className={"input-container"} minWidth={"235px"} width={"25%"} borderStyle={"solid"}
-                        borderColor={"#1A202C"}>
-                <InputLeftElement
-                    pointerEvents='none'
-                    children={<Pin className={"pin-icon"}/>}
-                />
-                <Input
-                    variant='outline'
-                    textColor={"black"}
-                    placeholder='Point name'
-                    _placeholder={{opacity: 1, color: 'gray.500'}}
-                    value={value}
-                    backgroundColor={"white"}
-                    onChange={handleChange}
-                />
-                <InputRightElement marginRight={"7px"}>
-                    <Button height={"75%"} size='sm' onClick={handleClick}>
-                        <Arrow className={"pin-icon"}/>
-                    </Button>
-                </InputRightElement>
-            </InputGroup>
-        );
-    }
-
+    const getInput = () => (
+        <InputGroup className={"input-container"} minWidth={"235px"} width={"25%"} borderStyle={"solid"}
+                    borderColor={"#1A202C"}>
+            <InputLeftElement
+                pointerEvents='none'
+                children={<Pin className={"pin-icon"}/>}
+            />
+            <Input
+                variant='outline'
+                textColor={"black"}
+                placeholder='Point name'
+                _placeholder={{opacity: 1, color: 'gray.500'}}
+                value={value}
+                backgroundColor={"white"}
+                onChange={handleChange}
+            />
+            <InputRightElement marginRight={"7px"}>
+                <Button height={"75%"} size='sm' onClick={handleClick}>
+                    <Arrow className={"pin-icon"}/>
+                </Button>
+            </InputRightElement>
+        </InputGroup>
+    );
+    useImperativeHandle(_ref, () => ({
+        getCentralMarkerPosition: () => {
+            return centerMarkerPosition;
+        }
+    }))
     return (
         <Box className={"map-container"}>
             {props.showSearch ? getInput() : null}
@@ -82,9 +98,9 @@ function Map(props) {
                 {/*    color={"#ff7800"}*/}
                 {/*/>*/}
                 {MapMarkers(poiName)}
-                {props.diplayMarkers ? null : centerMarker()}
+                {props.diplayCenterMarker ? centerMarker() : null}
             </MapContainer>
         </Box>
     );
-}
-export default Map;
+});
+export default React.memo(Map);
