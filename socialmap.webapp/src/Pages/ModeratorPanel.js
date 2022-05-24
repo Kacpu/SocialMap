@@ -15,6 +15,8 @@ import DeleteCategoryModal from '../components/Moderator/DeleteCategoryModal';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import {SearchIcon} from '@chakra-ui/icons';
 import SearchInput from "../components/Moderator/SearchInput";
+import {getPoisForUser} from "../socialMapApi/poiRequests";
+import BaseTabPanel from "../components/UserPanel/BaseTabPanel";
 
 export default function ModeratorPanel() {
 
@@ -51,83 +53,32 @@ export default function ModeratorPanel() {
 
     function switchTab(id) {
         let usedData;
-        switch (id) {
-            case 0:
-                if(allPointsToAccept.length == 0){
-                    //fetch from API
-                    setAllPointsToAccept(POIToAcceptMock);
-                    usedData = POIToAcceptMock;
-                }
-                else{
-                    usedData = allPointsToAccept;
-                }
-                setPartPointsToAccept(initialLoadPointsToAccept(usedData));
-
-                //clear Categories
-                setPartCategories([]);
-                setAllFilteredCategories([]);
-                setCategoriesCounter(1);
-                setHasMoreCategories(true);
-
-                //clear Existing points
-                setPartPoints([]);
-                setAllFilteredPoints([]);
-                setPointsCounter(1);
-                setHasMorePoints(true);
-
-                break;
-
-            case 1:
-                if(allPoints.length == 0){
-                    //fetch from API
-                    setAllPoints(POIToAcceptMock);
-                    usedData = POIToAcceptMock;
-                }
-                else{
-                    usedData = allPoints;
-                }
-                setPartPoints(initialLoadPoints(usedData));
-
-                //clear Categories
-                setPartCategories([]);
-                setAllFilteredCategories([]);
-                setCategoriesCounter(1);
-                setHasMoreCategories(true);
-
-                //clear points to accept
-                setPointsToAcceptCounter(1);
-                setPartPointsToAccept([]);
-                setAllFilteredPointsToAccept([]);
-                setHasMorePointsToAccept(true);
-                break;
-
-            case 2:
-                if(allCategories.length == 0){
-                    console.log("brak!!!")
-                    //fetch from API
-                    setAllCategories(categoryToAcceptMock);
-                    usedData = categoryToAcceptMock;
-                }
-                else{
-                    usedData = allCategories;
-                }
-                setPartCategories(initialLoadCategories(usedData));
-
-                //Clear points to accept
-                setPointsToAcceptCounter(1);
-                setPartPointsToAccept([]);
-                setAllFilteredPointsToAccept([]);
-                setHasMorePointsToAccept(true);
-
-                //clear Existing points
-                setPartPoints([]);
-                setAllFilteredPoints([]);
-                setPointsCounter(1);
-                setHasMorePoints(true);
-                break;
-        }
-        setSelectedTab(id);
-
+        // switch (id) {
+        //     case 0:
+        //         if(allPointsToAccept.length == 0){
+        //
+        //         }
+        //         else{
+        //         }
+        //         break;
+        //
+        //     case 1:
+        //         if(allPoints.length == 0){
+        //             //fetch from API
+        //         }
+        //         else{
+        //         }
+        //
+        //         break;
+        //
+        //     case 2:
+        //         if(allCategories.length == 0){
+        //         }
+        //         else{
+        //         }
+        //         break;
+        // }
+        //setSelectedTab(id);
     }
 
     function focusOnName(name){
@@ -147,48 +98,56 @@ export default function ModeratorPanel() {
                 break;
         }
         return index;
-    };
+    }
 
-    const categories = partCategories.map((obj) =>
-        <CategoryModerator
-            id={obj.Id}
-            name={obj.Name}
-            onOpen={onOpen}
-            setCategoryIdToDelete={setCategoryIdToDelete}
-            setCategoryNameToDelete={setCategoryNameToDelete}
-        />
-    );
+    const categories = (list) => {
+        return list.map((obj) =>
+            <CategoryModerator
+                key={obj.Id}
+                id={obj.Id}
+                name={obj.Name}
+                onOpen={onOpen}
+                setCategoryIdToDelete={setCategoryIdToDelete}
+                setCategoryNameToDelete={setCategoryNameToDelete}
+            />
+        );
+    }
 
-    const pointsToAccept = partPointsToAccept.map((obj) =>
-        <PointBox
-            id={obj.Id}
-            name={obj.Name}
-            author={obj.Author}
-            category={obj.Category}
-            x={obj.X}
-            y={obj.Y}
-            description={obj.description}
-            setPointIdToManage={setPointIdToManage}
-            setPointNameToManage={setPointNameToManage}
-            pointType="toAccept"
-        />
-    );
+    const pointsToAccept = (list) => {
+        return list.map((obj) =>
+            <PointBox
+                key={obj.Id}
+                id={obj.Id}
+                name={obj.Name}
+                author={obj.Author}
+                category={obj.Category}
+                x={obj.X}
+                y={obj.Y}
+                description={obj.description}
+                setPointIdToManage={setPointIdToManage}
+                setPointNameToManage={setPointNameToManage}
+                pointType="toAccept"
+            />
+        );
+    }
 
-    const existingPoints = partPoints.map((obj) =>
-        <PointBox
-            id={obj.Id}
-            name={obj.Name}
-            author={obj.Author}
-            category={obj.Category}
-            x={obj.X}
-            y={obj.Y}
-            description={obj.description}
-            setPointIdToManage={setPointIdToManage}
-            setPointNameToManage={setPointNameToManage}
-            pointType="existing"
-        />
-    );
-
+    const existingPoints = (list) => {
+        return list.map((obj) =>
+            <PointBox
+                key={obj.Id}
+                id={obj.Id}
+                name={obj.Name}
+                author={obj.Author}
+                category={obj.Category}
+                x={obj.X}
+                y={obj.Y}
+                description={obj.description}
+                setPointIdToManage={setPointIdToManage}
+                setPointNameToManage={setPointNameToManage}
+                pointType="existing"
+            />
+        );
+    }
 
     return (
         <Box display={'flex'} flexDirection={'column'} alignItems='center' mb={20}>
@@ -199,7 +158,7 @@ export default function ModeratorPanel() {
                 <Button isLoading={true}></Button>
             ) : (
                 <Box width={'90vw'} bgColor={boxColor} mt={8} rounded={'lg'}>
-                    <Tabs defaultIndex={() => focusOnName(hash)}>
+                    <Tabs isLazy defaultIndex={() => focusOnName(hash)}>
                         <TabList>
                             <Tab onClick={() => switchTab(0)}>Accept Points</Tab>
                             <Tab onClick={() => switchTab(1)}>Existing Points</Tab>
@@ -208,50 +167,21 @@ export default function ModeratorPanel() {
 
                         <TabPanels>
                             <TabPanel>
-                                <Box mb={"30px"}>
-                                    <SearchInput placeholder="point name or id" findFromInput={findPointsToAccept}/>
-                                </Box>
-
-                                <Stack spacing={5}>
-                                    {selectedTab == 0 ? (
-                                            <InfiniteScroll
-                                                dataLength={partPointsToAccept.length}
-                                                next={loadMorePointsToAccept}
-                                                hasMore={hasMorePointsToAccept}
-                                                loader={<h4>Loading...</h4>}
-                                                endMessage={
-                                                    <p style={{textAlign: 'center'}}>
-                                                        <b>No more points to accept!</b>
-                                                    </p>
-                                                }
-                                            >
-                                                {pointsToAccept}
-                                            </InfiniteScroll>
-                                        ) :
-                                        (<></>)}
-                                </Stack>
+                                <BaseTabPanel
+                                    fetchData={fetchPointsToAccept}
+                                    searchPlaceholder={"point name or id"}
+                                    filterData={filter}
+                                    createDataComponentList={existingPoints}
+                                />
                             </TabPanel>
 
                             <TabPanel>
-                                <Box mb={"30px"}>
-                                    <SearchInput placeholder="point name or id" findFromInput={findPoints}/>
-                                </Box>
-                                {selectedTab == 1 ? (
-                                        <InfiniteScroll
-                                            dataLength={partPoints.length}
-                                            next={loadMorePoints}
-                                            hasMore={hasMorePoints}
-                                            loader={<h4>Loading...</h4>}
-                                            endMessage={
-                                                <p style={{textAlign: 'center'}}>
-                                                    <b>No more points!</b>
-                                                </p>
-                                            }
-                                        >
-                                            {existingPoints}
-                                        </InfiniteScroll>
-                                    ) :
-                                    (<></>)}
+                                <BaseTabPanel
+                                    fetchData={fetchPoints}
+                                    searchPlaceholder={"point name or id"}
+                                    filterData={filter}
+                                    createDataComponentList={pointsToAccept}
+                                />
                             </TabPanel>
 
                             <TabPanel>
@@ -261,40 +191,20 @@ export default function ModeratorPanel() {
                                     Add Category
                                 </AddButton>
 
-                                <Box mt={"10px"} mb={"30px"}>
-                                    <SearchInput placeholder="category name or id"
-                                                 findFromInput={findCategories}/>
-                                </Box>
-
                                 <DeleteCategoryModal id={categoryIdToDelete} name={categoryNameToDelete}
                                                      isOpen={isOpen}
                                                      onClose={onClose}/>
-                                {selectedTab == 2 ? (
-                                        <InfiniteScroll
-                                            dataLength={partCategories.length}
-                                            next={loadMoreCategories}
-                                            hasMore={hasMoreCategories}
-                                            loader={<h4>Loading...</h4>}
-                                            endMessage={
-                                                <p style={{textAlign: 'center'}}>
-                                                    <b>No more categories!</b>
-                                                </p>
-                                            }
-                                        >
-                                            {categories}
-                                        </InfiniteScroll>
-                                    )
-                                    :
-                                    (
-                                        <></>
-                                    )}
-
+                                <BaseTabPanel
+                                    fetchData={fetchCategories}
+                                    searchPlaceholder={"category name or id"}
+                                    filterData={filter}
+                                    createDataComponentList={categories}
+                                />
                             </TabPanel>
                         </TabPanels>
                     </Tabs>
                 </Box>
             )}
-
         </Box>
     );
 }
