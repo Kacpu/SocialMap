@@ -77,7 +77,7 @@ namespace SocialMap.WebAPI.Controllers
         {
             IEnumerable<POIDTO> poisDTO;
 
-            poisDTO = await _poiService.GetAllForUserAsync(16, withGlobal, withUser, withAccessed, withInvited);
+            poisDTO = await _poiService.GetAllForUserAsync(User.GetId(), withGlobal, withUser, withAccessed, withInvited);
 
             return Json(poisDTO);
             
