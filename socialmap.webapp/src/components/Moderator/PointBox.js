@@ -115,7 +115,6 @@ export default function PointBox(props) {
                         {displayMap ? (<Box><Map diplayMarkers={false} mapCenter={[props.x, props.y]} zoom={17} showSearch={false} diplayCenterMarker={true} draggable={false}/> </Box>) : (<></>)}
                         <Text mb={1}>Description: </Text>
                         {makeBox(props.description)}
-                        <Text>IsGlobal: {props.isGlobal}</Text>
                     </Box>
 
                     {props.pointType =="toAccept" ? (

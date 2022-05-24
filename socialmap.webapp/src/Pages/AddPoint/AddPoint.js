@@ -47,7 +47,7 @@ function InfoBadge(props) {
 
 export default function AddPoint() {
     const [value, setValue] = React.useState('')
-    const [mapCenter, setMapCenter] = React.useState([52.22983, 21.01173])
+    const [mapCenter, setMapCenter] = React.useState([52.22983, 21.01173]);
     const [reloadMap, setReloadMap] = React.useState(false)
     const [displayClearButton, setDisplayClearButton] = React.useState(false)
     const [chosenItem, setChosenItem] = React.useState('helelelelp')
@@ -267,7 +267,7 @@ export default function AddPoint() {
                                            value={value}
                                            onChange={handleChange}
                                            placeholder='Find location'
-                                           size='lg'
+
                                            colorScheme={'red'}
                                     />
                                     <InputRightElement style={{width: "auto", height: "100%", marginRight: "4px"}}>
@@ -289,7 +289,7 @@ export default function AddPoint() {
 
                             <Collapse in={showPointList} animateOpacity>
                                 <ThemeProvider theme={darkTheme}>
-                                    <InputLabel style={{width: '100%'}}>Search results</InputLabel>
+                                    <InputLabel style={{width: '100%', marginBottom: '5px'}}>Search results</InputLabel>
                                     <SelectMaterial
                                         value={chosenItem}
                                         onChange={handleSelectChange}
