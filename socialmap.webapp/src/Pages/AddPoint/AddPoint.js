@@ -8,26 +8,32 @@ import {
     FormErrorMessage,
     FormLabel,
     Heading,
+    HStack,
     Input,
     InputGroup,
     InputRightElement,
     Select,
     Stack,
     Switch,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
     Text,
     Textarea,
-    Tr,
     useColorModeValue
 } from '@chakra-ui/react';
 import {useForm} from 'react-hook-form'
-import {ArrowForwardIcon, SearchIcon} from '@chakra-ui/icons';
+import {CloseIcon, SearchIcon} from '@chakra-ui/icons';
 import Map from '../../components/Map/Map'
 import {categoryData} from '../../mocks/CategoryMock';
 import React, {useRef, useState} from "react";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import {Select as SelectMaterial} from "@mui/material";
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+});
 
 function InfoBadge(props) {
     return (
@@ -43,6 +49,8 @@ export default function AddPoint() {
     const [value, setValue] = React.useState('')
     const [mapCenter, setMapCenter] = React.useState([52.22983, 21.01173])
     const [reloadMap, setReloadMap] = React.useState(false)
+    const [displayClearButton, setDisplayClearButton] = React.useState(false)
+    const [chosenItem, setChosenItem] = React.useState('helelelelp')
 
     const [items, setItems] = useState([]);
     const [showPointList, setShowPointList] = useState(false)
@@ -57,10 +65,7 @@ export default function AddPoint() {
 
     function onSubmit(data) {
         const markerPosition = getCentralMarkerPosition()
-        //X: markerPosition.lat
-        //Y: markerPosition.lng
-        let obj = JSON.stringify(data, null, 3)
-//obj.isGlobal = !obj.isGlobal;
+        let obj = JSON.stringify([data.name, data.description, data.category, data.isGlobal, markerPosition.lat, markerPosition.lng], null, 3)
         alert(obj)
     }
 
@@ -72,6 +77,10 @@ export default function AddPoint() {
 
     const handleChange = (event) => {
         setValue(event.target.value)
+        if (event.target.value.trim().length === 0)
+            setDisplayClearButton(false)
+        else
+            setDisplayClearButton(true)
     }
 
     async function getData() {
@@ -81,29 +90,82 @@ export default function AddPoint() {
         let url = 'https://nominatim.openstreetmap.org/?addressdetails=1&q=' + value + ', Warszawa&format=json&limit=5'
         const response = await fetch(url)
         let data = await response.json()
-        console.log(data)
-        data = data.filter(x => x.address.city === "Warszawa");
-        setItems(data)
         if (data.length === 0) {
             setShowPointList(false)
+            return 0;
         } else {
             setShowPointList(true)
         }
+        data = data.filter(x => x.address.city === "Warszawa" || x.address.city === "Warsaw");
+        if (data.length === 0) {
+            setShowPointList(false)
+            return 0;
+        } else {
+            setShowPointList(true)
+        }
+        setItems(data)
+        setChosenItem(data[0])
+        setMapCenter([parseFloat(data[0].lat), parseFloat(data[0].lon)])
+        setReloadMap(true)
+        setTimeout(() => setReloadMap(false), 1)
+        console.log(data)
     }
 
-    const handleClick = async () => {
-        await getData()
-    }
-
-    const handleTableButtonClick = (event) => {
-        setMapCenter(event)
+    const handleSelectChange = (event) => {
+        setChosenItem(event.target.value)
+        setMapCenter([parseFloat(event.target.value.lat), parseFloat(event.target.value.lon)])
         setReloadMap(true)
         setTimeout(() => setReloadMap(false), 1)
     }
+
+    const handleClearClick = () => {
+        setValue('')
+        setDisplayClearButton(false)
+    }
+
+
     const mapRef = useRef()
     const getCentralMarkerPosition = () => {
         return mapRef.current.getCentralMarkerPosition()
     }
+
+    const clearButton = () => (
+        <Button variant={'ghost'} color={'blue.300'} onClick={handleClearClick}>
+            <CloseIcon/>
+        </Button>
+    );
+
+    function filterString(string) {
+        let poiName = string.display_name.split(',')
+        let res = []
+        if (string.address.hasOwnProperty('city'))
+            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.country.replace(/\s/g, ''))
+        if (string.address.hasOwnProperty('state'))
+            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.state.replace(/\s/g, ''))
+        if (string.address.hasOwnProperty('postcode'))
+            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.postcode)
+        if (string.address.hasOwnProperty('city_district'))
+            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.city_district.replace(/\s/g, ''))
+        if (string.address.hasOwnProperty('quarter'))
+            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.quarter.replace(/\s/g, ''))
+        if (string.address.hasOwnProperty('suburb')) {
+            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.suburb.replace(/\s/g, ''))
+            res.push(string.address.suburb)
+        }
+        if (string.address.hasOwnProperty('neighbourhood'))
+            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.neighbourhood.replace(/\s/g, ''))
+        if (string.address.hasOwnProperty('road')) {
+            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.road.replace(/\s/g, ''))
+            res.splice(0, 0, string.address.road)
+        }
+        if (string.address.hasOwnProperty('house_number')) {
+            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.house_number.replace(/\s/g, ''))
+            res.splice(1, 0, string.address.house_number)
+        }
+        res.splice(0, 0, poiName.join(''))
+        return res
+    }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Flex
@@ -205,54 +267,50 @@ export default function AddPoint() {
                                            value={value}
                                            onChange={handleChange}
                                            placeholder='Find location'
+                                           size='lg'
+                                           colorScheme={'red'}
                                     />
-                                    <InputRightElement h={'full'}>
-                                        <Button
-                                            variant={'ghost'}
-                                            onClick={async () => {
-                                                await handleClick()
-                                            }}
-                                            color={'blue.300'}
-                                        >
-                                            <SearchIcon/>
-                                        </Button>
+                                    <InputRightElement style={{width: "auto", height: "100%", marginRight: "4px"}}>
+                                        <HStack spacing='0px'>
+                                            {displayClearButton ? clearButton() : null}
+                                            <Button
+                                                variant={'ghost'}
+                                                onClick={async () => {
+                                                    (await getData())
+                                                }}
+                                                color={'blue.300'}
+                                            >
+                                                <SearchIcon/>
+                                            </Button>
+                                        </HStack>
                                     </InputRightElement>
                                 </InputGroup>
                             </FormControl>
 
                             <Collapse in={showPointList} animateOpacity>
-                                <Box
-                                    padding={"15px"}
-                                    color='white'
-                                    mt='4'
-                                    bg='blue.200'
-                                    rounded='md'
-                                    shadow='md'
-                                >
-                                    <TableContainer>
-                                        <Table variant='striped' colorScheme='teal' whiteSpace={'break-spaces'}>
-                                            <Tbody>
-                                                {items.map(data => (
-                                                    <Tr key={data.place_id}>
-                                                        <Td>{data.display_name.split(',').filter(a => a.replace(/\s/g, '') !== data.address.country && a.replace(/\s/g, '') !== data.address.postcode && a.replace(/\s/g, '') !== data.address.state.replace(/\s/g, '') && a.replace(/\s/g, '') !== data.address.city_district.replace(/\s/g, '') && a.replace(/\s/g, '') !== data.address.neighbourhood && a.replace(/\s/g, '') !== data.address.quarter.replace(/\s/g, '')).join('')}</Td>
-                                                        <Td className={'tableButton'}>
-                                                            <Button rightIcon={<ArrowForwardIcon/>} colorScheme='teal'
-                                                                    variant='solid' size='sm'
-                                                                    onClick={() => handleTableButtonClick([parseFloat(data.lat), parseFloat(data.lon)])}>
-                                                                Go to
-                                                            </Button>
-                                                        </Td>
-                                                    </Tr>
-                                                ))}
-                                            </Tbody>
-                                        </Table>
-                                    </TableContainer>
-                                </Box>
+                                <ThemeProvider theme={darkTheme}>
+                                    <InputLabel style={{width: '100%'}}>Search results</InputLabel>
+                                    <SelectMaterial
+                                        value={chosenItem}
+                                        onChange={handleSelectChange}
+                                        style={{width: '100%'}}
+                                    >
+                                        {items.map(data => (
+                                            <MenuItem value={data}>
+                                                {filterString(data)[0]}
+                                                <br/>
+                                                {filterString(data).splice(1, filterString(data).length).join(' ')}
+                                            </MenuItem>
+                                        ))}
+                                    </SelectMaterial>
+                                </ThemeProvider>
                             </Collapse>
 
-                            {reloadMap ? <Box className={'map-container'}/> :
-                                <Map ref={mapRef} height={'400px'} diplayMarkers={true} mapCenter={mapCenter}
-                                     diplayCenterMarker={true} zoom={17} draggable={true}/>}
+                            {
+                                reloadMap ? <Box className={'map-container'}/> :
+                                    <Map ref={mapRef} height={'400px'} diplayMarkers={true} mapCenter={mapCenter}
+                                         diplayCenterMarker={true} zoom={17} draggable={true}/>
+                            }
                         </Stack>
                     </Box>
 
@@ -276,7 +334,8 @@ export default function AddPoint() {
                 </Stack>
             </Flex>
         </form>
-    );
+    )
+        ;
 }
 
 // export default withAuthenticationRequired(AddPoint, {
