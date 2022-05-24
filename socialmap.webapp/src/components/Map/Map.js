@@ -12,7 +12,7 @@ const Map = forwardRef((props, _ref) => {
     const [value, setValue] = React.useState('')
     const [poiName, setPoiName] = React.useState('')
     const [mapBounds, setMapBounds] = React.useState([[52.368, 21.271], [52.098, 20.852]])
-    const [centerMarkerPosition, setCenterMarkerPosition] = React.useState(props.mapCenter)
+    const [centerMarkerPosition, setCenterMarkerPosition] = React.useState(new L.LatLng(props.mapCenter[0], props.mapCenter[1]))
     const handleChange = (event) => {
         setValue(event.target.value)
     }
