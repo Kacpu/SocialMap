@@ -19,7 +19,10 @@ import SearchInput from "../components/Moderator/SearchInput";
 export default function ModeratorPanel() {
 
     const boxColor = useColorModeValue('gray.600', 'gray.700');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    const {isOpen, onOpen, onClose} = useDisclosure()
+    const {hash} = useLocation();
 
     const [categoryIdToDelete, setCategoryIdToDelete] = useState(undefined);
     const [categoryNameToDelete, setCategoryNameToDelete] = useState(undefined);
@@ -27,192 +30,24 @@ export default function ModeratorPanel() {
     const [pointIdToManage, setPointIdToManage] = useState(undefined);
     const [pointNameToManage, setPointNameToManage] = useState(undefined);
 
-    const {isOpen, onOpen, onClose} = useDisclosure()
-    const {hash} = useLocation();
-    const [textInput, setTextInput] = useState();
-
     const [selectedTab, setSelectedTab] = useState(0);
 
-    const [pointsToAcceptCounter, setPointsToAcceptCounter] = useState(1);
-    const [hasMorePointsToAccept, setHasMorePointsToAccept] = useState(true);
-    const [allPointsToAccept, setAllPointsToAccept] = useState([]);
-    const [allFilteredPointsToAccept, setAllFilteredPointsToAccept] = useState([]);
-    const [partPointsToAccept, setPartPointsToAccept] = useState([]); //initialLoadPointsToAccept
-
-    const [pointsCounter, setPointsCounter] = useState(1);
-    const [hasMorePoints, setHasMorePoints] = useState(true);
-    const [allPoints, setAllPoints] = useState([]);
-    const [allFilteredPoints, setAllFilteredPoints] = useState([]);
-    const [partPoints, setPartPoints] = useState([]);
-
-    const [categoriesCounter, setCategoriesCounter] = useState(1);
-    const [hasMoreCategories, setHasMoreCategories] = useState(true);
-    const [allCategories, setAllCategories] = useState([]);
-    const [allFilteredCategories, setAllFilteredCategories] = useState([]);
-    const [partCategories, setPartCategories] = useState([]); //initialLoadCategories
-
-    const elemPerLoad = 10;
-
-    function initialLoad(ctr, arr) {
-        let from = 0;
-        let to = ctr * 10;
-        let points = arr.slice(from, to);
-        return points;
+    const fetchCategories = async (signal = null) => {
+        //return await getPoisForUser(signal, true).catch(console.error);
+        return categoryToAcceptMock;
     }
 
-    function initialLoadCategories(data) {
-        return initialLoad(categoriesCounter, data)
+    const fetchPoints = async (signal = null) => {
+        //return await getPoisForUser(signal, false, true).catch(console.error);
+        return POIToAcceptMock;
     }
 
-    function initialLoadPoints(data) {
-        return initialLoad(pointsCounter, data);
+    const fetchPointsToAccept= async (signal = null) => {
+        //return await getPoisForUser(signal, false, false, true).catch(console.error);
+        return POIToAcceptMock;
     }
 
-    function initialLoadPointsToAccept(data) {
-        return initialLoad(pointsToAcceptCounter, data);
-    }
-
-    useEffect(() => {
-
-        let index = 0;
-        if(hash){
-            index = focusOnName(hash);
-        }
-        setSelectedTab(index);
-
-        //load data from API
-        if (index == 0) {
-            let points = POIToAcceptMock;
-            setAllPointsToAccept(points);
-            setPartPointsToAccept(initialLoadPointsToAccept(points));
-        } else if(index ==1){
-            let allPoints = POIToAcceptMock;
-            setAllPoints(allPoints);
-            setPartPoints(initialLoadPoints(allPoints));
-        } else if (index == 2) {
-            let categories = categoryToAcceptMock;
-            setAllCategories(categories);
-            setPartCategories(initialLoadCategories(categories))
-        }
-        setLoading(false);
-    }, [])
-
-    function loadMoreCategories() {
-        if (hasMoreCategories) {
-            let lookedCategories;
-            if (allFilteredCategories.length == 0) {
-                lookedCategories = allCategories;
-            } else {
-                lookedCategories = allFilteredCategories;
-            }
-            let from = categoriesCounter * elemPerLoad;
-            let to = (categoriesCounter + 1) * elemPerLoad;
-            let categories = lookedCategories.slice(from, to);
-            setCategoriesCounter(categoriesCounter + 1);
-            setPartCategories([...partCategories, ...categories]);
-            if (to > lookedCategories.length) {
-                setHasMoreCategories(false);
-            }
-        }
-    }
-    function loadMorePoints(){
-        let lookedPoints;
-        if (allFilteredPoints.length == 0) {
-            lookedPoints = allPoints;
-        } else {
-            lookedPoints = allFilteredPoints;
-        }
-        let from = pointsCounter * elemPerLoad;
-        let to = (pointsCounter + 1) * elemPerLoad;
-        let points = lookedPoints.slice(from, to);
-        setPointsCounter(pointsCounter + 1);
-        setPartPoints([...partPoints, ...points]);
-        if (to > lookedPoints.length) {
-            setHasMorePoints(false);
-        }
-    }
-
-    function loadMorePointsToAccept() {
-        let lookedPoints;
-        if (allFilteredPointsToAccept.length == 0) {
-            lookedPoints = allPointsToAccept;
-        } else {
-            lookedPoints = allFilteredPointsToAccept;
-        }
-        let from = pointsToAcceptCounter * elemPerLoad;
-        let to = (pointsToAcceptCounter + 1) * elemPerLoad;
-        let points = lookedPoints.slice(from, to);
-        setPointsToAcceptCounter(pointsToAcceptCounter + 1);
-        setPartPointsToAccept([...partPointsToAccept, ...points]);
-        if (to > lookedPoints.length) {
-            setHasMorePointsToAccept(false);
-        }
-    }
-
-    function handleInputChange(event) {
-        setTextInput(event.target.value);
-        console.log(event.target.value);
-    }
-
-    function findCategories(inputValue) {
-        let newCategories = []
-        for (const elem of allCategories) {
-            if (elem.Name.toLowerCase().includes(inputValue)) {
-                newCategories.push(elem);
-            } else if (elem.Id == inputValue) {
-                newCategories.push(elem);
-            }
-        }
-        setAllFilteredCategories(newCategories);
-        setPartCategories(initialLoad(1, newCategories));
-        setCategoriesCounter(1);
-        if(newCategories.length != 0) {
-            setHasMoreCategories(true);
-        }
-        else{
-            setHasMoreCategories(false);
-        }
-    }
-
-    function findPoints(inputValue) {
-        let newPoints = [];
-        for (const elem of allPoints) {
-            if (elem.Name.toLowerCase().includes(inputValue)) {
-                newPoints.push(elem);
-            } else if (elem.Id == inputValue) {
-                newPoints.push(elem);
-            }
-        }
-        setAllFilteredPoints(newPoints);
-        setPartPoints(initialLoad(1, newPoints));
-        setPointsCounter(1);
-        if(newPoints.length != 0){
-            setHasMorePoints(true);
-        }
-        else{
-            setHasMorePoints(false);
-        }
-    }
-
-    function findPointsToAccept(inputValue) {
-        let newPoints = [];
-        for (const elem of allPointsToAccept) {
-            if (elem.Name.toLowerCase().includes(inputValue)) {
-                newPoints.push(elem);
-            } else if (elem.Id == inputValue) {
-                newPoints.push(elem);
-            }
-        }
-        setAllFilteredPointsToAccept(newPoints);
-        setPartPointsToAccept(initialLoad(1, newPoints));
-        setPointsToAcceptCounter(1);
-        if(newPoints.length != 0){
-            setHasMorePointsToAccept(true);
-        }
-        else{
-            setHasMorePointsToAccept(false);
-        }
-    }
+    const filter = (list, input) => list.filter(x => x.Name.toLowerCase().includes(input.toLowerCase()) || x.Id == input);
 
     function switchTab(id) {
         let usedData;
@@ -422,7 +257,7 @@ export default function ModeratorPanel() {
                             <TabPanel>
 
                                 <AddButton as={RouterLink} to="/moderatorpanel/addcategory"
-                                           w={"100%"}>
+                                           w={"100%"} mb={"4"}>
                                     Add Category
                                 </AddButton>
 

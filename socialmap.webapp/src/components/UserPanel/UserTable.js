@@ -14,19 +14,19 @@ import BaseTabPanel from "./BaseTabPanel";
 import AccessedPoiBox from "./AccessedPoiBox";
 import InvitationBoiBox from "./InvitationBoiBox";
 
-export default function UserTable(){
+export default function UserTable() {
     const boxColor = useColorModeValue('gray.600', 'gray.700');
 
     const fetchUserPoints = async (signal) => {
-        return await getPoisForUser(signal,true).catch(console.error);
+        return await getPoisForUser(signal, true).catch(console.error);
     }
 
     const fetchAccessedPoints = async (signal) => {
-        return await getPoisForUser(signal,false, true).catch(console.error);
+        return await getPoisForUser(signal, false, true).catch(console.error);
     }
 
     const fetchInvitationPoints = async (signal) => {
-        return await getPoisForUser(signal,false, false, true).catch(console.error);
+        return await getPoisForUser(signal, false, false, true).catch(console.error);
     }
 
     const filterPoint = (list, input) => list.filter(x => x.name.toLowerCase().includes(input.toLowerCase()));
@@ -37,7 +37,8 @@ export default function UserTable(){
                 <UserPoiBox
                     poiData={p}
                 />
-                <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3} boxShadow={'0 3px 10px -0.5px gray'}/>
+                <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3}
+                     boxShadow={'0 3px 10px -0.5px gray'}/>
             </React.Fragment>
         );
     }
@@ -48,7 +49,8 @@ export default function UserTable(){
                 <AccessedPoiBox
                     poiData={p}
                 />
-                <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3} boxShadow={'0 3px 10px -0.5px gray'}/>
+                <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3}
+                     boxShadow={'0 3px 10px -0.5px gray'}/>
             </React.Fragment>
         );
     }
@@ -59,7 +61,8 @@ export default function UserTable(){
                 <InvitationBoiBox
                     poiData={p}
                 />
-                <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3} boxShadow={'0 3px 10px -0.5px gray'}/>
+                <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3}
+                     boxShadow={'0 3px 10px -0.5px gray'}/>
             </React.Fragment>
         );
     }

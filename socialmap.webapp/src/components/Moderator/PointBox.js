@@ -57,6 +57,14 @@ export default function PointBox(props) {
         alert("reject!")
     }
 
+    const handleEdit = () => {
+        alert("edit")
+    }
+
+    const handleDelete = () => {
+        alert("delete")
+    }
+
     function makeBox(textData) {
         return (
             <Box border={'1px'} bgColor={'gray.700'} rounded={'md'} mb={1} borderColor={'gray.500'}>
@@ -124,8 +132,8 @@ export default function PointBox(props) {
                 </Box>
                     ):(
                         <Box display='flex' pb={5}>
-                        <EditButton w={'50%'} ml={5} mr={2} onClick={() => handleAccept()}>Edit</EditButton>
-                        <WarningButton w={'50%'} mr={5} ml={2} onClick={() => handleReject()}>Remove</WarningButton>
+                        <EditButton w={'50%'} ml={5} mr={2} onClick={() => handleEdit()}>Edit</EditButton>
+                        <WarningButton w={'50%'} mr={5} ml={2} onClick={() => handleDelete()}>Remove</WarningButton>
                     </Box>
                     )}
 

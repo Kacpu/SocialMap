@@ -1,7 +1,7 @@
 import {
     Box, Button, HStack, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader,
     ModalOverlay,
-    Text
+    Text, useToast
 } from "@chakra-ui/react";
 import WarningButton from "../Buttons/WarningButton";
 
@@ -9,8 +9,16 @@ import WarningButton from "../Buttons/WarningButton";
 
 export default function DeleteCategoryModal(props) {
 
+    const toast = useToast()
+
     const handleDelete =() => {
-        alert("delete!")
+        toast({
+            title: 'Deleted',
+            description: "We've created your account for you.",
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+        })
         props.onClose()
     }
 
