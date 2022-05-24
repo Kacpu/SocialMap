@@ -59,7 +59,7 @@ async function deleteReq(query) {
                 Authorization: paramHeaders.Authorization
             }
         });
-        return response.status === 204 ? "deleted" : null;
+        return response.ok ? "deleted" : null;
     } catch (e) {
         console.error(e);
         return null;

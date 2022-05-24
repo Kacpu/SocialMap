@@ -75,6 +75,11 @@ namespace SocialMap.Infrastructure.Services
                 throw new ForbidException("you do not have permission to change this poi");
             }
 
+            if (authId != null && updatePoi.IsAccepted == true)
+            {
+                throw new ForbidException("you do not have permission to accept this poi");
+            }
+
             p.Name = !string.IsNullOrEmpty(updatePoi.Name) ? updatePoi.Name : p.Name;
             p.X = updatePoi.X ?? p.X;
             p.Y = updatePoi.Y ?? p.Y;

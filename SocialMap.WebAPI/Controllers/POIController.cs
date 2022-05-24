@@ -72,20 +72,15 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpGet("user")]
+        [Authorize]
         public async Task<IActionResult> BrowseAllPoiForUser(bool withGlobal, bool withUser, bool withAccessed, bool withInvited)
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                IEnumerable<POIDTO> poisDTO;
+            IEnumerable<POIDTO> poisDTO;
 
-                poisDTO = await _poiService.GetAllForUserAsync(16, withGlobal, withUser, withAccessed, withInvited);
+            poisDTO = await _poiService.GetAllForUserAsync(16, withGlobal, withUser, withAccessed, withInvited);
 
-                return Json(poisDTO);
-            }
-            else
-            {
-                return Forbid();
-            }
+            return Json(poisDTO);
+            
         }
 
         [HttpPut("{id}")]
