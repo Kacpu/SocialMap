@@ -2,6 +2,7 @@ import {Badge, Button, Text} from "@chakra-ui/react";
 import BasePoiBox from "./BasePoiBox";
 import React from "react";
 import {rgbToHex} from "@mui/material";
+import {BsFillPeopleFill} from "react-icons/bs";
 
 export default function InvitationBoiBox(props) {
     let badges = [
@@ -16,24 +17,31 @@ export default function InvitationBoiBox(props) {
         </Badge>
     )));
 
-    const footer =
-        <Text textAlign={"center"} mb={5} color={"gray.300"} fontWeight={"semibold"}>
-            Shared by: {props.poiData.creatorName}
-        </Text>;
+    const centerFooter = <React.Fragment>
+        <Text mr={2} color={"gray.300"} fontWeight={"semibold"}>
+            Invited by:
+        </Text>
+        <BsFillPeopleFill/>
+        <Text ml={1} color={"gray.200"} fontWeight={"semibold"}>
+            {props.poiData.creatorName}
+        </Text>
+    </React.Fragment>;
 
     const leftButtons = [
-        <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
-            See comments
+        <Button ml={2} variant={"outline"} borderColor={"green.400"} color={"green.400"}
+                _hover={{bg: "rgba(62,131,41,0.12)"}} fontSize={16} mr={3} key={1}>
+            Accept
         </Button>,
+        <Button variant={"outline"} borderColor={"red.400"} color={"red.400"}
+                _hover={{bg: "rgba(225,116,116,0.12)"}} fontSize={16} key={2}>
+            Reject
+        </Button>
     ];
 
     const rightButtons = [
-        <Button colorScheme={"green"} fontSize={16} mr={2} key={1}>
-            Accept
+        <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
+            See comments
         </Button>,
-        <Button colorScheme={"red"} fontSize={16} key={2}>
-            Reject
-        </Button>
     ];
 
     return (
@@ -42,7 +50,8 @@ export default function InvitationBoiBox(props) {
             badges={badges}
             leftButtons={leftButtons}
             rightButtons={rightButtons}
-            footer={footer}
+            centerFooter={centerFooter}
+            mapButtonOnLeft={false}
         />
     );
 }

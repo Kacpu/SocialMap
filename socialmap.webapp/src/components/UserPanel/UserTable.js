@@ -29,7 +29,9 @@ export default function UserTable() {
         return await getPoisForUser(signal, false, false, true).catch(console.error);
     }
 
-    const filterPoint = (list, input) => list.filter(x => x.name.toLowerCase().includes(input.toLowerCase()));
+    const filterPoint = (list, input) => list.filter(x => x.name.toLowerCase().includes(input.toLowerCase())
+        || x.categoryDTOs.some(c => c.name.toLowerCase().includes(input.toLowerCase()))
+    );
 
     const createUserPointComponentList = (dataList) => {
         return dataList.map((p) =>
@@ -80,7 +82,7 @@ export default function UserTable() {
                     <TabPanel>
                         <BaseTabPanel
                             fetchData={fetchUserPoints}
-                            searchPlaceholder={"point name"}
+                            searchPlaceholder={"point name or category"}
                             filterData={filterPoint}
                             createDataComponentList={createUserPointComponentList}
                         />
@@ -89,7 +91,7 @@ export default function UserTable() {
                     <TabPanel>
                         <BaseTabPanel
                             fetchData={fetchAccessedPoints}
-                            searchPlaceholder={"point name"}
+                            searchPlaceholder={"point name or category"}
                             filterData={filterPoint}
                             createDataComponentList={createAccessedPointComponentList}
                         />
@@ -98,7 +100,7 @@ export default function UserTable() {
                     <TabPanel>
                         <BaseTabPanel
                             fetchData={fetchInvitationPoints}
-                            searchPlaceholder={"point name"}
+                            searchPlaceholder={"point name or category"}
                             filterData={filterPoint}
                             createDataComponentList={createInvitationPointComponentList}
                         />

@@ -47,10 +47,12 @@ export default function UserPoiBox(props) {
     ];
 
     const rightButtons = [
-        <Button variant={'ghost'} size='sm' color={"yellow.200"} fontSize={16}  key={1}>
+        <Button variant={"outline"} borderColor={"yellow.300"} color={"yellow.300"} mr={3}
+                _hover={{bg: "rgba(241,231,136,0.12)"}} fontSize={16} key={1}>
             Edit
         </Button>,
-        <Button variant={'ghost'} size='sm' color={"red.400"} fontSize={16}  key={2}>
+        <Button variant={"outline"} borderColor={"red.400"} color={"red.400"}
+                _hover={{bg: "rgba(225,116,116,0.12)"}} fontSize={16} key={2}>
             Delete
         </Button>
     ];

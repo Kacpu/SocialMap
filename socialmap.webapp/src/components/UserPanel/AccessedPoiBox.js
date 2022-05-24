@@ -1,6 +1,7 @@
 import {Badge, Button, Text} from "@chakra-ui/react";
 import BasePoiBox from "./BasePoiBox";
 import React from "react";
+import {BsFillPeopleFill} from "react-icons/bs";
 
 export default function AccessedPoiBox(props) {
     let badges = [
@@ -15,10 +16,15 @@ export default function AccessedPoiBox(props) {
         </Badge>
     )));
 
-    const footer =
-        <Text textAlign={"center"} mb={5} color={"gray.300"} fontWeight={"semibold"}>
-            Shared by: {props.poiData.creatorName}
-        </Text>;
+    const centerFooter = <React.Fragment>
+        <Text mr={2} color={"gray.300"} fontWeight={"semibold"}>
+            Shared by:
+        </Text>
+        <BsFillPeopleFill/>
+        <Text ml={1} color={"gray.200"} fontWeight={"semibold"}>
+            {props.poiData.creatorName}
+        </Text>
+    </React.Fragment>;
 
     const leftButtons = [
         <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
@@ -31,7 +37,7 @@ export default function AccessedPoiBox(props) {
             poiData={props.poiData}
             badges={badges}
             leftButtons={leftButtons}
-            footer={footer}
+            centerFooter={centerFooter}
         />
     );
 }
