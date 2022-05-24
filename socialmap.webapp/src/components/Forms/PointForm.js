@@ -45,8 +45,8 @@ function InfoBadge(props) {
     );
 }
 
-export default function AddPoint() {
-    const [value, setValue] = React.useState('')
+export default function PointForm(props) {
+    const [inputValue, setInputValue] = React.useState('')
     const [mapCenter, setMapCenter] = React.useState([52.22983, 21.01173]);
     const [reloadMap, setReloadMap] = React.useState(false)
     const [displayClearButton, setDisplayClearButton] = React.useState(false)
@@ -59,24 +59,56 @@ export default function AddPoint() {
     const labelColor = useColorModeValue('gray.600', 'gray.200');
     const inputColor = useColorModeValue('gray.100', 'gray.50')
     const subBoxColor = useColorModeValue('gray.600', 'gray.600');
-    const categoryList = categoryData.map((category) =>
-        <option key={category.id} value={category.id}>{category.name}</option>
-    );
 
-    function onSubmit(data) {
-        const markerPosition = getCentralMarkerPosition()
-        let obj = JSON.stringify([data.name, data.description, data.category, data.isGlobal, markerPosition.lat, markerPosition.lng], null, 3)
-        alert(obj)
-    }
+    const [centerMarkerFlag, setCenterMarkerFlag] = React.useState(true);
 
     const {
         handleSubmit,
         register,
+        reset,
         formState: {errors, isSubmitting},
     } = useForm()
 
+
+    React.useEffect(()=>{
+        if(props.defaultValues) {
+            reset(
+                {name: props.defaultValues.name,
+                    description: props.defaultValues.description,
+                    category: props.defaultValues.categoryId,
+                    isGlobal: props.defaultValues.isGlobal,
+                }
+            )
+        }
+
+        // if(props.defaultValues.x && props.defaultValues.y){
+        //     setMapCenter([props.defaultValues.x, props.defaultValues.y]);
+        // }
+        // setCenterMarkerFlag(true);
+
+    },[])
+
+
+    const categoryList = categoryData.map((category) =>
+        <option
+            key={category.id} value={category.id}
+        >
+            {category.name}
+        </option>
+    );
+
+    function onSubmit(data) {
+        const markerPosition = getCentralMarkerPosition();
+        let obj = JSON.stringify([data.name, data.description, data.category, data.isGlobal, markerPosition.lat, markerPosition.lng], null, 3)
+        return new Promise(resolve => {
+            props.submitAction(obj);
+        });
+    }
+
+
+
     const handleChange = (event) => {
-        setValue(event.target.value)
+        setInputValue(event.target.value)
         if (event.target.value.trim().length === 0)
             setDisplayClearButton(false)
         else
@@ -84,10 +116,10 @@ export default function AddPoint() {
     }
 
     async function getData() {
-        if (value.trim().length === 0)
+        if (inputValue.trim().length === 0)
             return 0;
         setItems([])
-        let url = 'https://nominatim.openstreetmap.org/?addressdetails=1&q=' + value + ', Warszawa&format=json&limit=5'
+        let url = 'https://nominatim.openstreetmap.org/?addressdetails=1&q=' + inputValue + ', Warszawa&format=json&limit=5'
         const response = await fetch(url)
         let data = await response.json()
         if (data.length === 0) {
@@ -119,7 +151,7 @@ export default function AddPoint() {
     }
 
     const handleClearClick = () => {
-        setValue('')
+        setInputValue('')
         setDisplayClearButton(false)
     }
 
@@ -177,10 +209,10 @@ export default function AddPoint() {
                 <Stack spacing={5} mx={'auto'} maxW={'700px'} w={'90%'} py={12} px={0}>
                     <Stack align={'center'}>
                         <Heading fontSize={'4xl'} textAlign={'center'} color={'gray.100'}>
-                            Add new interesting Point!
+                            {props.title}
                         </Heading>
                         <Text fontSize={'lg'} color={'gray.400'}>
-                            save your favourite place 🌎
+                            {props.subtitle}
                         </Text>
                     </Stack>
 
@@ -237,7 +269,7 @@ export default function AddPoint() {
                                 </FormErrorMessage>
                             </FormControl>
 
-                            <FormControl isInvalid={errors.isPrivate} display='flex' alignItems='center'>
+                            <FormControl isInvalid={errors.isGlobal} display='flex' alignItems='center'>
                                 <FormLabel htmlFor='isGlobal' mb='0' color={labelColor}>Global</FormLabel>
                                 <Switch id='isGlobal'
                                         {...register("isGlobal", {})} />
@@ -264,7 +296,7 @@ export default function AddPoint() {
                                     <Input id="findLocation"
                                            type="text"
                                            color={inputColor}
-                                           value={value}
+                                           value={inputValue}
                                            onChange={handleChange}
                                            placeholder='Find location'
 
@@ -309,7 +341,7 @@ export default function AddPoint() {
                             {
                                 reloadMap ? <Box className={'map-container'}/> :
                                     <Map ref={mapRef} height={'400px'} diplayMarkers={true} mapCenter={mapCenter}
-                                         diplayCenterMarker={true} zoom={17} draggable={true}/>
+                                         diplayCenterMarker={centerMarkerFlag} zoom={17} draggable={true}/>
                             }
                         </Stack>
                     </Box>
@@ -328,7 +360,7 @@ export default function AddPoint() {
                             type="submit"
                             isLoading={isSubmitting}
                         >
-                            Add Point
+                            {props.buttonName}
                         </Button>
                     </Stack>
                 </Stack>
@@ -338,7 +370,7 @@ export default function AddPoint() {
         ;
 }
 
-// export default withAuthenticationRequired(AddPoint, {
+// export default withAuthenticationRequired(PointPages, {
 //   // Show a message while the user waits to be redirected to the login page.
 //   onRedirecting: () => <div>Redirecting you to the login page...</div>,
 // });

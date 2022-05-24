@@ -171,7 +171,7 @@ export default function ModeratorPanel() {
                                     fetchData={fetchPointsToAccept}
                                     searchPlaceholder={"point name or id"}
                                     filterData={filter}
-                                    createDataComponentList={existingPoints}
+                                    createDataComponentList={pointsToAccept}
                                 />
                             </TabPanel>
 
@@ -180,7 +180,7 @@ export default function ModeratorPanel() {
                                     fetchData={fetchPoints}
                                     searchPlaceholder={"point name or id"}
                                     filterData={filter}
-                                    createDataComponentList={pointsToAccept}
+                                    createDataComponentList={existingPoints}
                                 />
                             </TabPanel>
 

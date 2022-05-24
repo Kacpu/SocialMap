@@ -30,8 +30,10 @@ import AcceptButton from '../Buttons/AcceptButton';
 import WarningButton from '../Buttons/WarningButton';
 import Map from "../Map/Map";
 import EditButton from '../Buttons/EditButton';
+import {useNavigate} from "react-router-dom";
 
 export default function PointBox(props) {
+    const navigate = useNavigate();
     const [expand, setExpand] = useState(false);
     const [displayMap, setDisplayMap] = useState(false);
     const downIcon = () =>
@@ -58,7 +60,7 @@ export default function PointBox(props) {
     }
 
     const handleEdit = () => {
-        alert("edit")
+        navigate("/editpoint", {state: {pointId: props.id}})
     }
 
     const handleDelete = () => {

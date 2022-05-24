@@ -9,7 +9,7 @@ import {
     Button,
     useDisclosure,
     useColorModeValue,
-    Link
+    Link, Icon, Divider
 } from "@chakra-ui/react";
 import {HamburgerIcon} from "@chakra-ui/icons";
 import mapIcon from "../../icons/map-icon.png";
@@ -18,6 +18,7 @@ import {useNavigate} from "react-router-dom";
 import Userfront from "@userfront/react";
 import Logo from "./Logo";
 import isAuthenticated from "../../auth/isAuthenticated";
+import {FaUser} from "react-icons/fa";
 
 //Userfront.init("pn4xgmpn");
 
@@ -67,18 +68,20 @@ export default function NavBar() {
         </Link>
     );
 
-    const profileLink = <Link as={RouterLink} to={'/profile'}
-                              color={linkColor}
-                              fontSize='lg'
-                              fontWeight={'bold'}
-                              href={'/profile'}
-                              onClick={isOpen ? handleToggle : null}
-                              _hover={{
-                                  textDecoration: 'none',
-                                  color: linkHoverColor,
-                              }}>
-                            {Userfront.user.name}
-                        </Link>
+    const profileLinkButton = <Button as={RouterLink} to={'/profile'}
+                                      fontWeight={'bold'}
+                                      href={'/profile'}
+                                      onClick={isOpen ? handleToggle : null}
+                                      _hover={{
+                                          textDecoration: 'none',
+                                          color: linkHoverColor,
+                                      }}
+                                      variant={"ghost"}>
+                                    <Icon as={FaUser}></Icon>
+                                    <Text ml={"10px"}>
+                                        {Userfront.user.name}
+                                    </Text>
+                                </Button>
 
     const buttonItems = buttons.map((button) =>
         ((!button.signed && !isAuthenticated()) || (button.signed && isAuthenticated())) &&
@@ -110,6 +113,7 @@ export default function NavBar() {
                     </Button>
                 </Box>
 
+
                 <Stack
                     direction={{base: "column", md: "row"}}
                     display={{base: isOpen ? "flex" : "none", md: "flex"}}
@@ -121,15 +125,8 @@ export default function NavBar() {
                     spacing={5}
                 >
                     {linkItems}
-                </Stack>
 
-                {
-                    isAuthenticated() &&
-                    <Text fontSize='lg' marginRight='30px'>Hello {profileLink}</Text>
-                    // <Text color={linkColor} fontSize='lg' marginRight='30px'>
-                    //     Hello {Userfront.user.name}
-                    // </Text>
-                }
+                </Stack>
 
                 {isAuthenticated() && console.log(Userfront.user)}
                 {/*console.log(Userfront.user) &&*/}
@@ -140,6 +137,11 @@ export default function NavBar() {
                     width={{base: "full", md: "auto"}}
                     mt={{base: 5, md: 0}}
                 >
+                    <Divider display={{base: "", md:"none"}}/>
+                    {
+                        isAuthenticated() &&
+                        profileLinkButton
+                    }
                     {buttonItems}
                 </Stack>
             </Flex>

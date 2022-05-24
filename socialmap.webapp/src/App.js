@@ -8,7 +8,7 @@ import './index.css';
 import PrivatePage from "./Pages/PrivatePage";
 import ApiTest from "./Pages/ApiTest";
 import ContactUs from "./Pages/ContactUs";
-import AddPoint from "./Pages/AddPoint/AddPoint";
+import AddPoint from "./Pages/PointPages/AddPoint";
 import ModeratorPanel from "./Pages/ModeratorPanel";
 import {Box, useColorModeValue} from '@chakra-ui/react';
 import Login from "./Pages/Login";
@@ -18,6 +18,9 @@ import PrivateRoute from "./auth/PrivateRoute";
 import ProfilePage from "./Pages/ProfilePage";
 import AddCategoryModerator from "./Pages/AddCategoryModerator";
 import EditCategoryModerator from "./Pages/EditCategoryModerator";
+import EditPoint from "./Pages/PointPages/EditPoint";
+import ScrollToTop from "./tools/ScrollToTop";
+import About from "./Pages/About";
 
 //Wczenisej bylo Route z Navbarem. Musialem to zmienic by footer ladnie sie kleil konca strony
 function App() {
@@ -26,6 +29,7 @@ function App() {
             <div className="BodyDiv">
                 <NavBar/>
                 <Box className="MainContent" bgColor={useColorModeValue('gray.700', 'gray.800')}>
+                    <ScrollToTop>
                     <Routes>
                         <Route path='/' element={<Map diplayMarkers={true} showSearch={true} mapCenter={[52.22983, 21.01173]} zoom={12} diplayCenterMarker={false} draggable={false}/>}/>
                         <Route path='/signup' element={<Signup/>}/>
@@ -35,7 +39,8 @@ function App() {
                         <Route path='/moderatorpanel/addcategory' element={<AddCategoryModerator />} />
                         <Route path='/moderatorpanel/editcategory' element={<EditCategoryModerator />} />
                         <Route path='/addpoint' element={<AddPoint/>}/>
-                        <Route path='/about'/>
+                        <Route path='/editpoint' element={<EditPoint/>}/>
+                        <Route path='/about' element={<About/>}/>
                         <Route path='/contact' element={<ContactUs/>}/>
                         <Route path='/private'
                                element={
@@ -53,6 +58,7 @@ function App() {
                         />
                         <Route path='/apitest' element={<ApiTest/>}/>
                     </Routes>
+                    </ScrollToTop>
                 </Box>
                 <CustomFooter className="Footer"/>
             </div>

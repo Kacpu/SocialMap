@@ -4,6 +4,8 @@ import {
     Text, useToast
 } from "@chakra-ui/react";
 import WarningButton from "../Buttons/WarningButton";
+import {deleteCategory} from "../../socialMapApi/categoryRequests";
+import {errorToast, successToast} from "../Toasts/ToastUtil";
 
 
 
@@ -12,13 +14,14 @@ export default function DeleteCategoryModal(props) {
     const toast = useToast()
 
     const handleDelete =() => {
-        toast({
-            title: 'Deleted',
-            description: "We've created your account for you.",
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-        })
+        //fetch api to delete
+        // let res = deleteCategory(props.id);
+        //
+        // if (res !== null && res !== undefined) {
+        //     //console.log("get req " + props.searchPlaceholder)
+        //
+        // }
+        successToast(toast, "deleted", "category");
         props.onClose()
     }
 

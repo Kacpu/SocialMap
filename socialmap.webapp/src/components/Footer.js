@@ -13,8 +13,10 @@ export default function SmallWithSocial() {
             color={useColorModeValue('gray.200', 'gray.200')}>
             <Container
                 py={3}
+                maxWidth={"800px"}
             >
-                <Text align={'center'}>© 2022 Bartłomiej Kopyść, Kacper Tarłowski, Oskar Jankowski</Text>
+                <Text align={"center"}>SocialMap @ 2022</Text>
+                <Text align={'center'} fontWeight={"light"}>Bartłomiej Kopyść, Kacper Tarłowski, Oskar Jankowski</Text>
             </Container>
         </Box>
     );
