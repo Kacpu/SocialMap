@@ -14,23 +14,32 @@ export default function BaseTabPanel(props) {
     const elemPerLoad = 10;
 
     useEffect(() => {
+        const ac = new AbortController();
         (async () => {
-            //console.log("here")
-            let res = await props.fetchData();
-            if (res !== null) {
+            //console.log("send req " + props.searchPlaceholder)
+            let res = await props.fetchData(ac.signal);
+            if (res !== null && res !== undefined) {
+                //console.log("get req " + props.searchPlaceholder)
                 setFetchedData(res);
                 setIsDataLoading(false);
-
                 setFilteredData(res);
             }
         })();
+        return () => {
+            ac.abort("unm " + props.searchPlaceholder);
+            //console.log(ac.signal)
+            //console.log("unmount " + props.searchPlaceholder);
+        };
     }, [props]);
 
     useEffect(() => {
         if (!isDataLoading) {
-            //console.log(isDataLoading)
+            //console.log("load" + props.searchPlaceholder)
             loadMoreData();
         }
+        return () => {
+            //console.log("unmount2 " + props.searchPlaceholder)
+        };
     }, [filteredData])
 
     function loadMoreData() {
@@ -73,7 +82,7 @@ export default function BaseTabPanel(props) {
                             loader={<h4>Loading...</h4>}
                             endMessage={
                                 <p style={{textAlign: 'center'}}>
-                                    <b>No more points to accept!</b>
+                                    <b>No more data!</b>
                                 </p>
                             }
                         >

@@ -56,7 +56,7 @@ namespace SocialMap.Infrastructure.Repositories
                 p = p.Where(x => x.IsAccepted == isAccepted);
             }
 
-            p = p.Include(x => x.Categories).Include(x => x.Likes).AsSplitQuery();
+            p = p.Include(x => x.AppUser).Include(x => x.Categories).Include(x => x.Likes).AsSplitQuery();
 
             return await Task.FromResult(p);
         }
@@ -87,7 +87,7 @@ namespace SocialMap.Infrastructure.Repositories
                 filter = filter.Or(x => pas.Any(pa => pa.POIId == x.Id));
             }
 
-            var p = _appDbContext.POI.Where(filter).Include(x => x.Categories).Include(x => x.Likes).AsSplitQuery();
+            var p = _appDbContext.POI.Where(filter).Include(x => x.AppUser).Include(x => x.Categories).Include(x => x.Likes).AsSplitQuery();
 
             return await Task.FromResult(p);
         }

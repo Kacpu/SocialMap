@@ -1,19 +1,19 @@
 import {serverUrl} from "./requestsParams";
 import {addReq, deleteReq, getReq} from "./baseRequetsts";
 
-async function getLike(id) {
+async function getLike(id, signal = null) {
     const query = `${serverUrl}/like/${id}`;
-    return await getReq(query);
+    return await getReq(query, signal);
 }
 
-async function getLikes(poiId = null, userId = null) {
+async function getLikes(signal = null, poiId = null, userId = null) {
     let query = `${serverUrl}/like`;
     if(poiId != null)
         query += `?poiId=${poiId}`;
     if(userId != null)
         query += `&userId=${userId}`;
 
-    return await getReq(query);
+    return await getReq(query, signal);
 }
 
 async function addLike(like) {

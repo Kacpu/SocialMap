@@ -1,17 +1,17 @@
 import {serverUrl} from "./requestsParams";
 import {addReq, deleteReq, getReq, updateReq} from "./baseRequetsts";
 
-async function getCategory(id) {
+async function getCategory(id, signal = null,) {
     const query = `${serverUrl}/category/${id}`;
-    return await getReq(query);
+    return await getReq(query, signal);
 }
 
-async function getCategories(name = null) {
+async function getCategories(signal = null, name = null) {
     let query = `${serverUrl}/category`;
     if(name != null)
         query += `?name=${name}`;
 
-    return await getReq(query);
+    return await getReq(query, signal);
 }
 
 async function addCategory(category) {

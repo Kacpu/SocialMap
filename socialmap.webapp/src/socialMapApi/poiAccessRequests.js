@@ -1,12 +1,13 @@
 import {serverUrl} from "./requestsParams";
 import {addReq, deleteReq, getReq, updateReq} from "./baseRequetsts";
 
-async function getPoiAccess(id) {
+async function getPoiAccess(id, signal = null) {
     const query = `${serverUrl}/poiAccess/${id}`;
-    return await getReq(query);
+    return await getReq(query, signal);
 }
 
-async function getPoiAccesses(invitedUserId = null, poiId = null, issuerId = null, isAccepted = null) {
+async function getPoiAccesses(signal = null, invitedUserId = null, poiId = null,
+                              issuerId = null, isAccepted = null) {
     let query = `${serverUrl}/poiAccess`;
     if(invitedUserId != null)
         query += `?invitedUserId=${invitedUserId}`;
@@ -17,7 +18,7 @@ async function getPoiAccesses(invitedUserId = null, poiId = null, issuerId = nul
     if(isAccepted != null)
         query += `&isAccepted=${isAccepted}`;
 
-    return await getReq(query);
+    return await getReq(query, signal);
 }
 
 async function addPoiAccess(poiAccess) {

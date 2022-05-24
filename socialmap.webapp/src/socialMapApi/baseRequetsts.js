@@ -2,7 +2,7 @@ import {headers, headers as paramHeaders, methods} from "./requestsParams";
 import Userfront from "@userfront/react";
 Userfront.init("xbr78p4n");
 
-async function getReq(query) {
+async function getReq(query, signal = null) {
     let headers = {}
 
     if(Userfront.tokens.accessToken !== undefined){
@@ -10,11 +10,11 @@ async function getReq(query) {
             Authorization: paramHeaders.Authorization
         };
     }
-
     try {
         const response = await fetch(query, {
             method: methods.get,
             headers: headers,
+            signal: signal
         });
         return response.ok ? await response.json() : null;
     } catch(e) {
