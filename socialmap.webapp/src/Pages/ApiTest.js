@@ -61,7 +61,7 @@ export default function ApiTest() {
             name: "fajne poi",
             x: 1110,
             y: 102,
-            description: "cdcdcdcdc",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur laoreet bibendum libero, a consectetur sapien. Sed eget purus tristique, dapibus ligula sit amet, tristique turpis. Etiam justo risus, egestas in enim non, pulvinar viverra mauris. Sed iaculis mollis lacus, in consectetur risus. Integer aliquam nisl eu neque feugiat vehicula. Nam id lectus bibendum dolor rhoncus euismod. Fusce ornare ultricies nibh congue egestas. Morbi maximus mattis lectus, aliquam sodales mi pulvinar sed. Phasellus tempus mauris ornare turpis posuere, at dapibus ex vulputate. Proin id ex lobortis, mollis justo non, varius nisl. Sed commodo felis in ipsum tincidunt ultrices. Cras faucibus ut nunc tempus eleifend. Nulla ac mollis neque, a vulputate ipsum. Vestibulum eu nisl vel mi imperdiet faucibus non et mauris.",
             isGlobal: false,
             categoriesId: []
         });

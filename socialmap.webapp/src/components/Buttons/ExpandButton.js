@@ -4,12 +4,12 @@ import {Box} from "@chakra-ui/react";
 export default function ExpandButton(props) {
     const downIcon = () =>
         (
-            <ChevronDownIcon align w={10} h={10}/>
+            <ChevronDownIcon w={10} h={10}/>
         );
 
     const upIcon = () =>
         (
-            <ChevronUpIcon align w={10} h={10}/>
+            <ChevronUpIcon w={10} h={10}/>
         )
 
     return (

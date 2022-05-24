@@ -54,14 +54,9 @@ namespace SocialMap.Infrastructure.Services
             return await Task.FromResult(ps.Select(x => x.ToDTO()));
         }
 
-        public async Task<IEnumerable<POIDTO>> GetAllForUserAsync(int userId)
+        public async Task<IEnumerable<POIDTO>> GetAllForUserAsync(int userId, bool withGlobal, bool withUser, bool withAccessed, bool withInvited)
         {
-            var ps = await _poiRepository.BrowseAllAsync();
-            ps = ps.Where(x => x.AppUserId == userId || (x.IsGlobal == true && x.IsAccepted == true));
-
-            var aps = await _poiRepository.GetAllAccessedAsync(userId);
-
-            ps = ps.Union(aps);
+            var ps = await _poiRepository.BrowseAllForUserAsync(userId, withGlobal, withUser, withAccessed, withInvited);
 
             return await Task.FromResult(ps.Select(x => x.ToDTO()));
         }

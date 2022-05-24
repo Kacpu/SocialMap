@@ -13,7 +13,7 @@ namespace SocialMap.Infrastructure.Services
         Task<POIDTO> AddAsync(CreatePOI createPOI, int authorId);
         Task<POIDTO> GetAsync(int id);
         Task<IEnumerable<POIDTO>> BrowseAllAsync(int? creatorId = null, bool? IsGlobal = null, bool? IsAccepted = null);
-        Task<IEnumerable<POIDTO>> GetAllForUserAsync(int userId);
+        Task<IEnumerable<POIDTO>> GetAllForUserAsync(int userId, bool withGlobal, bool withUser, bool withAccessed, bool withInvited);
         Task<POIDTO> UpdateAsync(int id, UpdatePOI updatePoi, int? authorId = null);
         Task DelAsync(int id, int? authId = null);
     }

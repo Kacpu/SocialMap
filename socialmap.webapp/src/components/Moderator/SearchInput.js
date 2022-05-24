@@ -8,7 +8,7 @@ export default function SearchInput(props) {
 
     function handle(event){
         setInputValue(event.target.value);
-        console.log(event.target.value)
+        //console.log(event.target.value)
     }
 
     return (

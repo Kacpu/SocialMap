@@ -6,15 +6,22 @@ async function getPoi(id) {
     return await getReq(query);
 }
 
-async function getPois(creatorId= null, isGlobal = null, isAccepted = null) {
+async function getPois(creatorId = null, isGlobal = null, isAccepted = null) {
     let query = `${serverUrl}/poi`;
-    if(creatorId != null)
+    if (creatorId != null)
         query += `?creatorId=${creatorId}`;
-    if(isGlobal != null)
+    if (isGlobal != null)
         query += `&isGlobal=${isGlobal}`;
-    if(isAccepted != null)
+    if (isAccepted != null)
         query += `&isAccepted=${isAccepted}`;
 
+    return await getReq(query);
+}
+
+async function getPoisForUser(withUser = false, withAccessed = false,
+                              withInvited = false, withGlobal = false,) {
+    let query = `${serverUrl}/poi/user?withGlobal=${withGlobal}&withUser=${withUser}&withAccessed=${withAccessed}`
+        + `&withInvited=${withInvited}`;
     return await getReq(query);
 }
 
@@ -33,4 +40,4 @@ async function deletePoi(id) {
     return await deleteReq(query);
 }
 
-export {getPoi, getPois, addPoi, updatePoi, deletePoi}
+export {getPoi, getPois, getPoisForUser, addPoi, updatePoi, deletePoi}

@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using LinqKit;
+using Microsoft.EntityFrameworkCore;
 using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -54,17 +56,40 @@ namespace SocialMap.Infrastructure.Repositories
                 p = p.Where(x => x.IsAccepted == isAccepted);
             }
 
-            p = p.Include(x => x.Categories);
+            p = p.Include(x => x.Categories).Include(x => x.Likes).AsSplitQuery();
 
             return await Task.FromResult(p);
         }
 
-        public async Task<IEnumerable<POI>> GetAllAccessedAsync(int userId)
+        public async Task<IEnumerable<POI>> BrowseAllForUserAsync(int userId, bool withGlobal, bool withUser, bool withAccessed, bool withInvited)
         {
-            var pas = _appDbContext.POIAccess.Where(x => x.AppUserId == userId);
-            var pois = _appDbContext.POI.Where(p => pas.Any(pa => pa.POIId == p.Id)).Include(x => x.Categories);
+            Expression<Func<POI, bool>> filter = PredicateBuilder.New<POI>(false);
 
-            return await Task.FromResult(pois);
+            if (withGlobal)
+            {
+                filter = filter.Or(x => x.AppUserId != userId && x.IsGlobal == true && x.IsAccepted == true);
+            }
+
+            if (withUser)
+            {
+                filter = filter.Or(x => x.AppUserId == userId);
+            }
+
+            if (withAccessed)
+            {
+                var pas = _appDbContext.POIAccess.Where(x => x.AppUserId == userId && x.IsAccepted == true);
+                filter = filter.Or(x => pas.Any(pa => pa.POIId == x.Id));
+            }
+
+            if (withInvited)
+            {
+                var pas = _appDbContext.POIAccess.Where(x => x.AppUserId == userId && x.IsAccepted == false);
+                filter = filter.Or(x => pas.Any(pa => pa.POIId == x.Id));
+            }
+
+            var p = _appDbContext.POI.Where(filter).Include(x => x.Categories).Include(x => x.Likes).AsSplitQuery();
+
+            return await Task.FromResult(p);
         }
 
         public async Task UpdateAsync()

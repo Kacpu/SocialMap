@@ -63,16 +63,29 @@ namespace SocialMap.WebAPI.Controllers
             {
                 poisDTO = await _poiService.BrowseAllAsync(creatorId, isGlobal, isAccepted);
             }
-            else if (User.Identity.IsAuthenticated)
-            {
-                poisDTO = await _poiService.GetAllForUserAsync(User.GetId());
-            }
             else
             {
                 poisDTO = await _poiService.BrowseAllAsync(IsGlobal: true, IsAccepted: true);
             }
 
             return Json(poisDTO);
+        }
+
+        [HttpGet("user")]
+        public async Task<IActionResult> BrowseAllPoiForUser(bool withGlobal, bool withUser, bool withAccessed, bool withInvited)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                IEnumerable<POIDTO> poisDTO;
+
+                poisDTO = await _poiService.GetAllForUserAsync(16, withGlobal, withUser, withAccessed, withInvited);
+
+                return Json(poisDTO);
+            }
+            else
+            {
+                return Forbid();
+            }
         }
 
         [HttpPut("{id}")]
