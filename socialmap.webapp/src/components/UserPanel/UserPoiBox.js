@@ -1,15 +1,22 @@
-import {Badge, Box, Button, Flex, HStack, Icon, Text, useColorModeValue} from "@chakra-ui/react";
+import {Badge, Box, Button, Flex, HStack, Icon, Text, useColorModeValue, useDisclosure} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import React from "react";
 import {ReactComponent as Like} from '../../icons/like-icon.svg'
 import Map from "../Map/Map";
 import ExpandButton from "../Buttons/ExpandButton";
 import BasePoiBox from "./BasePoiBox";
+import SharePoiModal from "../Modals/SharePoiModal";
 
 export default function UserPoiBox(props) {
     let status;
     let changeStatusButtonName;
     let changeStatusButtonFunction;
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
+    const handleShare = () => {
+        onOpen();
+    }
 
     if (props.poiData.isAccepted === true && props.poiData.isGlobal === true) {
         status = "public";
@@ -38,7 +45,7 @@ export default function UserPoiBox(props) {
         <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
             See comments
         </Button>,
-        <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={2}>
+        <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={2} onClick={handleShare}>
             Share
         </Button>,
         <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={3}>
@@ -58,11 +65,21 @@ export default function UserPoiBox(props) {
     ];
 
     return (
-        <BasePoiBox
-            poiData={props.poiData}
-            badges={badges}
-            leftButtons={leftButtons}
-            rightButtons={rightButtons}
-        />
+        <React.Fragment>
+            {isOpen &&
+                <SharePoiModal
+                    isOpen={isOpen}
+                    onOpen={onOpen}
+                    onClose={onClose}
+                    name={props.poiData.name}
+                />
+            }
+            <BasePoiBox
+                poiData={props.poiData}
+                badges={badges}
+                leftButtons={leftButtons}
+                rightButtons={rightButtons}
+            />
+        </React.Fragment>
     );
 }

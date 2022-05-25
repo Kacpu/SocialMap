@@ -23,7 +23,8 @@ export default function SearchInput(props) {
     return (
         <Box>
             <InputGroup>
-                <Input bg={"gray.800"} placeholder={props.placeholder} onChange={handle} onKeyDown={checkKey}></Input>
+                <Input bg={"gray.800"}  placeholder={props.placeholder}
+                       onChange={handle} onKeyDown={checkKey}/>
                 <Button leftIcon={<SearchIcon></SearchIcon>} width={"120px"} ml={"2"}
                         variant={"outline"} onClick={() => props.findFromInput(inputValue)}
                 >Find</Button>

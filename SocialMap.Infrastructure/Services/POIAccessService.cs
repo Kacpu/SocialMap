@@ -38,7 +38,7 @@ namespace SocialMap.Infrastructure.Services
                 throw new ForbidException("you are not an author of poi");
             }
 
-            var user = await _appUserRepository.GetAsync(createPoiAccess.InvitedUserId);
+            var user = await _appUserRepository.GetAsync(x => x.Id == createPoiAccess.InvitedUserId);
 
             if (user is null)
             {

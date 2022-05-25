@@ -15,7 +15,8 @@ namespace SocialMap.Infrastructure.DTO
             return new AppUser()
             {
                 UserfrontId = createAppUser.Record?.UserUuid,
-                UserName = createAppUser.Record?.Name
+                UserName = createAppUser.Record?.Name,
+                EmailAddress = createAppUser.Record?.Email
             };
         }
 
@@ -25,7 +26,8 @@ namespace SocialMap.Infrastructure.DTO
             {
                 Id = appUser.Id,
                 UserfrontId = appUser.UserfrontId,
-                UserName = appUser.UserName
+                UserName = appUser.UserName,
+                Email = appUser.EmailAddress
             };
         }
 

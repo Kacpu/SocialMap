@@ -4,6 +4,7 @@ using SocialMap.Core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,21 +25,15 @@ namespace SocialMap.Infrastructure.Repositories
             return await Task.FromResult(user);
         }
 
-        public async Task<AppUser> GetAsync(int id)
+        public async Task<AppUser> GetAsync(Expression<Func<AppUser, bool>> filter)
         {
-            var u = await _appDbContext.AppUsers.FirstOrDefaultAsync(x => x.Id == id);
+            var u = await _appDbContext.AppUsers.FirstOrDefaultAsync(filter);
             return await Task.FromResult(u);
         }
 
-        public async Task<AppUser> GetByUuidAsync(string uuid)
+        public async Task<IEnumerable<AppUser>> GetAllAsync(Expression<Func<AppUser, bool>> filter)
         {
-            var u = await _appDbContext.AppUsers.FirstOrDefaultAsync(x => x.UserfrontId == uuid);
-            return await Task.FromResult(u);
-        }
-
-        public async Task<IEnumerable<AppUser>> GetAllAsync()
-        {
-            var us = _appDbContext.AppUsers;
+            var us = _appDbContext.AppUsers.Where(filter);
             return await Task.FromResult(us);
         }
     }

@@ -1,4 +1,5 @@
-﻿using SocialMap.Core.Domain;
+﻿using LinqKit;
+using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
 using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
@@ -6,6 +7,7 @@ using SocialMap.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +24,14 @@ namespace SocialMap.Infrastructure.Services
 
         public async Task<AppUserDTO> AddAsync(CreateAppUser createUser)
         {
-            var check_u = await _appUserRepository.GetByUuidAsync(createUser.Record?.UserUuid);
+            if(createUser.Record is null)
+            {
+                throw new BadRequestException("record is null");
+            }
+
+            var check_u = await _appUserRepository.GetAsync(x => x.UserfrontId == createUser.Record.UserUuid
+                || x.EmailAddress == createUser.Record.Email);
+
             if (check_u != null)
             {
                 throw new BadRequestException("such app user already exists");
@@ -33,9 +42,20 @@ namespace SocialMap.Infrastructure.Services
             return await Task.FromResult(u.ToDTO());
         }
 
-        public async Task<AppUserDTO> GetAsync(int id)
+        public async Task<AppUserDTO> GetAsync(int? id, string uuid)
         {
-            var u = await _appUserRepository.GetAsync(id);
+            Expression<Func<AppUser, bool>> filter = x => false;
+
+            if(id != null)
+            {
+                filter = x => x.Id == id;
+            }
+            else if (!string.IsNullOrEmpty(uuid))
+            {
+                filter = x => x.UserfrontId == uuid;
+            }
+
+            var u = await _appUserRepository.GetAsync(filter);
 
             if (u is null)
             {
@@ -45,21 +65,16 @@ namespace SocialMap.Infrastructure.Services
             return await Task.FromResult(u.ToDTO());
         }
 
-        public async Task<AppUserDTO> GetByUuidAsync(string uuid)
+        public async Task<IEnumerable<AppUserDTO>> GetAllAsync(string searchInput)
         {
-            var u = await _appUserRepository.GetByUuidAsync(uuid);
-
-            if (u is null)
+            if (searchInput == null)
             {
-                throw new NotFoundException("user not found");
+                searchInput = "";
             }
 
-            return await Task.FromResult(u.ToDTO());
-        }
-
-        public async Task<IEnumerable<AppUserDTO>> GetAllAsync()
-        {
-            var users = await _appUserRepository.GetAllAsync();
+            Expression<Func<AppUser, bool>> filter = x => x.UserName.Contains(searchInput) || x.EmailAddress.Contains(searchInput);
+            
+            var users = await _appUserRepository.GetAllAsync(filter);
 
             return await Task.FromResult(users.Select(u => u.ToDTO()));
         }

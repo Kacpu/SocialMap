@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
 using SocialMap.Infrastructure.Services;
+using SocialMap.WebAPI.Extensions;
 using SocialMap.WebAPI.Helpers;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace SocialMap.WebAPI.Controllers
 {
+    [ApiController]
     [Route("[Controller]")]
     public class AppUserController : Controller
     {
@@ -47,18 +49,22 @@ namespace SocialMap.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "Admin")]
-        public async Task<IActionResult> GetAllAppUsers(string uuid)
+        [Authorize]
+        public async Task<IActionResult> GetAllAppUsers(string searchInput, string uuid)
         {
             if (!string.IsNullOrEmpty(uuid))
             {
-                var u = await _appUserService.GetByUuidAsync(uuid);
+                if(!User.IsAdmin() && !User.IsMod())
+                {
+                    return Forbid();
+                }
+                var u = await _appUserService.GetAsync(uuid: uuid);
                 return Json(u);
             }
             else
             {
-                var us = await _appUserService.GetAllAsync();
-                return Json(us);
+                var us = await _appUserService.GetAllAsync(searchInput);
+                return Json(us.Select(ud => new { ud.UserName, ud.Email }));
             }
         }
     }

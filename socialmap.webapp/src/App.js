@@ -2,7 +2,7 @@ import React from "react";
 import './App.css';
 import Map from "./components/Map/Map";
 import NavBar from "./components/NavBar/NavBar";
-import CustomFooter from "./components/Footer";
+import CustomFooter from "./components/Footer/Footer";
 import {Routes, Route} from "react-router-dom";
 import './index.css';
 import PrivatePage from "./Pages/PrivatePage";

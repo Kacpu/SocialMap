@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace SocialMap.WebAPI.Controllers
 {
+    [ApiController]
     [Route("[Controller]")]
     public class POIController : Controller
     {

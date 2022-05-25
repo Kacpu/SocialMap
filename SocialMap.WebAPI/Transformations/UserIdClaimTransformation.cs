@@ -25,7 +25,7 @@ namespace SocialMap.WebAPI.Transformations
             try
             {
                 string uuid = principal.Claims.First(c => c.Type == "userUuid").Value;
-                var user = await _appUserService.GetByUuidAsync(uuid);
+                var user = await _appUserService.GetAsync(uuid: uuid);
                 userIdValue = user.Id;
             }
             catch
