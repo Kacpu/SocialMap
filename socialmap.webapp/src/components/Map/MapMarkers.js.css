@@ -17,10 +17,29 @@
     height: 30px;
 }
 
+.popup-description{
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+@media only screen and (max-width: 600px) {
+    .leaflet-popup-content{
+        width: 60vw !important;
+    }
+}
+
+.leaflet-popup-content-wrapper{
+    background-color: rgba(251, 251, 255, 0.92);
+}
+
 .HStackLikes {
-    margin: auto 10px auto auto;
+    margin: auto 0px auto auto;
     width: min-content;
     height: 100%;
+}
+
+.leaflet-container a{
+    color: white;
 }
 
 .mapPin {

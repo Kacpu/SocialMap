@@ -13,6 +13,7 @@ import UserPoiBox from "./UserPoiBox";
 import BaseTabPanel from "./BaseTabPanel";
 import AccessedPoiBox from "./AccessedPoiBox";
 import InvitationBoiBox from "./InvitationBoiBox";
+import {POIToAcceptMock} from "../../mocks/POIToAcceptMock";
 
 export default function UserTable() {
     const boxColor = useColorModeValue('gray.600', 'gray.700');
@@ -23,6 +24,9 @@ export default function UserTable() {
 
     const fetchAccessedPoints = async (signal) => {
         return await getPoisForUser(signal, false, true).catch(console.error);
+
+
+
     }
 
     const fetchInvitationPoints = async (signal) => {

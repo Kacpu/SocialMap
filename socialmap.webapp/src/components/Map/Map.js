@@ -4,7 +4,7 @@ import './Map.js.css'
 import MapMarkers from "./MapMarkers";
 import {ReactComponent as Pin} from '../../icons/pin-icon.svg'
 import {ReactComponent as Arrow} from '../../icons/arrow-right.svg'
-import {Box, Button, Input, InputGroup, InputLeftElement, InputRightElement} from "@chakra-ui/react";
+import {Box, Button, HStack, Input, InputGroup, InputLeftElement, InputRightElement, Text} from "@chakra-ui/react";
 import L from "leaflet";
 import {ReactComponent as RedPin} from "../../icons/Pin-red.svg";
 
@@ -44,9 +44,10 @@ const Map = forwardRef((props, _ref) => {
             <Marker position={props.mapCenter} icon={centerIcon} draggable={props.draggable} ref={markerRef}
                     eventHandlers={eventHandlers}>
                 <Popup autoClose={false}>
-                    <Box>
-                        New point
-                    </Box>
+                    <HStack>
+                        <Text fontSize={"lg"}>Current</Text>
+                        <Text fontSize={"lg"} color={"red.500"}>point</Text>
+                    </HStack>
                 </Popup>
             </Marker>
         );
