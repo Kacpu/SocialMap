@@ -15,6 +15,7 @@ const Map = forwardRef((props, _ref) => {
     const [mapBounds, setMapBounds] = React.useState([[52.368, 21.271], [52.098, 20.852]])
     const [centerMarkerPosition, setCenterMarkerPosition] = React.useState(new L.LatLng(props.mapCenter[0], props.mapCenter[1]))
     const [displayClearButton, setDisplayClearButton] = React.useState(false)
+
     const handleChange = (event) => {
         setValue(event.target.value)
         if (event.target.value.trim().length === 0)
@@ -23,6 +24,7 @@ const Map = forwardRef((props, _ref) => {
             setDisplayClearButton(true)
     }
     const handleClick = () => {
+        console.log("value: " + value);
         setPoiName(value)
     }
     const handleClearClick = () => {
@@ -117,7 +119,7 @@ const Map = forwardRef((props, _ref) => {
                 {/*    bounds={mapBounds}*/}
                 {/*    color={"#ff7800"}*/}
                 {/*/>*/}
-                {MapMarkers(poiName)}
+                <MapMarkers poiName={poiName} />
                 {props.diplayCenterMarker ? centerMarker() : null}
             </MapContainer>
         </Box>

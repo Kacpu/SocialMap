@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Marker, Popup} from 'react-leaflet';
 import L from 'leaflet';
 import './MapMarkers.js.css'
@@ -21,12 +21,19 @@ const ReactDOMServer = require('react-dom/server');
 
 
 
-function GetMarkers(poiName) {
+function GetMarkers(props) {
 
-    const [markers, setMarkers] = useState(initialLoad(poiName));
+    const [markers, setMarkers] = useState([]);
+
+    useEffect(()=>{
+        let data = initialLoad(props.poiName);
+        setMarkers(data);
+    },[props.poiName])
 
     function initialLoad(poiName){
         //fetch from API
+        console.log("load Markers")
+        console.log("poiName:" + poiName)
         let data = POIMock.filter(x => x.Name.toLowerCase().includes(poiName.toLowerCase()));
         return data;
 
