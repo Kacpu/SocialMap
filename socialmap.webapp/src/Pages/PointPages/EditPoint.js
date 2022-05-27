@@ -7,6 +7,7 @@ import {POIToAcceptMock} from "../../mocks/POIToAcceptMock";
 
 export default function EditPoint(props) {
     const navigate = useNavigate();
+
     const {state} = useLocation();
     const {pointId} = state;
 
