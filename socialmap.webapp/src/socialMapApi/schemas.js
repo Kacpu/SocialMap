@@ -61,6 +61,11 @@ const createLike = {
     poiId: 0,
 }
 
+const userResponse = {
+    userName: "",
+    email: ""
+}
+
 export {
     createComment,
     updateCommentSchema,

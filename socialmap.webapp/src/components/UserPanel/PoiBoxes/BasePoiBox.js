@@ -7,21 +7,10 @@ import ExpandButton from "../../Buttons/ExpandButton";
 
 export default function BasePoiBox(props) {
     const [displayContent, setDisplayContent] = useState(false);
-    const [displayMap, setDisplayMap] = useState(false);
 
     const onHideContent = () => {
         setDisplayContent(prevState => !prevState);
-        setDisplayMap(false);
     }
-
-    const onHideMap = () => {
-        setDisplayMap(prevState => !prevState);
-    }
-
-    const displayMapButton =
-        <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} onClick={onHideMap}>
-            {displayMap ? "Hide map" : "Show map"}
-        </Button>;
 
     const boxColor = useColorModeValue('gray.600', 'gray.700');
 
@@ -82,20 +71,14 @@ export default function BasePoiBox(props) {
                     <Flex mt={3} mb={1} flexDirection={{base: "column", md: "row"}} justifyContent={"space-between"}
                           alignItems={"center"} rowGap={2}>
                         <Flex flexWrap={"wrap"} justify={"center"} rowGap={3}>
-                            {(props.mapButtonOnLeft === undefined || props.mapButtonOnLeft === true) && displayMapButton}
                             {props.leftButtons}
                         </Flex>
                         <Flex mt={{base: 2, md: 0}} flexWrap={"wrap"} justify={"center"} rowGap={3}>
-                            {props.mapButtonOnLeft === false && displayMapButton}
                             {props.rightButtons}
                         </Flex>
                     </Flex>
-
-                    {displayMap ? (<Box my={5}><Map diplayMarkers={true} mapCenter={[props.x, props.y]} zoom={17}
-                                                    showSearch={false}/></Box>) : (<></>)}
                 </Box>
             </Box>
-
         </React.Fragment>
     );
 }

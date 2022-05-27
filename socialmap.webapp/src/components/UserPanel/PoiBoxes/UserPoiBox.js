@@ -7,6 +7,9 @@ import ExpandButton from "../../Buttons/ExpandButton";
 import BasePoiBox from "./BasePoiBox";
 import SharePoiModal from "../../Modals/SharePoiModal";
 import useOpenStatus from "../../../hooks/useOpenStatus";
+import {Link as RouterLink} from "react-router-dom";
+import {ExternalLinkIcon} from "@chakra-ui/icons";
+import AddButton from "../../Buttons/AddButton";
 
 export default function UserPoiBox(props) {
     let status;
@@ -15,10 +18,10 @@ export default function UserPoiBox(props) {
 
     const { isOpen, onOpen, onClose } = useOpenStatus();
 
-    useEffect(() => {
-        console.log("render poi box")
-        return () => console.log("un user poi box")
-    })
+    // useEffect(() => {
+    //     console.log("render poi box")
+    //     return () => console.log("un user poi box")
+    // })
 
     const handleShare = () => {
         onOpen();
@@ -48,8 +51,9 @@ export default function UserPoiBox(props) {
     )));
 
     const leftButtons = [
-        <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
-            See comments
+        <Button as={RouterLink} to={`point/${props.poiData.id}`}
+                   variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
+            Details
         </Button>,
         <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={2} onClick={handleShare}>
             Share

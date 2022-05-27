@@ -1,4 +1,3 @@
-import BasePoiBox from "../components/UserPanel/BasePoiBox";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react"
 import {Box, Button, Container, Flex, Heading, HStack, Input, Stack, Text, VStack} from "@chakra-ui/react";
