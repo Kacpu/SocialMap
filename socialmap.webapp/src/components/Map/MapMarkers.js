@@ -6,8 +6,10 @@ import {ReactComponent as Like} from '../../icons/like-icon.svg'
 import {ReactComponent as BluePin} from '../../icons/Pin-blue.svg'
 import {POIMock} from "../../mocks/POIMock";
 import {Box, Button, GridItem, HStack} from "@chakra-ui/react";
-import {EditIcon} from "@chakra-ui/icons";
+import {EditIcon, ExternalLinkIcon} from "@chakra-ui/icons";
 import Grid from "antd/es/card/Grid";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
+import AddButton from "../Buttons/AddButton";
 
 const ReactDOMServer = require('react-dom/server');
 const iconPerson = new L.DivIcon({
@@ -18,6 +20,7 @@ const iconPerson = new L.DivIcon({
 });
 
 function GetMarkers(poiName) {
+
     return (
         <div>
             {POIMock.filter(x => x.Name.toLowerCase().includes(poiName.toLowerCase())).map(data => (
@@ -25,16 +28,19 @@ function GetMarkers(poiName) {
                     key={data.Id}
                     position={[data.X, data.Y]}
                     icon={iconPerson}>
-                    <Popup autoClose={false}>
-                        <Box className={"popup-title"}>
+                    <Popup autoClose={false} class={"popup-marker"} >
+                        <Box className={"popup-title"} mb={"2"}>
                             {data.Name}
                         </Box>
-                        {data.description}
+                        <Box mb={"5"} className={"popup-description"}>
+                            {data.description}
+                        </Box >
                         <HStack spacing='24px'>
                             <Box w='50%' h='40px'>
-                                <Button leftIcon={<EditIcon />} colorScheme='teal' variant='solid' size='sm' className={'editButton'}>
-                                    Edit
-                                </Button>
+                                <AddButton as={RouterLink} to={`point/${data.Id}`} leftIcon={<ExternalLinkIcon />}
+                                           size='sm' className={'editButton'} >
+                                    Details
+                                </AddButton>
                             </Box>
                             <Box w='50%' h='40px'>
                                 <HStack spacing='10px' className={'HStackLikes'}>

@@ -7,6 +7,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import UserTable from "../components/UserPanel/Tabs/UserTable";
+import HorizontalLineBox from "../components/Boxes/HorizontalLineBox";
 
 //Userfront.init("xbr78p4n");
 
@@ -27,8 +28,7 @@ export default function ProfilePage() {
                         <Text fontSize={'18px'}>{Userfront.user.userUuid}</Text>
                     </HStack>
                 </Stack>
-                <Box height={0.5} border={'none'} bg={'gray.600'} marginTop={10} boxShadow={'0 3px 10px -0.5px gray'}>
-                </Box>
+                <HorizontalLineBox marginTop={10}/>
             </Box>
             <UserTable/>
         </Box>

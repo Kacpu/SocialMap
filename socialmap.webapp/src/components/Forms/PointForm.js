@@ -47,7 +47,7 @@ function InfoBadge(props) {
 
 export default function PointForm(props) {
     const [inputValue, setInputValue] = React.useState('')
-    const [mapCenter, setMapCenter] = React.useState([52.22983, 21.01173]);
+    const [mapCenter, setMapCenter] = React.useState(initialMap());
     const [reloadMap, setReloadMap] = React.useState(false)
     const [displayClearButton, setDisplayClearButton] = React.useState(false)
     const [chosenItem, setChosenItem] = React.useState('helelelelp')
@@ -68,6 +68,14 @@ export default function PointForm(props) {
         reset,
         formState: {errors, isSubmitting},
     } = useForm()
+
+    function initialMap(){
+        if(props.defaultValues){
+            return [props.defaultValues.x,props.defaultValues.y]
+        }
+
+        return [52.22983, 21.01173]
+    }
 
 
     React.useEffect(()=>{

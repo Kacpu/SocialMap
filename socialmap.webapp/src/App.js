@@ -21,6 +21,7 @@ import EditCategoryModerator from "./Pages/EditCategoryModerator";
 import EditPoint from "./Pages/PointPages/EditPoint";
 import ScrollToTop from "./tools/ScrollToTop";
 import About from "./Pages/About";
+import PoiDetails from "./Pages/PoiDetails";
 
 //Wczenisej bylo Route z Navbarem. Musialem to zmienic by footer ladnie sie kleil konca strony
 function App() {
@@ -35,6 +36,7 @@ function App() {
                         <Route path='/signup' element={<Signup/>}/>
                         <Route path='/login' element={<Login/>}/>
                         <Route path='/reset' element={<PasswordReset/>}/>
+                        <Route path='/point/:id' element={<PoiDetails/>}/>
                         <Route path='/moderatorpanel' element={<ModeratorPanel/>}/>
                         <Route path='/moderatorpanel/addcategory' element={<AddCategoryModerator />} />
                         <Route path='/moderatorpanel/editcategory' element={<EditCategoryModerator />} />

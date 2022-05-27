@@ -123,7 +123,7 @@ export default function PointBox(props) {
                         </HStack>
                         <Text mb={1}>Map: </Text>
                         {displayMap ? (<Box><Map diplayMarkers={false} mapCenter={[props.x, props.y]} zoom={17} showSearch={false} diplayCenterMarker={true} draggable={false}/> </Box>) : (<></>)}
-                        <Text mb={1}>Description: </Text>
+                        <Text mb={1} mt={5}>Description: </Text>
                         {makeBox(props.description)}
                     </Box>
 
