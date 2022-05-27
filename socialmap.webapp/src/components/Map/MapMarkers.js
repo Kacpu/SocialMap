@@ -18,9 +18,6 @@ import CustomMarker from "./CustomMarker";
 
 const ReactDOMServer = require('react-dom/server');
 
-
-
-
 function GetMarkers(props) {
 
     const [markers, setMarkers] = useState([]);
