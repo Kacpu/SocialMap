@@ -60,7 +60,7 @@ export default function PointBox(props) {
     }
 
     const handleEdit = () => {
-        navigate("/editpoint", {state: {pointId: props.id}})
+        navigate("/editpoint", {state: {pointId: props.id, beforeSite: "/moderatorpanel/#globalPoints"}})
     }
 
     const handleDelete = () => {
