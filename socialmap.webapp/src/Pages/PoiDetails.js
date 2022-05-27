@@ -1,14 +1,14 @@
-import {useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react"
 import {Box, Button, Container, Flex, Heading, HStack, Icon, Input, Stack, Text, VStack} from "@chakra-ui/react";
 import Map from "../components/Map/Map";
 import HorizontalLineBox from "../components/Boxes/HorizontalLineBox";
-import {AddIcon, SmallAddIcon} from "@chakra-ui/icons";
+import {AddIcon, ArrowBackIcon, SmallAddIcon} from "@chakra-ui/icons";
 import {FaUser} from "react-icons/fa"
 import CommentsList from "../components/PoiDetails/CommentsList";
 
 
-export default function PoiDetails() {
+export default function PoiDetails(props) {
 
     const {id} = useParams();
     const [poiData, setPoiData] = useState([]);
@@ -16,6 +16,9 @@ export default function PoiDetails() {
     const [reloadMap, setReloadMap] = React.useState(false);
     const [centerMarkerFlag, setCenterMarkerFlag] = React.useState(true);
 
+    const navigate = useNavigate();
+    const {state} = useLocation();
+    const {beforeSite} = state || {};
     const [loading, setLoading] = useState(true);
 
 
@@ -51,6 +54,16 @@ export default function PoiDetails() {
         return poiData;
     }
 
+    function handleBack() {
+        let to = "";
+        if(!beforeSite){
+            to="/"
+        } else{
+            to = beforeSite;
+        }
+        navigate(to);
+    }
+
     const mapRef = useRef()
 
     useEffect(() => {
@@ -65,9 +78,16 @@ export default function PoiDetails() {
                 </React.Fragment>
             ) : (
 
-                <Flex mt={"10"} alignItems={"center"} justifyContent={"center"} flexDirection={"column"}>
+                <Flex mt={"60px"} alignItems={"center"} justifyContent={"center"} flexDirection={"column"}>
                     <Flex alignItems={"center"} justifyContent={"center"} flexDirection={"column"}
-                          width={{base: '90vw', md: '800px'}}>
+                          width={{base: '90vw', md: '800px'}} position={"relative"}>
+                        <Button alignSelf={"flex-start"}
+                                position={"absolute"}
+                                top={"-35px"}
+                                variant={"outline"}
+                                onClick={() => handleBack()}>
+                            <ArrowBackIcon/>
+                        </Button>
                         <VStack mb={"5"} alignText={"center"}>
                             <HStack>
                                 <Heading>{poiData.name}</Heading>

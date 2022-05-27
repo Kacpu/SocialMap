@@ -214,8 +214,11 @@ export default function PointForm(props) {
                 //bg={useColorModeValue('gray.50', 'gray.800')}
             >
 
-                <Stack spacing={5} mx={'auto'} maxW={'700px'} w={'90%'} py={12} px={0}>
-                    <Button alignSelf={"flex-start"} position="absolute" variant={"outline"} onClick={() => props.backAction()}>
+                <Stack spacing={5} mx={'auto'} maxW={'700px'} w={'90%'} py={12} px={0} position={"relative"}>
+                    <Button alignSelf={"flex-start"} position="absolute"
+                            top={"5"}
+                            variant={"outline"}
+                            onClick={() => props.backAction()}>
                         <ArrowBackIcon/>
                     </Button>
                     <Stack align={'center'}>

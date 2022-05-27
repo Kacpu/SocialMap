@@ -4,7 +4,7 @@ import {Marker, Popup} from "react-leaflet";
 import {Box, Button, Flex, HStack, Icon, Link, Text} from "@chakra-ui/react";
 import {SiGooglestreetview} from "react-icons/si";
 import AddButton from "../Buttons/AddButton";
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {ExternalLinkIcon} from "@chakra-ui/icons";
 import {AiFillLike, AiOutlineLike} from "react-icons/ai";
 import L from "leaflet";
@@ -20,6 +20,8 @@ const iconPerson = new L.DivIcon({
 
 export default function CustomMarker(props){
 
+    const navigate = useNavigate();
+
     const [isLiked, setIsLiked] = useState();
     const [likesCount, setLikesCount] = useState(props.data.likes.length);
 
@@ -32,6 +34,10 @@ export default function CustomMarker(props){
         }
 
         setIsLiked(!isLiked);
+    }
+
+    function handleChangePage(){
+        navigate(`point/${props.data.Id}`, {state: {beforeSite : "/"}});
     }
 
     return(
@@ -56,7 +62,8 @@ export default function CustomMarker(props){
                     </Box >
                     <HStack spacing='24px'>
                         <Box w='50%' h='40px'>
-                            <AddButton as={RouterLink} to={`point/${props.data.Id}`} leftIcon={<ExternalLinkIcon />}
+                            <AddButton onClick={handleChangePage}
+                                       leftIcon={<ExternalLinkIcon />}
                                        size='sm' className={'editButton'} >
                                 Details
                             </AddButton>

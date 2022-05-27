@@ -40,7 +40,8 @@ export default function NavBar() {
         navigate('/signup')
     }
 
-    const links = [{id: 0, name: "Add point", url: '/addpoint', protect: false},
+    const links = [
+        {id: 0, name: "Add point", url: '/addpoint', protect: false},
         {id: 1, name: "About", url: '/about', protect: false},
         {id: 2, name: "Contact Us", url: '/contact', protect: false},
         //{id: 3, name: "PrivateTest", url: '/private', protect: false},
@@ -54,7 +55,7 @@ export default function NavBar() {
 
     const linkItems = links.map((link) =>
         ((link.protect && isAuthenticated()) || !link.protect) &&
-        <Link as={RouterLink} to={link.url}
+        <Link as={RouterLink} to={{pathname: link.url}}
               key={link.id}
               color={linkColor}
               fontSize='lg'

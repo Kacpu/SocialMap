@@ -46,6 +46,7 @@ const Map = forwardRef((props, _ref) => {
     const handleClick = () => {
         setPoiName(value)
     }
+
     const handleClearClick = () => {
         setValue('')
         setDisplayClearButton(false)
