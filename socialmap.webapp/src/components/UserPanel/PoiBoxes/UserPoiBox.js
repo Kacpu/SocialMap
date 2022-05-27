@@ -1,18 +1,24 @@
 import {Badge, Box, Button, Flex, HStack, Icon, Text, useColorModeValue, useDisclosure} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import React from "react";
-import {ReactComponent as Like} from '../../icons/like-icon.svg'
-import Map from "../Map/Map";
-import ExpandButton from "../Buttons/ExpandButton";
+import {ReactComponent as Like} from '../../../icons/like-icon.svg'
+import Map from "../../Map/Map";
+import ExpandButton from "../../Buttons/ExpandButton";
 import BasePoiBox from "./BasePoiBox";
-import SharePoiModal from "../Modals/SharePoiModal";
+import SharePoiModal from "../../Modals/SharePoiModal";
+import useOpenStatus from "../../../hooks/useOpenStatus";
 
 export default function UserPoiBox(props) {
     let status;
     let changeStatusButtonName;
     let changeStatusButtonFunction;
 
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen, onOpen, onClose } = useOpenStatus();
+
+    useEffect(() => {
+        console.log("render poi box")
+        return () => console.log("un user poi box")
+    })
 
     const handleShare = () => {
         onOpen();
@@ -69,7 +75,6 @@ export default function UserPoiBox(props) {
             {isOpen &&
                 <SharePoiModal
                     isOpen={isOpen}
-                    onOpen={onOpen}
                     onClose={onClose}
                     name={props.poiData.name}
                 />

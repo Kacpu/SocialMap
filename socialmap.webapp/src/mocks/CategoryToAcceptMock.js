@@ -1,43 +1,43 @@
 export const categoryToAcceptMock = 
 [
     {
-      "Id": 0,
+      "id": 0,
       "Name": "Oneida"
     },
     {
-      "Id": 1,
+      "id": 1,
       "Name": "Munjor"
     },
     {
-      "Id": 2,
+      "id": 2,
       "Name": "Cliffside"
     },
     {
-      "Id": 3,
+      "id": 3,
       "Name": "Martinez"
     },
     {
-      "Id": 4,
+      "id": 4,
       "Name": "Avoca"
     },
     {
-      "Id": 5,
+      "id": 5,
       "Name": "Catherine"
     },
     {
-      "Id": 6,
+      "id": 6,
       "Name": "Martell"
     },
     {
-      "Id": 7,
+      "id": 7,
       "Name": "Leyner"
     },
     {
-      "Id": 8,
+      "id": 8,
       "Name": "Finzel"
     },
     {
-      "Id": 9,
+      "id": 9,
       "Name": "Lodoga"
     },
     {

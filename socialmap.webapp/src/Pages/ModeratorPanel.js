@@ -1,84 +1,42 @@
-import {
-    Tabs, TabList, TabPanels, Tab, TabPanel, Box, useColorModeValue, Stack, Heading, Button, Flex, useDisclosure,
-    Input, HStack, InputGroup, InputRightElement
-} from '@chakra-ui/react'
-
-import {Link as RouterLink, useLocation} from "react-router-dom"
-import CategoryModerator from '../components/Moderator/CategoryModerator';
-import PointBox from "../components/Moderator/PointBox";
-import {POIToAcceptMock} from '../mocks/POIToAcceptMock';
-import {categoryData} from '../mocks/CategoryMock';
-import {categoryToAcceptMock} from '../mocks/CategoryToAcceptMock';
+import {Tabs, TabList, TabPanels, Tab, TabPanel, Box, useColorModeValue, Stack, Heading, Button} from '@chakra-ui/react'
+import {useLocation} from "react-router-dom"
 import {useEffect, useState} from 'react';
-import AddButton from '../components/Buttons/AddButton';
-import DeleteCategoryModal from '../components/Moderator/DeleteCategoryModal';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import {SearchIcon} from '@chakra-ui/icons';
-import SearchInput from "../components/Moderator/SearchInput";
-import {getPoisForUser} from "../socialMapApi/poiRequests";
-import BaseTabPanel from "../components/UserPanel/BaseTabPanel";
+import CategoryTabPanel from "../components/Moderator/CategoryTabPanel";
+import PointsToAcceptTabPanel from "../components/Moderator/PointsToAcceptTabPanel";
+import GlobalPointsTabPanel from "../components/Moderator/GlobalPointsTabPanel";
 
 export default function ModeratorPanel() {
-
-    const boxColor = useColorModeValue('gray.600', 'gray.700');
     const [loading, setLoading] = useState(false);
-
-    const {isOpen, onOpen, onClose} = useDisclosure()
     const {hash} = useLocation();
+    const boxColor = useColorModeValue('gray.600', 'gray.700');
 
-    const [categoryIdToDelete, setCategoryIdToDelete] = useState(undefined);
-    const [categoryNameToDelete, setCategoryNameToDelete] = useState(undefined);
-
-    const [pointIdToManage, setPointIdToManage] = useState(undefined);
-    const [pointNameToManage, setPointNameToManage] = useState(undefined);
-
-    const [selectedTab, setSelectedTab] = useState(0);
-
-    const fetchCategories = async (signal = null) => {
-        //return await getPoisForUser(signal, true).catch(console.error);
-        return categoryToAcceptMock;
-    }
-
-    const fetchPoints = async (signal = null) => {
-        //return await getPoisForUser(signal, false, true).catch(console.error);
-        return POIToAcceptMock;
-    }
-
-    const fetchPointsToAccept= async (signal = null) => {
-        //return await getPoisForUser(signal, false, false, true).catch(console.error);
-        return POIToAcceptMock;
-    }
-
-    const filter = (list, input) => list.filter(x => x.Name.toLowerCase().includes(input.toLowerCase()) || x.Id == input);
+    //const [pointIdToManage, setPointIdToManage] = useState(undefined);
+    //const [pointNameToManage, setPointNameToManage] = useState(undefined);
+    //const [selectedTab, setSelectedTab] = useState(0);
 
     function switchTab(id) {
-        let usedData;
+        // let usedData;
         // switch (id) {
         //     case 0:
-        //         if(allPointsToAccept.length == 0){
-        //
-        //         }
-        //         else{
+        //         if (fetchedPointsToAccept.length === 0) {
+        //         } else {
         //         }
         //         break;
         //
         //     case 1:
-        //         if(allPoints.length == 0){
-        //             //fetch from API
-        //         }
-        //         else{
+        //         if (fetchedGlobalPoints.length === 0) {
+        //         } else {
         //         }
         //
         //         break;
         //
         //     case 2:
-        //         if(allCategories.length == 0){
-        //         }
-        //         else{
+        //         if (fetchedCategories.length === 0) {
+        //         } else {
         //         }
         //         break;
         // }
-        //setSelectedTab(id);
+        // setSelectedTab(id);
     }
 
     function focusOnName(name){
@@ -87,10 +45,10 @@ export default function ModeratorPanel() {
             case "#categories":
                 index = 2;
                 break;
-            case "#acceptPoints":
+            case "#pointsToAccept":
                 index = 0;
                 break;
-            case "#existPoints":
+            case "#globalPoints":
                 index = 1;
                 break;
             default:
@@ -98,55 +56,6 @@ export default function ModeratorPanel() {
                 break;
         }
         return index;
-    }
-
-    const categories = (list) => {
-        return list.map((obj) =>
-            <CategoryModerator
-                key={obj.Id}
-                id={obj.Id}
-                name={obj.Name}
-                onOpen={onOpen}
-                setCategoryIdToDelete={setCategoryIdToDelete}
-                setCategoryNameToDelete={setCategoryNameToDelete}
-            />
-        );
-    }
-
-    const pointsToAccept = (list) => {
-        return list.map((obj) =>
-            <PointBox
-                key={obj.Id}
-                id={obj.Id}
-                name={obj.Name}
-                author={obj.Author}
-                category={obj.Category}
-                x={obj.X}
-                y={obj.Y}
-                description={obj.description}
-                setPointIdToManage={setPointIdToManage}
-                setPointNameToManage={setPointNameToManage}
-                pointType="toAccept"
-            />
-        );
-    }
-
-    const existingPoints = (list) => {
-        return list.map((obj) =>
-            <PointBox
-                key={obj.Id}
-                id={obj.Id}
-                name={obj.Name}
-                author={obj.Author}
-                category={obj.Category}
-                x={obj.X}
-                y={obj.Y}
-                description={obj.description}
-                setPointIdToManage={setPointIdToManage}
-                setPointNameToManage={setPointNameToManage}
-                pointType="existing"
-            />
-        );
     }
 
     return (
@@ -158,48 +67,22 @@ export default function ModeratorPanel() {
                 <Button isLoading={true}></Button>
             ) : (
                 <Box width={'90vw'} bgColor={boxColor} mt={8} rounded={'lg'}>
-                    <Tabs isLazy defaultIndex={() => focusOnName(hash)}>
+                    <Tabs isLazy defaultIndex={focusOnName(hash)}>
                         <TabList>
                             <Tab onClick={() => switchTab(0)}>Accept Points</Tab>
-                            <Tab onClick={() => switchTab(1)}>Existing Points</Tab>
+                            <Tab onClick={() => switchTab(1)}>Global Points</Tab>
                             <Tab onClick={() => switchTab(2)}>Categories</Tab>
                         </TabList>
 
                         <TabPanels>
                             <TabPanel>
-                                <BaseTabPanel
-                                    fetchData={fetchPointsToAccept}
-                                    searchPlaceholder={"point name or id"}
-                                    filterData={filter}
-                                    createDataComponentList={pointsToAccept}
-                                />
+                                <PointsToAcceptTabPanel/>
                             </TabPanel>
-
                             <TabPanel>
-                                <BaseTabPanel
-                                    fetchData={fetchPoints}
-                                    searchPlaceholder={"point name or id"}
-                                    filterData={filter}
-                                    createDataComponentList={existingPoints}
-                                />
+                                <GlobalPointsTabPanel/>
                             </TabPanel>
-
                             <TabPanel>
-
-                                <AddButton as={RouterLink} to="/moderatorpanel/addcategory"
-                                           w={"100%"} mb={"4"}>
-                                    Add Category
-                                </AddButton>
-
-                                <DeleteCategoryModal id={categoryIdToDelete} name={categoryNameToDelete}
-                                                     isOpen={isOpen}
-                                                     onClose={onClose}/>
-                                <BaseTabPanel
-                                    fetchData={fetchCategories}
-                                    searchPlaceholder={"category name or id"}
-                                    filterData={filter}
-                                    createDataComponentList={categories}
-                                />
+                                <CategoryTabPanel/>
                             </TabPanel>
                         </TabPanels>
                     </Tabs>

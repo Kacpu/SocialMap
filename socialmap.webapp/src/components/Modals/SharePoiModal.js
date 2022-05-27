@@ -10,7 +10,7 @@ import {
     ModalOverlay,
     Text
 } from "@chakra-ui/react";
-import SearchInput from "../Moderator/SearchInput";
+import SearchInput from "../Buttons/SearchInput";
 import AcceptButton from "../Buttons/AcceptButton";
 
 export default function SharePoiModal(props) {

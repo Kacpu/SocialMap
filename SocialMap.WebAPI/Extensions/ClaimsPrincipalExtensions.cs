@@ -13,19 +13,26 @@ namespace SocialMap.WebAPI.Extensions
             return Convert.ToInt32(principal?.Claims.FirstOrDefault(x => x.Type == "id")?.Value);
         }
 
-        public static string GetRole(this ClaimsPrincipal principal)
+        public static bool HasRole(this ClaimsPrincipal principal, string role)
         {
-            return principal?.Claims.FirstOrDefault(x => x.Type == "role")?.Value;
+            foreach(var r in principal?.Claims.Where(x => x.Type == "role").Select(x => x.Value))
+            {
+                if(r == role)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static bool IsAdmin(this ClaimsPrincipal principal)
         {
-            return principal?.GetRole() == "admin";
+            return principal.HasRole("admin");
         }
 
         public static bool IsMod(this ClaimsPrincipal principal)
         {
-            return principal?.GetRole() == "editor";
+            return principal.HasRole("editor");
         }
     }
 }

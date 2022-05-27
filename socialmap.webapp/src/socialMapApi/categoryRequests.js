@@ -16,7 +16,7 @@ async function getCategories(signal = null, name = null) {
 
 async function addCategory(category) {
     const query = `${serverUrl}/category`;
-    return await addReq(query,category);
+    return await addReq(query, category);
 }
 
 async function updateCategory(id, category) {

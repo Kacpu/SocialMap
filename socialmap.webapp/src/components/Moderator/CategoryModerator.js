@@ -27,9 +27,11 @@ import {
 import EditButton from '../Buttons/EditButton';
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import WarningButton from '../Buttons/WarningButton';
+import DeleteCategoryModal from "../Modals/DeleteCategoryModal";
+import useOpenStatus from "../../hooks/useOpenStatus";
 
 export default function CategoryModerator(props) {
-
+    const {isOpen, onOpen, onClose} = useOpenStatus()
     const navigate = useNavigate();
 
     const redirectToEdit = (id) => {
@@ -37,9 +39,7 @@ export default function CategoryModerator(props) {
     }
 
     const handleDelete = () => {
-        props.setCategoryIdToDelete(props.id);
-        props.setCategoryNameToDelete(props.name);
-        props.onOpen();
+        onOpen();
     }
 
     return (
@@ -65,6 +65,16 @@ export default function CategoryModerator(props) {
                     </Flex>
                 </Flex>
             </Stack>
+
+            {isOpen &&
+                <DeleteCategoryModal id={props.id}
+                                     name={props.name}
+                                     isOpen={isOpen}
+                                     onClose={onClose}
+                                     onCategoryDelete={props.onCategoryDelete}
+                />
+            }
+
         </Box>
     );
 }

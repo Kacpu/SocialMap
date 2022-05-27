@@ -18,7 +18,8 @@ import { useNavigate, Link as RouterLink } from "react-router-dom"
 import { categoryData } from '../mocks/CategoryMock';
 import React, { useState } from "react";
 import AddButton from '../components/Buttons/AddButton';
-import {successToast} from "../components/Toasts/ToastUtil";
+import {errorToast, successToast} from "../components/Toasts/ToastUtil";
+import {addCategory} from "../socialMapApi/categoryRequests";
 
 function InfoBadge(props) {
     return (
@@ -32,7 +33,6 @@ function InfoBadge(props) {
 
 export default function AddCategoryModerator() {
     let navigate = useNavigate();
-    // console.log(categoryData)
     const [value, setValue] = React.useState('')
     const toast = useToast();
 
@@ -41,11 +41,13 @@ export default function AddCategoryModerator() {
     const inputColor = useColorModeValue('gray.100', 'gray.50')
     const subBoxColor = useColorModeValue('gray.600', 'gray.600');
 
-    function onSubmit(data) {
-        let obj = JSON.stringify(data, null, 3)
-        //obj.isGlobal = !obj.isGlobal;
-
-        successToast(toast, "added", "category")
+    async function onSubmit(data) {
+        let res = await addCategory(data)
+        if(res != null){
+            successToast(toast, "added", "category")
+        } else {
+            errorToast(toast)
+        }
         navigate('/moderatorpanel/#categories')
     }
 
@@ -85,7 +87,6 @@ export default function AddCategoryModerator() {
                         p={8}>
 
                         <Stack spacing={5}>
-
                             <FormControl isInvalid={errors.name}>
                                 <FormLabel htmlFor='name' color={labelColor}>Name</FormLabel>
                                 <Input id='name' type="text" color={inputColor} bgColor={subBoxColor}

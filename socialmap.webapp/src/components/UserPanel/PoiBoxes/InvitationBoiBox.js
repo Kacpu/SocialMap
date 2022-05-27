@@ -1,6 +1,6 @@
-import {Badge, Button, Text} from "@chakra-ui/react";
+import {Badge, Button, Text, useDisclosure} from "@chakra-ui/react";
 import BasePoiBox from "./BasePoiBox";
-import React from "react";
+import React, {useEffect} from "react";
 import {rgbToHex} from "@mui/material";
 import {BsFillPeopleFill} from "react-icons/bs";
 

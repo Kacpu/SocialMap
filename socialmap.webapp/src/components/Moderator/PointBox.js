@@ -38,12 +38,12 @@ export default function PointBox(props) {
     const [displayMap, setDisplayMap] = useState(false);
     const downIcon = () =>
     (
-        <ChevronDownIcon align w={10} h={10} />
+        <ChevronDownIcon w={10} h={10} />
     );
 
     const upIcon = () =>
     (
-        <ChevronUpIcon align w={10} h={10} />
+        <ChevronUpIcon w={10} h={10} />
     )
 
     const handleToggle = () => {

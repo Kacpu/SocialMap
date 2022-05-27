@@ -21,7 +21,7 @@ export default function EditPoint(props) {
     }
 
     function getPoint(id) {
-        //fetch Id from API
+        //fetch id from API
 
         //categoryId !!
 

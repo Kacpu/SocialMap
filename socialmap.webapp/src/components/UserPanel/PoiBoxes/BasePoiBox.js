@@ -1,9 +1,9 @@
 import {Badge, Box, Button, Flex, HStack, Icon, Text, useColorModeValue} from "@chakra-ui/react";
 import {useState} from "react";
 import React from "react";
-import {ReactComponent as Like} from '../../icons/like-icon.svg'
-import Map from "../Map/Map";
-import ExpandButton from "../Buttons/ExpandButton";
+import {ReactComponent as Like} from '../../../icons/like-icon.svg'
+import Map from "../../Map/Map";
+import ExpandButton from "../../Buttons/ExpandButton";
 
 export default function BasePoiBox(props) {
     const [displayContent, setDisplayContent] = useState(false);

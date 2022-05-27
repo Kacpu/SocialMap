@@ -69,8 +69,7 @@ namespace SocialMap.WebAPI
             );
 
             services.AddTransient<ExceptionHandlingMiddleware>();
-            services.AddTransient<IClaimsTransformation, RoleClaimTransformation>();
-            services.AddTransient<IClaimsTransformation, UserIdClaimTransformation>();
+            services.AddTransient<IClaimsTransformation, ClaimsTransformation>();
 
             services.ConfigureAuthentication(Configuration["Userfront:JwtPublicKey"]);
             services.ConfigurePolicies();

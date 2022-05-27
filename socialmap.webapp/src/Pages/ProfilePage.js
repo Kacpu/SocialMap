@@ -6,7 +6,7 @@ import {
     Text,
 } from "@chakra-ui/react";
 import React from "react";
-import UserTable from "../components/UserPanel/UserTable";
+import UserTable from "../components/UserPanel/Tabs/UserTable";
 
 //Userfront.init("xbr78p4n");
 

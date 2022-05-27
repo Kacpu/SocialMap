@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SocialMap.Infrastructure.Commands;
 using SocialMap.Infrastructure.DTO;
 using SocialMap.Infrastructure.Services;
+using SocialMap.WebAPI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,19 +16,23 @@ namespace SocialMap.WebAPI.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
+        private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(ICategoryService CategoryService)
+        public CategoryController(ICategoryService CategoryService, ILogger<CategoryController> logger)
         {
             _categoryService = CategoryService;
+            _logger = logger;
         }
 
         [HttpPost]
         [Authorize(Policy = "SuperUser")]
         public async Task<IActionResult> AddCategory([FromBody] CreateCategory createCategory)
         {
+            //_logger.LogInformation(User.GetId().ToString());
+
             if (createCategory == null || string.IsNullOrEmpty(createCategory.Name))
             {
-                return BadRequest();
+                return BadRequest("bad category body");
             }
 
             var c = await _categoryService.AddAsync(createCategory);
