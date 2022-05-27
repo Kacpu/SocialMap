@@ -7,17 +7,28 @@ import {ReactComponent as Arrow} from '../../icons/arrow-right.svg'
 import {Box, Button, HStack, Input, InputGroup, InputLeftElement, InputRightElement, Text} from "@chakra-ui/react";
 import L from "leaflet";
 import {ReactComponent as RedPin} from "../../icons/Pin-red.svg";
+import {ArrowForwardIcon, CloseIcon} from "@chakra-ui/icons";
 
 const Map = forwardRef((props, _ref) => {
     const [value, setValue] = React.useState('')
     const [poiName, setPoiName] = React.useState('')
     const [mapBounds, setMapBounds] = React.useState([[52.368, 21.271], [52.098, 20.852]])
     const [centerMarkerPosition, setCenterMarkerPosition] = React.useState(new L.LatLng(props.mapCenter[0], props.mapCenter[1]))
+    const [displayClearButton, setDisplayClearButton] = React.useState(false)
     const handleChange = (event) => {
         setValue(event.target.value)
+        if (event.target.value.trim().length === 0)
+            setDisplayClearButton(false)
+        else
+            setDisplayClearButton(true)
     }
     const handleClick = () => {
         setPoiName(value)
+    }
+    const handleClearClick = () => {
+        setValue('')
+        setDisplayClearButton(false)
+        setPoiName('')
     }
     const ReactDOMServer = require('react-dom/server');
     const centerIcon = new L.DivIcon({
@@ -68,12 +79,20 @@ const Map = forwardRef((props, _ref) => {
                 backgroundColor={"white"}
                 onChange={handleChange}
             />
-            <InputRightElement marginRight={"7px"}>
-                <Button height={"75%"} size='sm' onClick={handleClick}>
-                    <Arrow className={"pin-icon"}/>
-                </Button>
+            <InputRightElement style={{width: "auto", height: "100%", marginRight: "4px"}}>
+                <HStack spacing='0px'>
+                    {displayClearButton ? clearButton() : null}
+                    <Button  variant={'ghost'} color={'blue.300'} onClick={handleClick}>
+                        <ArrowForwardIcon w={6} h={6}/>
+                    </Button>
+                </HStack>
             </InputRightElement>
         </InputGroup>
+    );
+    const clearButton = () => (
+        <Button variant={'ghost'} color={'blue.300'} onClick={handleClearClick}>
+            <CloseIcon/>
+        </Button>
     );
     useImperativeHandle(_ref, () => ({
         getCentralMarkerPosition: () => {

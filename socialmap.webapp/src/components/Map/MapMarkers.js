@@ -5,7 +5,7 @@ import './MapMarkers.js.css'
 import {ReactComponent as Like} from '../../icons/like-icon.svg'
 import {ReactComponent as BluePin} from '../../icons/Pin-blue.svg'
 import {POIMock} from "../../mocks/POIMock";
-import {Box, Button, GridItem, HStack} from "@chakra-ui/react";
+import {Box, Button, GridItem, HStack, Link} from "@chakra-ui/react";
 import {EditIcon, ExternalLinkIcon} from "@chakra-ui/icons";
 import Grid from "antd/es/card/Grid";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
@@ -41,6 +41,13 @@ function GetMarkers(poiName) {
                                            size='sm' className={'editButton'} >
                                     Details
                                 </AddButton>
+                            </Box>
+                            <Box>
+                                <Link href={'https://www.google.com/maps/dir//' + data.X + ',' + data.Y + '/@' + data.X + ',' + data.Y + ',15z'} isExternal>
+                                    <Button colorScheme='teal' size='sm'>
+                                        Navigate
+                                    </Button>
+                                </Link>
                             </Box>
                             <Box w='50%' h='40px'>
                                 <HStack spacing='10px' className={'HStackLikes'}>
