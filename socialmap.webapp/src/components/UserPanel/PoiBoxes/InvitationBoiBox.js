@@ -3,6 +3,7 @@ import BasePoiBox from "./BasePoiBox";
 import React, {useEffect} from "react";
 import {rgbToHex} from "@mui/material";
 import {BsFillPeopleFill} from "react-icons/bs";
+import {Link as RouterLink} from "react-router-dom";
 
 export default function InvitationBoiBox(props) {
     let badges = [
@@ -39,9 +40,10 @@ export default function InvitationBoiBox(props) {
     ];
 
     const rightButtons = [
-        <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
-            See comments
-        </Button>,
+        <Button as={RouterLink} to={`/point/${props.poiData.id}`}
+                variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
+            Details
+        </Button>
     ];
 
     return (

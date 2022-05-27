@@ -6,7 +6,6 @@ import {POIToAcceptMock} from "../../mocks/POIToAcceptMock";
 
 
 export default function EditPoint(props) {
-
     const navigate = useNavigate();
     const {state} = useLocation();
     const {pointId} = state;
@@ -26,7 +25,8 @@ export default function EditPoint(props) {
         //categoryId !!
 
         //Mock for tests
-        let data = POIToAcceptMock.filter(x => x.Id == id);
+        //let data = POIToAcceptMock.filter(x => x.Id == id);
+        let data = POIToAcceptMock;
         data = convertKeys(data[0]);
         console.log("test");
         console.log(data);

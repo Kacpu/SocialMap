@@ -31,27 +31,40 @@ export default function SharePoiModal(props) {
         }
     };
 
+    const bgChosenUserComp = "gray.700"
+
     const onUserChosen = (u) => {
+        console.log(u)
+
         setChosenUser(u);
         setIsUsersLoading(null);
     };
 
+
     const chosenUserComp =
-        <Flex rounded={"md"} direction={"column"} my={1} width={"100%"}>
-            <Text color={"gray.200"} fontWeight={"semibold"} mb={1}>Chosen User</Text>
-            <Flex pl={3}>
+        <Flex rounded={"md"} direction={"column"} my={1} width={"100%"} >
+            <Text color={"gray.300"} fontWeight={"semibold"} mb={1}>Chosen User</Text>
+            <Flex rounded={"md"} py={2} px={5} bg={chosenUser !== null ? "gray.800" : ""}>
                 <Text mr={5} fontWeight={"semibold"} fontSize={17}>{chosenUser?.userName}</Text>
                 <Text color={"gray.400"}>{chosenUser?.email}</Text>
             </Flex>
         </Flex>
 
-    const usersList = searchUsers.map((u) =>
+    const usersComps = searchUsers.map((u) =>
             <Flex key={u.email} rounded={"md"}  my={1} py={2} px={5} width={"100%"}
                   _hover={{bg: "gray.600"}} _focus={{bg: "gray.600"}} onClick={() => onUserChosen(u)}>
                 <Text mr={5} fontWeight={"semibold"} fontSize={17}>{u.userName}</Text>
                 <Text color={"gray.400"}>{u.email}</Text>
             </Flex>
     ) ;
+
+    const usersList =
+        <React.Fragment>
+            <Text color={"gray.300"} fontWeight={"semibold"} mb={1}>Select user</Text>
+            {usersComps}
+        </React.Fragment>
+
+    const notFindUserInfo = <Text color={"red.400"} fontWeight={"semibold"} mb={1}>User not found</Text>;
 
     return (
         <Box>
@@ -64,13 +77,14 @@ export default function SharePoiModal(props) {
                     <ModalCloseButton />
                     <ModalBody>
                         <FormControl mb={5}>
-                            <FormLabel color={"gray.200"}>Search for the user</FormLabel>
+                            <FormLabel color={"gray.300"}>Search for the user</FormLabel>
                             <SearchInput placeholder={"username"} findFromInput={searchForUser}/>
                         </FormControl>
 
-                        {/*{isUsersLoading === false && searchUsers.length}*/}
-                        {/*{isUsersLoading === true && <Button width={"100%"} isLoading={true}></Button>}*/}
-                        {/*/!*{chosenUser !== null && chosenUserComp}*!/*/}
+                        {(isUsersLoading === false && searchUsers.length > 0) && usersList}
+                        {(isUsersLoading === false && searchUsers.length === 0) && notFindUserInfo}
+                        {isUsersLoading === true && <Button width={"100%"} isLoading={true} variant={"ghost"}></Button>}
+                        {chosenUser !== null && chosenUserComp}
 
                     </ModalBody>
 

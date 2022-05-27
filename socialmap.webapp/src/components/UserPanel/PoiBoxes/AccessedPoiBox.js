@@ -2,6 +2,7 @@ import {Badge, Button, Text} from "@chakra-ui/react";
 import BasePoiBox from "./BasePoiBox";
 import React from "react";
 import {BsFillPeopleFill} from "react-icons/bs";
+import {Link as RouterLink} from "react-router-dom";
 
 export default function AccessedPoiBox(props) {
     let badges = [
@@ -27,9 +28,10 @@ export default function AccessedPoiBox(props) {
     </React.Fragment>;
 
     const leftButtons = [
-        <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
-            See comments
-        </Button>,
+        <Button as={RouterLink} to={`/point/${props.poiData.id}`}
+                variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
+            Details
+        </Button>
     ];
 
     return (

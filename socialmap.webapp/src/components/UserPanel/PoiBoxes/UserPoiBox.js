@@ -7,16 +7,18 @@ import ExpandButton from "../../Buttons/ExpandButton";
 import BasePoiBox from "./BasePoiBox";
 import SharePoiModal from "../../Modals/SharePoiModal";
 import useOpenStatus from "../../../hooks/useOpenStatus";
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {ExternalLinkIcon} from "@chakra-ui/icons";
 import AddButton from "../../Buttons/AddButton";
 
 export default function UserPoiBox(props) {
+    const navigate = useNavigate();
     let status;
     let changeStatusButtonName;
     let changeStatusButtonFunction;
 
-    const { isOpen, onOpen, onClose } = useOpenStatus();
+    const { isOpen: isOpenShareModal, onOpen: onOpenShareModal, onClose: onCloseShareModal } = useOpenStatus();
+
 
     // useEffect(() => {
     //     console.log("render poi box")
@@ -24,7 +26,11 @@ export default function UserPoiBox(props) {
     // })
 
     const handleShare = () => {
-        onOpen();
+        onOpenShareModal();
+    }
+
+    const onEdit = () => {
+        navigate("/editpoint", {state: {pointId: props.poiData.id}})
     }
 
     if (props.poiData.isAccepted === true && props.poiData.isGlobal === true) {
@@ -51,7 +57,7 @@ export default function UserPoiBox(props) {
     )));
 
     const leftButtons = [
-        <Button as={RouterLink} to={`point/${props.poiData.id}`}
+        <Button as={RouterLink} to={`/point/${props.poiData.id}`}
                    variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
             Details
         </Button>,
@@ -65,7 +71,7 @@ export default function UserPoiBox(props) {
 
     const rightButtons = [
         <Button variant={"outline"} borderColor={"yellow.300"} color={"yellow.300"} mr={3}
-                _hover={{bg: "rgba(241,231,136,0.12)"}} fontSize={16} key={1}>
+                _hover={{bg: "rgba(241,231,136,0.12)"}} fontSize={16} key={1} onClick={onEdit}>
             Edit
         </Button>,
         <Button variant={"outline"} borderColor={"red.400"} color={"red.400"}
@@ -76,10 +82,10 @@ export default function UserPoiBox(props) {
 
     return (
         <React.Fragment>
-            {isOpen &&
+            {isOpenShareModal &&
                 <SharePoiModal
-                    isOpen={isOpen}
-                    onClose={onClose}
+                    isOpen={isOpenShareModal}
+                    onClose={onCloseShareModal}
                     name={props.poiData.name}
                 />
             }
