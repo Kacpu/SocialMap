@@ -27,9 +27,13 @@ export default function CustomMarker(props){
 
     function toggleLike(){
         if(isLiked){
+            //delete like from API
+
             setLikesCount(likesCount-1);
         }
         else{
+            //add like to API
+
             setLikesCount(likesCount+1);
         }
 
