@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Button} from "@chakra-ui/react";
-import BaseTabPanel from "../UserPanel/PoiBoxes/BaseTabPanel";
+import BaseTabPanel from "../UserPanel/Tabs/BaseTabPanel";
 import {POIToAcceptMock} from "../../mocks/POIToAcceptMock";
 import PointBox from "./PointBox";
 

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Box, Button} from "@chakra-ui/react";
-import BaseTabPanel from "../PoiBoxes/BaseTabPanel";
+import BaseTabPanel from "./BaseTabPanel";
 import {getPoisForUser} from "../../../socialMapApi/poiRequests";
 import AccessedPoiBox from "../PoiBoxes/AccessedPoiBox";
 

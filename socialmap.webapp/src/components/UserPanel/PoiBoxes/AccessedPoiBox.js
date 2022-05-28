@@ -3,6 +3,7 @@ import BasePoiBox from "./BasePoiBox";
 import React from "react";
 import {BsFillPeopleFill} from "react-icons/bs";
 import {Link as RouterLink} from "react-router-dom";
+import WrapText from "../../../Elems/WrapText";
 
 export default function AccessedPoiBox(props) {
     let badges = [
@@ -22,9 +23,9 @@ export default function AccessedPoiBox(props) {
             Shared by:
         </Text>
         <BsFillPeopleFill/>
-        <Text ml={1} color={"gray.200"} fontWeight={"semibold"}>
+        <WrapText ml={1} color={"gray.200"} fontWeight={"semibold"}>
             {props.poiData.creatorName}
-        </Text>
+        </WrapText>
     </React.Fragment>;
 
     const leftButtons = [

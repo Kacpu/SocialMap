@@ -10,6 +10,7 @@ import useOpenStatus from "../../../hooks/useOpenStatus";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {ExternalLinkIcon} from "@chakra-ui/icons";
 import AddButton from "../../Buttons/AddButton";
+import DeletePoiModal from "../../Modals/DeletePoiModal";
 
 export default function UserPoiBox(props) {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function UserPoiBox(props) {
     let changeStatusButtonFunction;
 
     const { isOpen: isOpenShareModal, onOpen: onOpenShareModal, onClose: onCloseShareModal } = useOpenStatus();
-
+    const { isOpen: isOpenDeleteModal, onOpen: onOpenDeleteModal, onClose: onCloseDeleteModal } = useOpenStatus();
 
     // useEffect(() => {
     //     console.log("render poi box")
@@ -31,6 +32,10 @@ export default function UserPoiBox(props) {
 
     const onEdit = () => {
         navigate("/editpoint", {state: {pointId: props.poiData.id}})
+    }
+
+    const onDelete = () => {
+        onOpenDeleteModal();
     }
 
     if (props.poiData.isAccepted === true && props.poiData.isGlobal === true) {
@@ -75,13 +80,19 @@ export default function UserPoiBox(props) {
             Edit
         </Button>,
         <Button variant={"outline"} borderColor={"red.400"} color={"red.400"}
-                _hover={{bg: "rgba(225,116,116,0.12)"}} fontSize={16} key={2}>
+                _hover={{bg: "rgba(225,116,116,0.12)"}} fontSize={16} key={2} onClick={onDelete}>
             Delete
         </Button>
     ];
 
     return (
         <React.Fragment>
+            <BasePoiBox
+                poiData={props.poiData}
+                badges={badges}
+                leftButtons={leftButtons}
+                rightButtons={rightButtons}
+            />
             {isOpenShareModal &&
                 <SharePoiModal
                     isOpen={isOpenShareModal}
@@ -89,12 +100,15 @@ export default function UserPoiBox(props) {
                     poiData={props.poiData}
                 />
             }
-            <BasePoiBox
-                poiData={props.poiData}
-                badges={badges}
-                leftButtons={leftButtons}
-                rightButtons={rightButtons}
-            />
+            {isOpenDeleteModal &&
+                <DeletePoiModal
+                    id={props.poiData.id}
+                    name={props.poiData.name}
+                    isOpen={isOpenDeleteModal}
+                    onClose={onCloseDeleteModal}
+                    onUserPointDelete={props.onUserPointDelete}
+                />
+            }
         </React.Fragment>
     );
 }

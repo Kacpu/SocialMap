@@ -1,4 +1,4 @@
-import BaseTabPanel from "../UserPanel/PoiBoxes/BaseTabPanel";
+import BaseTabPanel from "../UserPanel/Tabs/BaseTabPanel";
 import React, {useEffect, useState} from "react";
 import {Button} from "@chakra-ui/react";
 import {getCategories} from "../../socialMapApi/categoryRequests";

@@ -19,6 +19,7 @@ import {CloseIcon} from "@chakra-ui/icons";
 import Userfront from "@userfront/react";
 import {errorToast, successToast} from "../Toasts/ToastUtil";
 import {addPoiAccess, getPoiAccesses} from "../../socialMapApi/poiAccessRequests";
+import WrapText from "../../Elems/WrapText";
 
 export default function SharePoiModal(props) {
     const [isUserSearching, setIsUserSearching] = useState(null);
@@ -40,7 +41,7 @@ export default function SharePoiModal(props) {
                 invitedUserId: chosenUser.id
             });
         if (res?.ok) {
-            successToast(toast, "Shared", props.poiData.name)
+            successToast(toast, "Shared with " + chosenUser.userName, props.poiData.name)
         } else {
             errorToast(toast)
         }
@@ -85,20 +86,20 @@ export default function SharePoiModal(props) {
     }
 
     const searchResultElement = chosenUser !== null
-        ? <Flex rounded={"md"} direction={"column"} width={"100%"}>
+        ? <React.Fragment>
             <Text color={"gray.300"} fontWeight={"semibold"} mb={2}>Chosen User</Text>
             <Flex rounded={"md"} ml={1} py={1} px={4} bg={"gray.800"} justify={"space-between"} align={"center"}>
-                <Flex align={"center"}>
-                    <Text mr={5} fontWeight={"semibold"} fontSize={17}>{chosenUser.userName}</Text>
-                    <Text color={"gray.400"}>{chosenUser.email}</Text>
+                <Flex align={"center"} flexWrap={"wrap"}>
+                    <WrapText mr={5} fontWeight={"semibold"} fontSize={17}>{chosenUser.userName}</WrapText>
+                    <WrapText mr={1} color={"gray.400"}>{chosenUser.email}</WrapText>
                 </Flex>
                 <IconButton aria-label={"cancel search"} icon={<CloseIcon/>} variant={"ghost"} size={"sm"}
                             onClick={onFoundUserCancel}/>
             </Flex>
             <Text color={"gray.300"} fontWeight={"semibold"} mt={5}>
-                Do you want to share {props.name} with {chosenUser.userName}?
+                Do you want to share {props.poiData.name} with {chosenUser.userName}?
             </Text>
-        </Flex>
+        </React.Fragment>
         : <Text color={"red.400"} fontWeight={"semibold"} fontSize={16}>{searchError}</Text>;
 
     return (
@@ -107,9 +108,10 @@ export default function SharePoiModal(props) {
                 <ModalOverlay/>
                 <ModalContent>
                     <ModalHeader>
-                        <HStack justify={"center"}>
-                            <Text>Share point</Text><Text color={"teal.300"}>{props.poiData.name}</Text>
-                        </HStack>
+                        <Flex justify={"center"} flexWrap={"wrap"}>
+                            <Text mx={1}>Share point</Text>
+                            <WrapText mx={1} textAlign={"center"} color={"teal.300"}>{props.poiData.name}</WrapText>
+                        </Flex>
                     </ModalHeader>
                     <ModalCloseButton/>
                     <ModalBody>

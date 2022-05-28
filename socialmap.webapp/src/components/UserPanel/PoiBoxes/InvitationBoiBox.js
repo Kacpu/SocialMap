@@ -4,6 +4,7 @@ import React, {useEffect} from "react";
 import {rgbToHex} from "@mui/material";
 import {BsFillPeopleFill} from "react-icons/bs";
 import {Link as RouterLink} from "react-router-dom";
+import WrapText from "../../../Elems/WrapText";
 
 export default function InvitationBoiBox(props) {
     let badges = [
@@ -23,9 +24,9 @@ export default function InvitationBoiBox(props) {
             Invited by:
         </Text>
         <BsFillPeopleFill/>
-        <Text ml={1} color={"gray.200"} fontWeight={"semibold"}>
+        <WrapText ml={1} color={"gray.200"} fontWeight={"semibold"}>
             {props.poiData.creatorName}
-        </Text>
+        </WrapText>
     </React.Fragment>;
 
     const leftButtons = [

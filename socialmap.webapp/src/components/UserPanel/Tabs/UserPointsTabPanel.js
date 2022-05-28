@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Box, Button} from "@chakra-ui/react";
 import AddButton from "../../Buttons/AddButton";
 import {Link as RouterLink} from "react-router-dom";
-import BaseTabPanel from "../PoiBoxes/BaseTabPanel";
+import BaseTabPanel from "./BaseTabPanel";
 import {getPoisForUser} from "../../../socialMapApi/poiRequests";
 import UserPoiBox from "../PoiBoxes/UserPoiBox";
 
@@ -47,9 +47,9 @@ export default function UserPointsTabPanel() {
             <React.Fragment key={p.id}>
                 <UserPoiBox
                     poiData={p}
+                    onUserPointDelete={onUserPointDelete}
                 />
-                <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3}
-                     boxShadow={'0 3px 10px -0.5px gray'}/>
+                <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3}/>
             </React.Fragment>
         );
     }

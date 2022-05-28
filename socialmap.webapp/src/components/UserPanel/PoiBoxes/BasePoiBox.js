@@ -1,9 +1,9 @@
-import {Badge, Box, Button, Flex, HStack, Icon, Text, useColorModeValue} from "@chakra-ui/react";
+import {Box, Flex, Text, useColorModeValue} from "@chakra-ui/react";
 import {useState} from "react";
 import React from "react";
 import {ReactComponent as Like} from '../../../icons/like-icon.svg'
-import Map from "../../Map/Map";
 import ExpandButton from "../../Buttons/ExpandButton";
+import WrapText from "../../../Elems/WrapText";
 
 export default function BasePoiBox(props) {
     const [displayContent, setDisplayContent] = useState(false);
@@ -30,10 +30,10 @@ export default function BasePoiBox(props) {
                 >
                     <Flex alignItems={"center"}>
                         <ExpandButton isExpand={displayContent}/>
-                        <Box ml={5}>
-                            <Text fontSize={'30px'} fontWeight='bold'>
+                        <Box mx={5} minW={"10vw"}>
+                            <WrapText fontSize={'28px'} fontWeight='bold'>
                                 {props.poiData.name}
-                            </Text>
+                            </WrapText>
                         </Box>
                     </Flex>
                     <Flex alignItems={"center"} justifyContent={"center"} rowGap={2} flexWrap={"wrap"}
@@ -49,15 +49,15 @@ export default function BasePoiBox(props) {
                         </Text>
                     </Box>
 
-                    <Flex pt={2} pb={1} mx={1} justifyContent={"space-between"} align={"center"} flexWrap={"wrap"}
+                    <Flex pt={2} pb={1} mx={1} justifyContent={"space-between"} align={"center"}
                           flexDirection={{base: "column", md: "row"}} rowGap={props.centerFooter ? 1 : 0}>
                         <Flex align={"center"} width={"10vw"} justifyContent={"left"}>
                             {props.leftFooter}
                         </Flex>
-                        <Flex align={"center"}>
+                        <Flex mx={3} align={"center"}>
                             {props.centerFooter}
                         </Flex>
-                        <Flex align={"center"} width={"10vw"} justify={"right"} alignSelf={"end"}>
+                        <Flex align={"center"} width={"10vw"} justify={"right"} alignSelf={{base: "end", md: "center"}}>
                             <Text fontSize={'16px'} fontWeight={"semibold"} color={"gray.200"} mr={2}>
                                 {props.poiData.likesNumber}
                             </Text>
