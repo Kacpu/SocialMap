@@ -16,10 +16,10 @@ export default function UserPointsTabPanel() {
         (async () => {
             //console.log("send req " + "cat tab panel");
             const res = await getPoisForUser(ac.signal, true).catch(console.error);
-            if (res !== null && res !== undefined) {
+            if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedUserPoints(res);
-                setFilteredUserPoints(res);
+                setFetchedUserPoints(res.data);
+                setFilteredUserPoints(res.data);
                 setIsLoading(false);
             }
         })();

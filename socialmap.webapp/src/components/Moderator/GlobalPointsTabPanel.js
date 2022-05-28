@@ -14,11 +14,11 @@ export default function GlobalPointsTabPanel() {
         (async () => {
             //console.log("send req " + "cat tab panel");
             //const res = await getCategories(ac.signal).catch(console.error);
-            const res = POIToAcceptMock;
-            if (res !== null && res !== undefined) {
+            const res = {ok: true, data: POIToAcceptMock};
+            if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedGlobalPoints(res);
-                setFilteredGlobalPoints(res);
+                setFetchedGlobalPoints(res.data);
+                setFilteredGlobalPoints(res.data);
                 setIsLoading(false);
             }
         })();

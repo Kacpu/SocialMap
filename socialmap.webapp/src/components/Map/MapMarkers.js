@@ -14,7 +14,6 @@ import {BiLike} from "react-icons/bi"
 import {AiOutlineLike, AiFillLike} from "react-icons/ai"
 import {FcLikePlaceholder, FcLike} from "react-icons/fc"
 import AddButton from "../Buttons/AddButton";
-import {SiGooglestreetview} from "react-icons/si";
 import CustomMarker from "./CustomMarker";
 
 const ReactDOMServer = require('react-dom/server');

@@ -33,8 +33,8 @@ function InfoBadge(props) {
 
 export default function AddCategoryModerator() {
     let navigate = useNavigate();
-    const [value, setValue] = React.useState('')
     const toast = useToast();
+    //const [value, setValue] = React.useState('')
 
     const boxColor = useColorModeValue('gray.600', 'gray.700');
     const labelColor = useColorModeValue('gray.600', 'gray.200');
@@ -43,7 +43,7 @@ export default function AddCategoryModerator() {
 
     async function onSubmit(data) {
         let res = await addCategory(data)
-        if(res != null){
+        if(res?.ok){
             successToast(toast, "added", "category")
         } else {
             errorToast(toast)
@@ -57,9 +57,9 @@ export default function AddCategoryModerator() {
         formState: { errors, isSubmitting },
     } = useForm()
 
-    const handleChange = (event) => {
-        setValue(event.target.value)
-    }
+    // const handleChange = (event) => {
+    //     setValue(event.target.value)
+    // }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>

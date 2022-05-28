@@ -16,10 +16,10 @@ export default function CategoryTabPanel() {
         (async () => {
             //console.log("send req " + "cat tab panel");
             const res = await getCategories(ac.signal).catch(console.error);
-            if (res !== null && res !== undefined) {
+            if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedCategories(res);
-                setFilteredCategories(res);
+                setFetchedCategories(res.data);
+                setFilteredCategories(res.data);
                 setIsLoading(false);
             }
         })();

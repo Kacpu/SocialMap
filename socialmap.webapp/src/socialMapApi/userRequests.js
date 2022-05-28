@@ -14,7 +14,7 @@ async function getUser(signal = null, email = null, uuid = null, id = null) {
         query = `${serverUrl}/appuser/${id}`;
     }
     else {
-        return null;
+        return {ok: false, status: 404};
     }
 
     return await getReq(query, signal);

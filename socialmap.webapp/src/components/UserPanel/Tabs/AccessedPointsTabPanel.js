@@ -14,10 +14,10 @@ export default function AccessedPointsTabPanel() {
         (async () => {
             //console.log("send req " + "cat tab panel");
             const res = await getPoisForUser(ac.signal, false, true).catch(console.error);
-            if (res !== null && res !== undefined) {
+            if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedAccessedPoints(res);
-                setFilteredAccessedPoints(res);
+                setFetchedAccessedPoints(res.data);
+                setFilteredAccessedPoints(res.data);
                 setIsLoading(false);
             }
         })();

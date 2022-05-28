@@ -22,12 +22,6 @@ namespace SocialMap.Infrastructure.Services
 
         public async Task<CategoryDTO> AddAsync(CreateCategory createCategory)
         {
-            var check_c = await _categoryRepository.BrowseAllAsync(createCategory.Name);
-            if(check_c.Any(c => c.Name == createCategory.Name))
-            {
-                throw new BadRequestException("such category already exists");
-            }
-
             var c = await _categoryRepository.AddAsync(createCategory.ToDomain());
             return await Task.FromResult(c.ToDTO());
         }

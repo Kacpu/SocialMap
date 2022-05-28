@@ -50,12 +50,6 @@ namespace SocialMap.Infrastructure.Services
                 throw new BadRequestException("issuer can not be invited user");
             }
 
-            var check_pa = await _poiAccessRepository.BrowseAllAsync(invitedUserId: createPoiAccess.InvitedUserId, poiId: createPoiAccess.POIId);
-            if(check_pa.Any())
-            {
-                throw new BadRequestException("such poi access already exists");
-            }
-
             var pa = await _poiAccessRepository.AddAsync(createPoiAccess.ToDomain());
             return await Task.FromResult(pa.ToDTO());
         }

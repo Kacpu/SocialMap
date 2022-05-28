@@ -14,11 +14,11 @@ export default function PointsToAcceptTabPanel() {
         (async () => {
             //console.log("send req " + "cat tab panel");
             //const res = await getCategories(ac.signal).catch(console.error);
-            const res = POIToAcceptMock;
-            if (res !== null && res !== undefined) {
+            const res = {ok: true, data: POIToAcceptMock};
+            if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedPointsToAccept(res);
-                setFilteredPointsToAccept(res);
+                setFetchedPointsToAccept(res.data);
+                setFilteredPointsToAccept(res.data);
                 setIsLoading(false);
             }
         })();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
+using SocialMap.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace SocialMap.Infrastructure.Repositories
 {
     public class POIAccessRepository : IPOIAccessRepository
     {
-        private AppDbContext _appDbContext;
+        private readonly AppDbContext _appDbContext;
 
         public POIAccessRepository(AppDbContext appDbContext)
         {
@@ -20,8 +21,23 @@ namespace SocialMap.Infrastructure.Repositories
 
         public async Task<POIAccess> AddAsync(POIAccess poiAccess)
         {
-            _appDbContext.POIAccess.Add(poiAccess);
-            await _appDbContext.SaveChangesAsync();
+            var pa = _appDbContext.POIAccess.FirstOrDefault(x => x.POIId == poiAccess.POIId && x.AppUserId == poiAccess.AppUserId);
+
+            if (pa != null)
+            {
+                throw new BadRequestException("such poi access already exists");
+            }
+
+            try
+            {
+                _appDbContext.POIAccess.Add(poiAccess);
+                await _appDbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                throw new ForbidException("can not add pa");
+            }
+
             return await Task.FromResult(poiAccess);
         }
 

@@ -22,22 +22,24 @@ import {addPoiAccess, getPoiAccesses} from "../../socialMapApi/poiAccessRequests
 
 export default function SharePoiModal(props) {
     const [isUserSearching, setIsUserSearching] = useState(null);
+    const [isSharing, setIsSharing] = useState(false);
     const [chosenUser, setChosenUser] = useState(null);
     const [searchError, setSearchError] = useState("");
     const toast = useToast();
     const ac = new AbortController();
 
     useEffect(() => {
-        return () => ac && ac.abort("abort on close share poi modal")
+        return () => ac.abort("abort on close share poi modal")
     }, [])
 
     const handleSharePoi = async () => {
+        setIsSharing(true);
         const res = await addPoiAccess(
             {
                 poiId: props.poiData.id,
                 invitedUserId: chosenUser.id
             });
-        if (res?.hasOwnProperty("id")) {
+        if (res?.ok) {
             successToast(toast, "Shared", props.poiData.name)
         } else {
             errorToast(toast)
@@ -48,23 +50,24 @@ export default function SharePoiModal(props) {
     const searchForUser = async (email) => {
         setIsUserSearching(true);
         const res = await getUser(ac.signal, email !== "" ? email : null).catch(console.error);
-        if(ac.signal.aborted){
+
+        if (res === null) {
             return;
-        }
-        if (res?.hasOwnProperty("id") && res?.hasOwnProperty("email") && res.email !== Userfront.user.email) {
-            const isPoiAlreadyShared = await isPoiAccessExist(res.id);
-            if(isPoiAlreadyShared === false) {
-                setChosenUser(res);
-            } else if(isPoiAlreadyShared === true) {
+        } else if (res.ok && res.data.hasOwnProperty("id") && res.data.hasOwnProperty("email")
+            && res.data.email !== Userfront.user.email) {
+            const isPoiAlreadyShared = await isPoiAccessExist(res.data.id);
+            if (isPoiAlreadyShared === false) {
+                setChosenUser(res.data);
+            } else if (isPoiAlreadyShared === true) {
                 setChosenUser(null);
-                setSearchError(props.poiData.name + " is already shared with " + res.userName + "!");
+                setSearchError(props.poiData.name + " is already shared with " + res.data.userName + "!");
             } else {
                 return;
             }
-        } else if (res?.email === Userfront.user.email) {
+        } else if (res.ok && res.data.email === Userfront.user.email) {
             setChosenUser(null);
             setSearchError("It's you!");
-        } else {
+        } else if (!res.ok && res.status === 404) {
             setChosenUser(null);
             setSearchError("User not found!");
         }
@@ -73,10 +76,7 @@ export default function SharePoiModal(props) {
 
     async function isPoiAccessExist(userId) {
         const res = await getPoiAccesses(ac.signal, userId, props.poiData.id).catch(console.error);
-        if(ac.signal.aborted){
-            return null;
-        }
-        return res !== null && res.length > 0;
+        return res === null ? null : res.ok && res.data.length > 0;
     }
 
     const onFoundUserCancel = () => {
@@ -120,11 +120,12 @@ export default function SharePoiModal(props) {
                                          findWithReset={false}
                                          inputStyle={{border: "none", _focus: {border: "none"}}}/>
                         </FormControl>
-                        {isUserSearching === true && <LoadingButton size={"sm"}/>}
+                        {isUserSearching === true && <LoadingButton/>}
                         {isUserSearching === false && searchResultElement}
                     </ModalBody>
                     <ModalFooter>
-                        <AcceptButton mr={3} isDisabled={chosenUser === null} onClick={handleSharePoi}>
+                        <AcceptButton mr={3} isDisabled={chosenUser === null} onClick={handleSharePoi}
+                                      isLoading={isSharing}>
                             Share
                         </AcceptButton>
                         <Button onClick={props.onClose}>Cancel</Button>

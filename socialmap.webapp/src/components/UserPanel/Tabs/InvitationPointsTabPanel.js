@@ -14,10 +14,10 @@ export default function InvitationPointsTabPanel() {
         (async () => {
             //console.log("send req " + "cat tab panel");
             const res = await getPoisForUser(ac.signal, false, false, true).catch(console.error);
-            if (res !== null && res !== undefined) {
+            if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedInvitationPoints(res);
-                setFilteredInvitationPoints(res);
+                setFetchedInvitationPoints(res.data);
+                setFilteredInvitationPoints(res.data);
                 setIsLoading(false);
             }
         })();
