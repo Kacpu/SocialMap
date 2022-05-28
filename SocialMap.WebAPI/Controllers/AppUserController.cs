@@ -50,22 +50,28 @@ namespace SocialMap.WebAPI.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAllAppUsers(string searchInput, string uuid)
+        public async Task<IActionResult> BrowseUsers(string uuid, string email, string name)
         {
-            if (!string.IsNullOrEmpty(uuid))
+            if (User.IsAdmin() || User.IsMod())
             {
-                if(!User.IsAdmin() && !User.IsMod())
+                if (uuid != null)
                 {
-                    return Forbid();
+                    var uu = await _appUserService.GetAsync(uuid: uuid);
+                    return Json(uu);
                 }
-                var u = await _appUserService.GetAsync(uuid: uuid);
-                return Json(u);
+
+                if (email != null)
+                {
+                    var u = await _appUserService.GetAsync(email: email);
+                    return Json(u);
+                }
+
+                var us = await _appUserService.GetAllAsync(name);
+                return Json(us);
             }
-            else
-            {
-                var us = await _appUserService.GetAllAsync(searchInput);
-                return Json(us.Select(ud => new { ud.UserName, ud.Email }));
-            }
+
+            var ue = await _appUserService.GetAsync(email: email);
+            return Json(ue);
         }
     }
 }

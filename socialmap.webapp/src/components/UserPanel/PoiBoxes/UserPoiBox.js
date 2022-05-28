@@ -86,7 +86,7 @@ export default function UserPoiBox(props) {
                 <SharePoiModal
                     isOpen={isOpenShareModal}
                     onClose={onCloseShareModal}
-                    name={props.poiData.name}
+                    poiData={props.poiData}
                 />
             }
             <BasePoiBox

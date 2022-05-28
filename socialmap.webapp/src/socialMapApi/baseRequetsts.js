@@ -18,7 +18,7 @@ async function getReq(query, signal = null) {
         });
         return response.ok ? await response.json() : null;
     } catch(e) {
-        console.error(e);
+        console.error(query + " "+ e);
         return null;
     }
 }

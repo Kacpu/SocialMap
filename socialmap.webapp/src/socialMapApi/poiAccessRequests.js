@@ -23,12 +23,12 @@ async function getPoiAccesses(signal = null, invitedUserId = null, poiId = null,
 
 async function addPoiAccess(poiAccess) {
     const query = `${serverUrl}/poiAccess`;
-    return await addReq(query,poiAccess);
+    return await addReq(query, poiAccess);
 }
 
 async function updatePoiAccess(id, poiAccess) {
     const query = `${serverUrl}/poiAccess/${id}`;
-    return await updateReq(query,poiAccess);
+    return await updateReq(query, poiAccess);
 }
 
 async function deletePoiAccess(id) {

@@ -10,6 +10,7 @@ import {EditIcon, ExternalLinkIcon} from "@chakra-ui/icons";
 import Grid from "antd/es/card/Grid";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import AddButton from "../Buttons/AddButton";
+import {SiGooglestreetview} from "react-icons/si";
 
 const ReactDOMServer = require('react-dom/server');
 const iconPerson = new L.DivIcon({
