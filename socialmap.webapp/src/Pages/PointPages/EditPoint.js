@@ -1,18 +1,21 @@
 import PointForm from "../../components/Forms/PointForm";
-import {useLocation, useNavigate} from "react-router-dom";
-import {useToast} from "@chakra-ui/react";
+import {Link as RouterLink, useLocation, useNavigate} from "react-router-dom";
+import {Button, useToast} from "@chakra-ui/react";
 import {successToast} from "../../components/Toasts/ToastUtil";
 import {POIToAcceptMock} from "../../mocks/POIToAcceptMock";
+import {ArrowBackIcon} from "@chakra-ui/icons";
+import React from "react";
 
 
 export default function EditPoint(props) {
     const navigate = useNavigate();
+
     const {state} = useLocation();
-    const {pointId} = state;
+    const {pointId, beforeSite} = state;
 
     const toast = useToast();
 
-    function convertKeys(obj){
+    function convertKeys(obj) {
         const newObj = Object.fromEntries(
             Object.entries(obj).map(([k, v]) => [k.toLowerCase(), v])
         );
@@ -33,21 +36,28 @@ export default function EditPoint(props) {
         return data;
     }
 
+    function handleBack() {
+        navigate(beforeSite);
+    }
+
     function handleSubmit(data) {
         alert(data);
         //handle API
         successToast(toast, "edited", "point", "Check map")
         //albo do panelu moderatora - trzeba sprawdzic
-        navigate("/profile")
+        navigate(beforeSite);
     }
 
     return (
-        <PointForm
-            title={"Edit point!"}
-            subtitle={""}
-            submitAction={handleSubmit}
-            defaultValues={getPoint(pointId)}
-            buttonName={"Edit Point"}
-        />
+        <React.Fragment>
+            <PointForm
+                title={"Edit point!"}
+                subtitle={""}
+                submitAction={handleSubmit}
+                backAction={handleBack}
+                defaultValues={getPoint(pointId)}
+                buttonName={"Edit Point"}
+            />
+        </React.Fragment>
     );
 }

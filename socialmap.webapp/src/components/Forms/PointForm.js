@@ -20,7 +20,7 @@ import {
     useColorModeValue
 } from '@chakra-ui/react';
 import {useForm} from 'react-hook-form'
-import {CloseIcon, SearchIcon} from '@chakra-ui/icons';
+import {ArrowBackIcon, CloseIcon, SearchIcon} from '@chakra-ui/icons';
 import Map from '../../components/Map/Map'
 import {categoryData} from '../../mocks/CategoryMock';
 import React, {useRef, useState} from "react";
@@ -214,7 +214,13 @@ export default function PointForm(props) {
                 //bg={useColorModeValue('gray.50', 'gray.800')}
             >
 
-                <Stack spacing={5} mx={'auto'} maxW={'700px'} w={'90%'} py={12} px={0}>
+                <Stack spacing={5} mx={'auto'} maxW={'700px'} w={'90%'} py={12} px={0} position={"relative"}>
+                    <Button alignSelf={"flex-start"} position="absolute"
+                            top={"5"}
+                            variant={"outline"}
+                            onClick={() => props.backAction()}>
+                        <ArrowBackIcon/>
+                    </Button>
                     <Stack align={'center'}>
                         <Heading fontSize={'4xl'} textAlign={'center'} color={'gray.100'}>
                             {props.title}

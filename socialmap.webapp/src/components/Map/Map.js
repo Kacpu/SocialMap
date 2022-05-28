@@ -4,10 +4,21 @@ import './Map.js.css'
 import MapMarkers from "./MapMarkers";
 import {ReactComponent as Pin} from '../../icons/pin-icon.svg'
 import {ReactComponent as Arrow} from '../../icons/arrow-right.svg'
-import {Box, Button, HStack, Input, InputGroup, InputLeftElement, InputRightElement, Text} from "@chakra-ui/react";
+import {
+    Box,
+    Button,
+    HStack,
+    Icon,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    InputRightElement,
+    Text
+} from "@chakra-ui/react";
 import L from "leaflet";
 import {ReactComponent as RedPin} from "../../icons/Pin-red.svg";
 import {ArrowForwardIcon, CloseIcon} from "@chakra-ui/icons";
+import {FiMapPin} from "react-icons/fi";
 
 const Map = forwardRef((props, _ref) => {
     const [value, setValue] = React.useState('')
@@ -15,16 +26,27 @@ const Map = forwardRef((props, _ref) => {
     const [mapBounds, setMapBounds] = React.useState([[52.368, 21.271], [52.098, 20.852]])
     const [centerMarkerPosition, setCenterMarkerPosition] = React.useState(new L.LatLng(props.mapCenter[0], props.mapCenter[1]))
     const [displayClearButton, setDisplayClearButton] = React.useState(false)
+
     const handleChange = (event) => {
         setValue(event.target.value)
-        if (event.target.value.trim().length === 0)
-            setDisplayClearButton(false)
+        if (event.target.value.trim().length === 0) {
+            setDisplayClearButton(false);
+            setPoiName('')
+        }
         else
             setDisplayClearButton(true)
     }
+
+    const handleButtonPress = (event) => {
+        if(event.code === "Enter"){
+            handleClick();
+        }
+    }
+
     const handleClick = () => {
         setPoiName(value)
     }
+
     const handleClearClick = () => {
         setValue('')
         setDisplayClearButton(false)
@@ -67,8 +89,9 @@ const Map = forwardRef((props, _ref) => {
         <InputGroup className={"input-container"} minWidth={"235px"} width={"25%"} borderStyle={"solid"}
                     borderColor={"#1A202C"}>
             <InputLeftElement
+
                 pointerEvents='none'
-                children={<Pin className={"pin-icon"}/>}
+                children={<Icon color={"black"} as={FiMapPin}/>}
             />
             <Input
                 variant='outline'
@@ -77,6 +100,7 @@ const Map = forwardRef((props, _ref) => {
                 _placeholder={{opacity: 1, color: 'gray.500'}}
                 value={value}
                 backgroundColor={"white"}
+                onKeyPress={handleButtonPress}
                 onChange={handleChange}
             />
             <InputRightElement style={{width: "auto", height: "100%", marginRight: "4px"}}>
@@ -89,6 +113,7 @@ const Map = forwardRef((props, _ref) => {
             </InputRightElement>
         </InputGroup>
     );
+
     const clearButton = () => (
         <Button variant={'ghost'} color={'blue.300'} onClick={handleClearClick}>
             <CloseIcon/>
@@ -117,7 +142,7 @@ const Map = forwardRef((props, _ref) => {
                 {/*    bounds={mapBounds}*/}
                 {/*    color={"#ff7800"}*/}
                 {/*/>*/}
-                {MapMarkers(poiName)}
+                <MapMarkers poiName={poiName} />
                 {props.diplayCenterMarker ? centerMarker() : null}
             </MapContainer>
         </Box>
