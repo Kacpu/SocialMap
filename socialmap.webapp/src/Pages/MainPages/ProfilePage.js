@@ -1,6 +1,6 @@
 import Userfront from "@userfront/react";
 import {
-    Box,
+    Box, Button,
     HStack,
     Stack,
     Text,
@@ -12,6 +12,7 @@ import HorizontalLineBox from "../../components/Boxes/HorizontalLineBox";
 //Userfront.init("xbr78p4n");
 
 export default function ProfilePage() {
+
     return (
         <Box display={'flex'} flexDirection={'column'} alignItems='center' mb={20}>
             <Box width={'80vw'} mt={8}>
