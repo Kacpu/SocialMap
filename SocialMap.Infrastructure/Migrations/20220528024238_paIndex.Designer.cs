@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SocialMap.Infrastructure.Repositories;
 
 namespace SocialMap.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220528024238_paIndex")]
+    partial class paIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,12 +69,9 @@ namespace SocialMap.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
 
                     b.ToTable("Category");
                 });
@@ -120,10 +119,9 @@ namespace SocialMap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("POIId");
+                    b.HasIndex("AppUserId");
 
-                    b.HasIndex("AppUserId", "POIId")
-                        .IsUnique();
+                    b.HasIndex("POIId");
 
                     b.ToTable("Likes");
                 });

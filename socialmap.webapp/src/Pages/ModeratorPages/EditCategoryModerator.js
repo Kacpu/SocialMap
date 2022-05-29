@@ -10,16 +10,14 @@ import {
     Icon,
     Input,
     Stack,
-    useColorModeValue, useToast
+    useColorModeValue
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form'
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { useNavigate, Link as RouterLink } from "react-router-dom"
-import { categoryData } from '../mocks/CategoryMock';
+import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom"
+import { categoryData } from '../../mocks/CategoryMock';
 import React, { useState } from "react";
-import AddButton from '../components/Buttons/AddButton';
-import {errorToast, successToast} from "../components/Toasts/ToastUtil";
-import {addCategory} from "../socialMapApi/categoryRequests";
+import AddButton from '../../components/Buttons/AddButton';
 
 function InfoBadge(props) {
     return (
@@ -31,23 +29,23 @@ function InfoBadge(props) {
     );
 }
 
-export default function AddCategoryModerator() {
-    let navigate = useNavigate();
+export default function EditCategoryModerator() {
+    const navigate = useNavigate();
+    const { state } = useLocation();
+    const { categoryId } = state;
+
+    console.log(categoryId)
     const [value, setValue] = React.useState('')
-    const toast = useToast();
 
     const boxColor = useColorModeValue('gray.600', 'gray.700');
     const labelColor = useColorModeValue('gray.600', 'gray.200');
     const inputColor = useColorModeValue('gray.100', 'gray.50')
     const subBoxColor = useColorModeValue('gray.600', 'gray.600');
 
-    async function onSubmit(data) {
-        let res = await addCategory(data)
-        if(res != null){
-            successToast(toast, "added", "category")
-        } else {
-            errorToast(toast)
-        }
+    function onSubmit(data) {
+        let obj = JSON.stringify(data, null, 2)
+        //obj.isGlobal = !obj.isGlobal;
+        alert(obj);
         navigate('/moderatorpanel/#categories')
     }
 
@@ -61,6 +59,12 @@ export default function AddCategoryModerator() {
         setValue(event.target.value)
     }
 
+    let Category = {"id": categoryId, "name": "none"}
+
+    const getData = () => {
+        //get data from server
+    }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Flex
@@ -69,12 +73,12 @@ export default function AddCategoryModerator() {
             >
                 <Stack spacing={5} mx={'auto'} maxW={'700px'} w={'90%'} py={9} px={0}>
                     <Button alignSelf={"flex-start"} position="absolute" variant={"outline"}
-                    as={RouterLink} to="/moderatorpanel/#categories">
+                        as={RouterLink} to="/moderatorpanel/#categories">
                         <ArrowBackIcon />
                     </Button>
                     <Stack align={'center'} pt={6}>
                         <Heading fontSize={'4xl'} textAlign={'center'} color={'gray.100'}>
-                            Add new category
+                            Edit Category
                         </Heading>
                     </Stack>
 
@@ -87,10 +91,18 @@ export default function AddCategoryModerator() {
                         p={8}>
 
                         <Stack spacing={5}>
+                            <FormControl>
+                                <FormLabel htmlFor='name' color={labelColor}>Id</FormLabel>
+                                <Input readOnly textColor={'gray.500'} value={Category.id}
+                                {...register("id", {
+                                    required: "This is required"
+                                })}/>
+                            </FormControl>
                             <FormControl isInvalid={errors.name}>
                                 <FormLabel htmlFor='name' color={labelColor}>Name</FormLabel>
                                 <Input id='name' type="text" color={inputColor} bgColor={subBoxColor}
                                     placeholder='type down a category'
+                                    defaultValue={Category.name}
                                     {...register("name", {
                                         required: "This is required",
                                         minLength: { value: 3, message: "Minimum length should be 4" }
@@ -110,7 +122,7 @@ export default function AddCategoryModerator() {
                             type="submit"
                             isLoading={isSubmitting}
                         >
-                            Add Category
+                            Edit Category
                         </AddButton>
                     </Stack>
                 </Stack>

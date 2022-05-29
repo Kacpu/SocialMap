@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Button} from "@chakra-ui/react";
-import BaseTabPanel from "../UserPanel/PoiBoxes/BaseTabPanel";
+import BaseTabPanel from "../UserPanel/Tabs/BaseTabPanel";
 import {POIToAcceptMock} from "../../mocks/POIToAcceptMock";
 import PointBox from "./PointBox";
+import {getPois} from "../../socialMapApi/poiRequests";
 
 export default function PointsToAcceptTabPanel() {
     const [isLoading, setIsLoading] = useState(true);
@@ -13,12 +14,12 @@ export default function PointsToAcceptTabPanel() {
         const ac = new AbortController();
         (async () => {
             //console.log("send req " + "cat tab panel");
-            //const res = await getCategories(ac.signal).catch(console.error);
-            const res = POIToAcceptMock;
-            if (res !== null && res !== undefined) {
+            const res = await getPois(ac.signal, null, true, false).catch(console.error);
+            //const res = {ok: true, data: POIToAcceptMock};
+            if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedPointsToAccept(res);
-                setFilteredPointsToAccept(res);
+                setFetchedPointsToAccept(res.data);
+                setFilteredPointsToAccept(res.data);
                 setIsLoading(false);
             }
         })();
@@ -33,7 +34,7 @@ export default function PointsToAcceptTabPanel() {
         setFilteredPointsToAccept(filtered);
     }
 
-    const onPointToAcceptDelete = (id) => {
+    const onPointToAcceptRemove = (id) => {
         const withoutDeleted = fetchedPointsToAccept.filter(x => x.id !== id)
         setFetchedPointsToAccept(withoutDeleted);
         const withoutDeletedFiltered = filteredPointsToAccept.filter(x => x.id !== id)
@@ -41,18 +42,17 @@ export default function PointsToAcceptTabPanel() {
     }
 
     const pointsToAccept = (list) => {
-        return list.map((obj) =>
+        return list.map((p) =>
             <PointBox
-                key={obj.Id}
-                id={obj.Id}
-                name={obj.Name}
-                author={obj.Author}
-                category={obj.Category}
-                x={obj.X}
-                y={obj.Y}
-                description={obj.description}
-                //setPointIdToManage={setPointIdToManage}
-                //setPointNameToManage={setPointNameToManage}
+                key={p.id}
+                id={p.id}
+                name={p.name}
+                author={p.creatorName}
+                category={p.categories.length > 0 ? p.categories[0].name : "no category"}
+                x={p.x}
+                y={p.y}
+                description={p.description}
+                onPointToAcceptRemove={onPointToAcceptRemove}
                 pointType="toAccept"
             />
         );

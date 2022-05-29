@@ -1,4 +1,4 @@
-import BaseTabPanel from "../UserPanel/PoiBoxes/BaseTabPanel";
+import BaseTabPanel from "../UserPanel/Tabs/BaseTabPanel";
 import React, {useEffect, useState} from "react";
 import {Button} from "@chakra-ui/react";
 import {getCategories} from "../../socialMapApi/categoryRequests";
@@ -16,10 +16,10 @@ export default function CategoryTabPanel() {
         (async () => {
             //console.log("send req " + "cat tab panel");
             const res = await getCategories(ac.signal).catch(console.error);
-            if (res !== null && res !== undefined) {
+            if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedCategories(res);
-                setFilteredCategories(res);
+                setFetchedCategories(res.data);
+                setFilteredCategories(res.data);
                 setIsLoading(false);
             }
         })();

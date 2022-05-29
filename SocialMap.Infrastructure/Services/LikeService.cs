@@ -36,12 +36,6 @@ namespace SocialMap.Infrastructure.Services
                 throw new BadRequestException("issuer can not be liked poi creator");
             }
 
-            var check_l = await _likeRepository.BrowseAllAsync(createLike.AppUserId, createLike.PoiId);
-            if (check_l.Any())
-            {
-                throw new BadRequestException("such like already exists");
-            }
-
             var l = await _likeRepository.AddAsync(createLike.ToDomain());
             return await Task.FromResult(l.ToDTO());
         }

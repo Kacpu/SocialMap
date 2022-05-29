@@ -1,4 +1,4 @@
-import PasswordResetForm from "../auth/PasswordResetForm";
+import PasswordResetForm from "../../auth/PasswordResetForm";
 
 export default function PasswordReset() {
     return (

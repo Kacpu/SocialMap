@@ -1,16 +1,16 @@
 import {Box, Flex, Heading, HStack, Image, Text} from "@chakra-ui/react";
 import {Link as RouterLink} from "react-router-dom";
 
-import socialMap from "../assets/socialmap.png";
-import explore from "../assets/explore.png";
-import point from "../assets/point.png";
-import sharing from "../assets/sharing.png";
-import socialMedia from "../assets/social-media.png";
-import lock from "../assets/lock.png";
+import socialMap from "../../assets/socialmap.png";
+import explore from "../../assets/explore.png";
+import point from "../../assets/point.png";
+import sharing from "../../assets/sharing.png";
+import socialMedia from "../../assets/social-media.png";
+import lock from "../../assets/lock.png";
 
-import SmallBoxes from "../components/AboutPage/SmallBoxes";
-import AcceptButton from "../components/Buttons/AcceptButton";
-import AddButton from "../components/Buttons/AddButton";
+import SmallBoxes from "../../components/AboutPage/SmallBoxes";
+import AcceptButton from "../../components/Buttons/AcceptButton";
+import AddButton from "../../components/Buttons/AddButton";
 
 export default function About() {
 

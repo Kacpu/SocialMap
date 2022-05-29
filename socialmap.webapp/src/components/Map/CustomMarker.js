@@ -1,4 +1,3 @@
-
 import React, {useState} from "react"
 import {Marker, Popup} from "react-leaflet";
 import {Box, Button, Flex, HStack, Icon, Link, Text} from "@chakra-ui/react";
@@ -18,33 +17,32 @@ const iconPerson = new L.DivIcon({
     className: "markerHolder"
 });
 
-export default function CustomMarker(props){
+export default function CustomMarker(props) {
 
     const navigate = useNavigate();
 
     const [isLiked, setIsLiked] = useState();
     const [likesCount, setLikesCount] = useState(props.data.likes.length);
 
-    function toggleLike(){
-        if(isLiked){
+    function toggleLike() {
+        if (isLiked) {
             //delete like from API
 
-            setLikesCount(likesCount-1);
-        }
-        else{
+            setLikesCount(likesCount - 1);
+        } else {
             //add like to API
 
-            setLikesCount(likesCount+1);
+            setLikesCount(likesCount + 1);
         }
 
         setIsLiked(!isLiked);
     }
 
-    function handleChangePage(){
-        navigate(`point/${props.data.Id}`, {state: {beforeSite : "/"}});
+    function handleChangePage() {
+        navigate(`point/${props.data.Id}`, {state: {beforeSite: "/"}});
     }
 
-    return(
+    return (
         <React.Fragment>
             <Marker
                 key={props.data.Id}
@@ -52,7 +50,9 @@ export default function CustomMarker(props){
                 icon={iconPerson}>
                 <Popup autoClose={false} className={"popup-marker"}>
                     <Box className={"google-link"} mb={"-10px"}>
-                        <Link href={'https://www.google.com/maps/dir//' + props.data.X + ',' + props.data.Y + '/@' + props.data.X + ',' + props.data.Y + ',15z'} isExternal>
+                        <Link
+                            href={'https://www.google.com/maps/dir//' + props.data.X + ',' + props.data.Y + '/@' + props.data.X + ',' + props.data.Y + ',15z'}
+                            isExternal>
                             <Button w={5} h={5} variant={"ghost"} color={"green.500"} size='sm'>
                                 <Icon w={5} h={5} as={SiGooglestreetview}></Icon>
                             </Button>
@@ -63,12 +63,12 @@ export default function CustomMarker(props){
                     </Box>
                     <Box mb={"5"} className={"popup-description"}>
                         {props.data.description}
-                    </Box >
+                    </Box>
                     <HStack spacing='24px'>
                         <Box w='50%' h='40px'>
                             <AddButton onClick={handleChangePage}
-                                       leftIcon={<ExternalLinkIcon />}
-                                       size='sm' className={'editButton'} >
+                                       leftIcon={<ExternalLinkIcon/>}
+                                       size='sm' className={'editButton'}>
                                 Details
                             </AddButton>
                         </Box>

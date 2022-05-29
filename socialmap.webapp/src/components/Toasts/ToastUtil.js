@@ -2,8 +2,7 @@
 function constructCom(action, item,extra){
     let prepAction = action.charAt(0).toLowerCase() + action.slice(1);
     let preItem = item.charAt(0).toUpperCase() + item.slice(1);
-    let com = preItem + " " + prepAction + "! " + extra;
-    return com;
+    return preItem + " " + prepAction + "! " + extra;
 }
 
 const constructTitle = (action) =>{
@@ -13,11 +12,11 @@ const constructTitle = (action) =>{
 //musisz zainicjowac useToast w kompnencie i tutaj przekazać!
 //const toast = useToast();
 
-function successToast(toast, action, item, extraPhrase = ""){
+function successToast(toast, action, item, extraPhrase = "", description = null){
     return(
     toast({
         title: "Success!",
-        description: constructCom(action,item, extraPhrase),
+        description: description !== null ? description : constructCom(action, item, extraPhrase),
         status: 'success',
         duration: 4000,
         isClosable: true,

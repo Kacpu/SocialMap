@@ -30,6 +30,18 @@ namespace SocialMap.Infrastructure.Repositories
                 .HasOne(p => p.AppUser)
                 .WithMany(u => u.POIs)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<POIAccess>()
+                .HasIndex(pa => new { pa.POIId, pa.AppUserId })
+                .IsUnique();
+
+            modelBuilder.Entity<Like>()
+                .HasIndex(l => new { l.AppUserId, l.POIId })
+                .IsUnique();
+
+            modelBuilder.Entity<Category>()
+                .HasIndex(c => c.Name)
+                .IsUnique();
         }
     }
 }

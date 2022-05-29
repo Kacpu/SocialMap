@@ -42,7 +42,7 @@ namespace SocialMap.Infrastructure.Services
             return await Task.FromResult(u.ToDTO());
         }
 
-        public async Task<AppUserDTO> GetAsync(int? id, string uuid)
+        public async Task<AppUserDTO> GetAsync(int? id, string uuid, string email)
         {
             Expression<Func<AppUser, bool>> filter = x => false;
 
@@ -53,6 +53,10 @@ namespace SocialMap.Infrastructure.Services
             else if (!string.IsNullOrEmpty(uuid))
             {
                 filter = x => x.UserfrontId == uuid;
+            }
+            else if (!string.IsNullOrEmpty(email))
+            {
+                filter = x => x.EmailAddress == email;
             }
 
             var u = await _appUserRepository.GetAsync(filter);
@@ -65,14 +69,14 @@ namespace SocialMap.Infrastructure.Services
             return await Task.FromResult(u.ToDTO());
         }
 
-        public async Task<IEnumerable<AppUserDTO>> GetAllAsync(string searchInput)
+        public async Task<IEnumerable<AppUserDTO>> GetAllAsync(string name)
         {
-            if (searchInput == null)
+            if (name == null)
             {
-                searchInput = "";
+                name = "";
             }
 
-            Expression<Func<AppUser, bool>> filter = x => x.UserName.Contains(searchInput) || x.EmailAddress.Contains(searchInput);
+            Expression<Func<AppUser, bool>> filter = x => x.UserName.Contains(name);
             
             var users = await _appUserRepository.GetAllAsync(filter);
 

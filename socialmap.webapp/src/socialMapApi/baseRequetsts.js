@@ -1,5 +1,6 @@
-import {headers, headers as paramHeaders, methods} from "./requestsParams";
+import {headers as paramHeaders, methods} from "./requestsParams";
 import Userfront from "@userfront/react";
+
 Userfront.init("xbr78p4n");
 
 async function getReq(query, signal = null) {
@@ -16,52 +17,52 @@ async function getReq(query, signal = null) {
             headers: headers,
             signal: signal
         });
-        return response.ok ? await response.json() : null;
+        return response.ok ? {ok: response.ok, data: await response.json()} : {ok: response.ok, status: response.status};
     } catch(e) {
-        console.error(e);
+        console.error(query + " " + e);
         return null;
     }
 }
 
-async function addReq(query, addObj) {
+async function addReq(query, addObj, signal = null) {
     try {
-        const response = await fetch(query, {
+        return await fetch(query, {
             method: methods.post,
             headers: paramHeaders,
+            signal: signal,
             body: JSON.stringify(addObj)
         });
-        return response.ok ? await response.json() : null;
     } catch (e) {
-        console.error(e);
+        console.error(query + " " + e);
         return null;
     }
 }
 
-async function updateReq(query, updateObj) {
+async function updateReq(query, updateObj, signal= null) {
     try {
-        const response = await fetch(query, {
+        return await fetch(query, {
             method: methods.put,
             headers: paramHeaders,
+            signal: signal,
             body: JSON.stringify(updateObj)
         });
-        return response.ok ? await response.json() : null;
     } catch (e) {
-        console.error(e);
+        console.error(query + " " + e);
         return null;
     }
 }
 
-async function deleteReq(query) {
+async function deleteReq(query, signal = null) {
     try {
-        const response = await fetch(query, {
+        return await fetch(query, {
             method: methods.delete,
             headers: {
                 Authorization: paramHeaders.Authorization
-            }
+            },
+            signal: signal
         });
-        return response.ok ? "deleted" : null;
     } catch (e) {
-        console.error(e);
+        console.error(query + " " + e);
         return null;
     }
 }

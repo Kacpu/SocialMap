@@ -1,9 +1,9 @@
 import {Tabs, TabList, TabPanels, Tab, TabPanel, Box, useColorModeValue, Stack, Heading, Button} from '@chakra-ui/react'
 import {useLocation} from "react-router-dom"
 import {useEffect, useState} from 'react';
-import CategoryTabPanel from "../components/Moderator/CategoryTabPanel";
-import PointsToAcceptTabPanel from "../components/Moderator/PointsToAcceptTabPanel";
-import GlobalPointsTabPanel from "../components/Moderator/GlobalPointsTabPanel";
+import CategoryTabPanel from "../../components/Moderator/CategoryTabPanel";
+import PointsToAcceptTabPanel from "../../components/Moderator/PointsToAcceptTabPanel";
+import GlobalPointsTabPanel from "../../components/Moderator/GlobalPointsTabPanel";
 
 export default function ModeratorPanel() {
     const [loading, setLoading] = useState(false);

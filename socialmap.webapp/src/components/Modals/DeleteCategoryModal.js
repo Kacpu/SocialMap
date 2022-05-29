@@ -6,19 +6,23 @@ import {
 import WarningButton from "../Buttons/WarningButton";
 import {deleteCategory} from "../../socialMapApi/categoryRequests";
 import {errorToast, successToast} from "../Toasts/ToastUtil";
+import {useState} from "react";
+import WrapText from "../Elems/WrapText";
 
 export default function DeleteCategoryModal(props) {
     const toast = useToast()
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const onDelete = async () => {
+        setIsDeleting(true);
         let res = await deleteCategory(props.id);
-        if (res != null) {
-            successToast(toast, "deleted", "category");
+        if (res?.ok) {
+            props.onCategoryDelete(props.id);
+            successToast(toast, "deleted", "category " + props.name);
         } else {
             errorToast(toast)
         }
         props.onClose();
-        props.onCategoryDelete(props.id);
     }
 
     return (
@@ -41,14 +45,14 @@ export default function DeleteCategoryModal(props) {
                             <Text fontWeight='bold'>
                                 Name
                             </Text>
-                            <Text>
+                            <WrapText>
                                 {props.name}
-                            </Text>
+                            </WrapText>
                         </HStack>
                     </ModalBody>
 
                     <ModalFooter>
-                        <WarningButton mr={3} onClick={onDelete}>
+                        <WarningButton mr={3} onClick={onDelete} isLoading={isDeleting}>
                             Yes
                         </WarningButton>
                         <Button onClick={props.onClose}>Close</Button>

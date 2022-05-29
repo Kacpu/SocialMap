@@ -1,28 +1,9 @@
 import {
-    FormErrorMessage,
-    Badge,
     Flex,
     Box,
-    FormControl,
-    FormLabel,
-    Input,
-    InputGroup,
     HStack,
-    InputRightElement,
     Stack,
-    Button,
-    Heading,
-    Text,
-    useColorModeValue,
-    Link,
-    Textarea,
-    Select,
-    Switch,
-    SimpleGrid,
-    IconButton,
-    VStack,
-    Center,
-    Spacer
+    Text
 } from '@chakra-ui/react';
 import EditButton from '../Buttons/EditButton';
 import {Link as RouterLink, useNavigate} from "react-router-dom";
@@ -45,7 +26,7 @@ export default function CategoryModerator(props) {
     return (
         <Box mt={3}>
             <Stack bgColor={'gray.600'} rounded={'lg'}
-            px={5} py={2} boxShadow='xl'>
+                   px={5} py={2} boxShadow='xl'>
                 <Flex justifyContent={"center"} alignItems={"center"}>
                     <HStack alignItems={"baseline"}>
                         <Text color={"gray.300"}>#{props.id}</Text>
@@ -56,25 +37,23 @@ export default function CategoryModerator(props) {
                             <Text>{props.name}</Text>
                         </Box>
                     </HStack>
-                    <Flex ml="auto" gap={"5px"} flexDirection={{ base: "column", md: "row" }}>
-                        <EditButton height={"30px"} width={"80px"} 
-                        onClick={() => redirectToEdit(props.id)}>
+                    <Flex ml="auto" gap={"5px"} flexDirection={{base: "column", md: "row"}}>
+                        <EditButton height={"30px"} width={"80px"}
+                                    onClick={() => redirectToEdit(props.id)}>
                             Edit
                         </EditButton>
-                        <WarningButton height={"30px"} width={"80px"} onClick={() => handleDelete()}>Delete</WarningButton>
+                        <WarningButton height={"30px"} width={"80px"}
+                                       onClick={() => handleDelete()}>Delete</WarningButton>
                     </Flex>
                 </Flex>
             </Stack>
 
-            {isOpen &&
-                <DeleteCategoryModal id={props.id}
-                                     name={props.name}
-                                     isOpen={isOpen}
-                                     onClose={onClose}
-                                     onCategoryDelete={props.onCategoryDelete}
-                />
+            {isOpen && <DeleteCategoryModal id={props.id}
+                                            name={props.name}
+                                            isOpen={isOpen}
+                                            onClose={onClose}
+                                            onCategoryDelete={props.onCategoryDelete}/>
             }
-
         </Box>
     );
 }

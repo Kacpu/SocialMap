@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Button} from "@chakra-ui/react";
-import BaseTabPanel from "../UserPanel/PoiBoxes/BaseTabPanel";
+import BaseTabPanel from "../UserPanel/Tabs/BaseTabPanel";
 import {POIToAcceptMock} from "../../mocks/POIToAcceptMock";
 import PointBox from "./PointBox";
+import {getPois} from "../../socialMapApi/poiRequests";
 
 export default function GlobalPointsTabPanel() {
     const [isLoading, setIsLoading] = useState(true);
@@ -13,12 +14,12 @@ export default function GlobalPointsTabPanel() {
         const ac = new AbortController();
         (async () => {
             //console.log("send req " + "cat tab panel");
-            //const res = await getCategories(ac.signal).catch(console.error);
-            const res = POIToAcceptMock;
-            if (res !== null && res !== undefined) {
+            const res = await getPois(ac.signal, null, true, true).catch(console.error);
+            //const res = {ok: true, data: POIToAcceptMock};
+            if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedGlobalPoints(res);
-                setFilteredGlobalPoints(res);
+                setFetchedGlobalPoints(res.data);
+                setFilteredGlobalPoints(res.data);
                 setIsLoading(false);
             }
         })();
@@ -33,7 +34,7 @@ export default function GlobalPointsTabPanel() {
         setFilteredGlobalPoints(filtered);
     }
 
-    const onGlobalPointDelete = (id) => {
+    const onGlobalPointRemove = (id) => {
         const withoutDeleted = fetchedGlobalPoints.filter(x => x.id !== id)
         setFetchedGlobalPoints(withoutDeleted);
         const withoutDeletedFiltered = filteredGlobalPoints.filter(x => x.id !== id)
@@ -41,18 +42,17 @@ export default function GlobalPointsTabPanel() {
     }
 
     const globalPoints = (list) => {
-        return list.map((obj) =>
+        return list.map((p) =>
             <PointBox
-                key={obj.Id}
-                id={obj.Id}
-                name={obj.Name}
-                author={obj.Author}
-                category={obj.Category}
-                x={obj.X}
-                y={obj.Y}
-                description={obj.description}
-                //setPointIdToManage={setPointIdToManage}
-                //setPointNameToManage={setPointNameToManage}
+                key={p.id}
+                id={p.id}
+                name={p.name}
+                author={p.creatorName}
+                category={p.categories.length > 0 ? p.categories[0].name : "no category"}
+                x={p.x}
+                y={p.y}
+                description={p.description}
+                onGlobalPointRemove={onGlobalPointRemove}
                 pointType="existing"
             />
         );

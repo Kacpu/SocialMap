@@ -6,8 +6,8 @@ import {
     Text,
 } from "@chakra-ui/react";
 import React from "react";
-import UserTable from "../components/UserPanel/Tabs/UserTable";
-import HorizontalLineBox from "../components/Boxes/HorizontalLineBox";
+import UserTable from "../../components/UserPanel/Tabs/UserTable";
+import HorizontalLineBox from "../../components/Boxes/HorizontalLineBox";
 
 //Userfront.init("xbr78p4n");
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
+using SocialMap.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,23 @@ namespace SocialMap.Infrastructure.Repositories
 
         public async Task<Category> AddAsync(Category category)
         {
-            _appDbContext.Category.Add(category);
-            await _appDbContext.SaveChangesAsync();
+            var check_category = _appDbContext.Category.FirstOrDefault(x => x.Name == category.Name);
+
+            if (check_category != null)
+            {
+                throw new BadRequestException("such category already exists");
+            }
+
+            try
+            {
+                _appDbContext.Category.Add(category);
+                await _appDbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                throw new ForbidException("can not add category");
+            }
+            
             return await Task.FromResult(category);
         }
 

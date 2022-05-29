@@ -51,10 +51,28 @@ namespace SocialMap.WebAPI.Controllers
 
             foreach (var pa in pas)
             {
-                if (User.GetId() != pa.AppUserId && User.GetId() != pa.POIDTO?.CreatorId)
+                if (User.GetId() != pa.AppUserId && User.GetId() != pa.Poi?.CreatorId)
                 {
                     return Forbid();
                 }
+            }
+
+            return Json(pas);
+        }
+
+        [HttpGet("user")]
+        [Authorize]
+        public async Task<IActionResult> GetAllPoiAccessesForUser(int? poiId, bool? isAccepted, bool? asIsuer)
+        {
+            IEnumerable<POIAccessDTO> pas;
+
+            if (asIsuer != true)
+            {
+                pas = await _poiAccessService.GetAllAsync(User.GetId(), poiId, null, isAccepted);
+            }
+            else
+            {
+                pas = await _poiAccessService.GetAllAsync(null, poiId, User.GetId(), isAccepted);
             }
 
             return Json(pas);

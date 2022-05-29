@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SocialMap.Core.Domain;
 using SocialMap.Core.Repositories;
+using SocialMap.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,23 @@ namespace SocialMap.Infrastructure.Repositories
 
         public async Task<Like> AddAsync(Like like)
         {
-            _appDbContext.Likes.Add(like);
-            await _appDbContext.SaveChangesAsync();
+            var check_like = _appDbContext.Likes.FirstOrDefault(x => x.POIId == like.POIId && x.AppUserId == like.AppUserId);
+
+            if (check_like != null)
+            {
+                throw new BadRequestException("such like already exists");
+            }
+
+            try
+            {
+                _appDbContext.Likes.Add(like);
+                await _appDbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                throw new ForbidException("can not add like");
+            }
+            
             return await Task.FromResult(like);
         }
 

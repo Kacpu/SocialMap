@@ -16,6 +16,6 @@ namespace SocialMap.Infrastructure.DTO
 
         public string IssuerName { get; set; }
         public string InvitedUserName { get; set; }
-        public POIDTO POIDTO {get; set;}
+        public POIDTO Poi {get; set;}
     }
 }

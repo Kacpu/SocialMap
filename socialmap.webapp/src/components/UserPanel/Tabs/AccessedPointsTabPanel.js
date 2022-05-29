@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Box, Button} from "@chakra-ui/react";
-import BaseTabPanel from "../PoiBoxes/BaseTabPanel";
+import BaseTabPanel from "./BaseTabPanel";
 import {getPoisForUser} from "../../../socialMapApi/poiRequests";
 import AccessedPoiBox from "../PoiBoxes/AccessedPoiBox";
 
@@ -14,10 +14,10 @@ export default function AccessedPointsTabPanel() {
         (async () => {
             //console.log("send req " + "cat tab panel");
             const res = await getPoisForUser(ac.signal, false, true).catch(console.error);
-            if (res !== null && res !== undefined) {
+            if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedAccessedPoints(res);
-                setFilteredAccessedPoints(res);
+                setFetchedAccessedPoints(res.data);
+                setFilteredAccessedPoints(res.data);
                 setIsLoading(false);
             }
         })();
@@ -29,7 +29,7 @@ export default function AccessedPointsTabPanel() {
 
     const filter = (input) => {
         const filtered = fetchedAccessedPoints.filter(x => x.name.toLowerCase().includes(input.toLowerCase())
-            || x.categoryDTOs.some(c => c.name.toLowerCase().includes(input.toLowerCase())));
+            || x.categories.some(c => c.name.toLowerCase().includes(input.toLowerCase())));
         setFilteredAccessedPoints(filtered);
     }
 
@@ -45,6 +45,7 @@ export default function AccessedPointsTabPanel() {
             <React.Fragment key={p.id}>
                 <AccessedPoiBox
                     poiData={p}
+                    onAccessedPointDelete={onAccessedPointDelete}
                 />
                 <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3}
                      boxShadow={'0 3px 10px -0.5px gray'}/>

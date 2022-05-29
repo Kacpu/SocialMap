@@ -11,7 +11,7 @@ namespace SocialMap.Infrastructure.Services
     public interface IAppUserService
     {
         Task<AppUserDTO> AddAsync(CreateAppUser user);
-        Task<AppUserDTO> GetAsync(int? id = null, string uuid = null);
-        Task<IEnumerable<AppUserDTO>> GetAllAsync(string searchInput);
+        Task<AppUserDTO> GetAsync(int? id = null, string uuid = null, string email = null);
+        Task<IEnumerable<AppUserDTO>> GetAllAsync(string name);
     }
 }

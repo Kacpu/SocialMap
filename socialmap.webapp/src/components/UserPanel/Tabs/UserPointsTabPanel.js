@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Box, Button} from "@chakra-ui/react";
 import AddButton from "../../Buttons/AddButton";
 import {Link as RouterLink} from "react-router-dom";
-import BaseTabPanel from "../PoiBoxes/BaseTabPanel";
+import BaseTabPanel from "./BaseTabPanel";
 import {getPoisForUser} from "../../../socialMapApi/poiRequests";
 import UserPoiBox from "../PoiBoxes/UserPoiBox";
 
@@ -16,10 +16,10 @@ export default function UserPointsTabPanel() {
         (async () => {
             //console.log("send req " + "cat tab panel");
             const res = await getPoisForUser(ac.signal, true).catch(console.error);
-            if (res !== null && res !== undefined) {
+            if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedUserPoints(res);
-                setFilteredUserPoints(res);
+                setFetchedUserPoints(res.data);
+                setFilteredUserPoints(res.data);
                 setIsLoading(false);
             }
         })();
@@ -31,7 +31,7 @@ export default function UserPointsTabPanel() {
 
     const filter = (input) => {
         const filtered = fetchedUserPoints.filter(x => x.name.toLowerCase().includes(input.toLowerCase())
-            || x.categoryDTOs.some(c => c.name.toLowerCase().includes(input.toLowerCase())));
+            || x.categories.some(c => c.name.toLowerCase().includes(input.toLowerCase())));
         setFilteredUserPoints(filtered);
     }
 
@@ -47,9 +47,9 @@ export default function UserPointsTabPanel() {
             <React.Fragment key={p.id}>
                 <UserPoiBox
                     poiData={p}
+                    onUserPointDelete={onUserPointDelete}
                 />
-                <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3}
-                     boxShadow={'0 3px 10px -0.5px gray'}/>
+                <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3}/>
             </React.Fragment>
         );
     }
