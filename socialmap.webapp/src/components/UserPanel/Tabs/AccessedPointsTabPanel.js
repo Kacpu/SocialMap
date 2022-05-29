@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Box, Button} from "@chakra-ui/react";
-import BaseTabPanel from "./BaseTabPanel";
+import BaseInfiniteScrollPanel from "./BaseInfiniteScrollPanel";
 import {getPoisForUser} from "../../../socialMapApi/poiRequests";
 import AccessedPoiBox from "../PoiBoxes/AccessedPoiBox";
+import SearchInput from "../../Buttons/SearchInput";
 
 export default function AccessedPointsTabPanel() {
     const [isLoading, setIsLoading] = useState(true);
@@ -59,10 +60,11 @@ export default function AccessedPointsTabPanel() {
                 <Button width={"100%"} isLoading={true}></Button>
             ) : (
                 <React.Fragment>
-                    <BaseTabPanel
-                        filteredData={filteredAccessedPoints}
-                        searchPlaceholder={"point name or category"}
-                        filterData={filter}
+                    <Box mb={"30px"}>
+                        <SearchInput placeholder={"point name or category"} findFromInput={filter}/>
+                    </Box>
+                    <BaseInfiniteScrollPanel
+                        allData={filteredAccessedPoints}
                         createDataComponentList={createAccessedPointComponentList}
                     />
                 </React.Fragment>

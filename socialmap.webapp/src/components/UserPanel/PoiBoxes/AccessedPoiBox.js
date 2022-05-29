@@ -2,14 +2,18 @@ import {Badge, Button, Text} from "@chakra-ui/react";
 import BasePoiBox from "./BasePoiBox";
 import React from "react";
 import {BsFillPeopleFill} from "react-icons/bs";
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import WrapText from "../../Elems/WrapText";
 import useOpenStatus from "../../../hooks/useOpenStatus";
-import DeletePoiModal from "../../Modals/DeletePoiModal";
 import DeleteAccessToPoiModal from "../../Modals/DeleteAccessToPoiModal";
 
 export default function AccessedPoiBox(props) {
+    const navigate = useNavigate();
     const { isOpen: isOpenRemoveModal, onOpen: onOpenRemoveModal, onClose: onCloseRemoveModal } = useOpenStatus();
+
+    const onDetails = () => {
+        navigate(`/point/${props.poiData.id}`, {state: {beforeSite: "/profile/#accessedPointsTab"}});
+    }
 
     const onRemove = () => {
         onOpenRemoveModal();
@@ -38,8 +42,7 @@ export default function AccessedPoiBox(props) {
     </React.Fragment>;
 
     const leftButtons = [
-        <Button as={RouterLink} to={`/point/${props.poiData.id}`}
-                variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
+        <Button key={1} variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} onClick={onDetails}>
             Details
         </Button>
     ];

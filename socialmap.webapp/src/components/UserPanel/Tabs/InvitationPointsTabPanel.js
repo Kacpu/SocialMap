@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Box, Button} from "@chakra-ui/react";
-import BaseTabPanel from "./BaseTabPanel";
+import BaseInfiniteScrollPanel from "./BaseInfiniteScrollPanel";
 import {getPoisForUser} from "../../../socialMapApi/poiRequests";
 import InvitationBoiBox from "../PoiBoxes/InvitationBoiBox";
+import SearchInput from "../../Buttons/SearchInput";
 
 export default function InvitationPointsTabPanel() {
     const [isLoading, setIsLoading] = useState(true);
@@ -60,10 +61,11 @@ export default function InvitationPointsTabPanel() {
                 <Button width={"100%"} isLoading={true}></Button>
             ) : (
                 <React.Fragment>
-                    <BaseTabPanel
-                        filteredData={filteredInvitationPoints}
-                        searchPlaceholder={"point name or category"}
-                        filterData={filter}
+                    <Box mb={"30px"}>
+                        <SearchInput placeholder={"point name or category"} findFromInput={filter}/>
+                    </Box>
+                    <BaseInfiniteScrollPanel
+                        allData={filteredInvitationPoints}
                         createDataComponentList={createInvitationPointComponentList}
                     />
                 </React.Fragment>

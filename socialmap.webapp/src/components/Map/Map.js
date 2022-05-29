@@ -57,7 +57,8 @@ const Map = forwardRef((props, _ref) => {
         html: ReactDOMServer.renderToString(<RedPin className={"mapPin"}/>),
         iconSize: new L.Point(40, 40),
         iconAnchor: new L.Point(0, 40),
-        className: "markerHolder"
+
+        className: " markerHolder centerMarker",
     });
     const markerRef = useRef(null)
     const eventHandlers = useMemo(
@@ -75,7 +76,7 @@ const Map = forwardRef((props, _ref) => {
     const centerMarker = () => {
         return (
             <Marker position={props.mapCenter} icon={centerIcon} draggable={props.draggable} ref={markerRef}
-                    eventHandlers={eventHandlers}>
+                    eventHandlers={eventHandlers} >
                 <Popup autoClose={false}>
                     <HStack>
                         <Text fontSize={"lg"}>Current</Text>

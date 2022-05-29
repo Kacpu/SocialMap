@@ -16,8 +16,8 @@ function GetMarkers(props) {
 
     function initialLoad(poiName){
         //fetch from API
-        console.log("load Markers")
-        console.log("poiName:" + poiName)
+        //console.log("load Markers")
+        //console.log("poiName:" + poiName)
         return POIMock.filter(x => x.Name.toLowerCase().includes(poiName.toLowerCase()));
 
     }

@@ -11,11 +11,11 @@ async function getPois(signal = null, creatorId = null, isGlobal = null, isAccep
     let mark = "?";
     if (creatorId != null) {
         query += mark + `creatorId=${creatorId}`;
-        mark = "&"
+        mark = "&";
     }
     if (isGlobal != null){
         query += mark + `isGlobal=${isGlobal}`;
-        mark = "&"
+        mark = "&";
     }
     if (isAccepted != null)
         query += mark + `isAccepted=${isAccepted}`;

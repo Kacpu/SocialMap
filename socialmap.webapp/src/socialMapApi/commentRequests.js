@@ -8,17 +8,21 @@ async function getComment(id, signal = null) {
 
 async function getComments(signal = null, poiId = null, userId = null) {
     let query = `${serverUrl}/comment`;
-    if(poiId != null)
-        query += `?poiId=${poiId}`;
-    if(userId != null)
-        query += `&userId=${userId}`;
+    let mark = "?";
+    if(poiId != null){
+        query += mark + `poiId=${poiId}`;
+        mark = "&";
+    }
+    if(userId != null){
+        query += mark + `userId=${userId}`;
+    }
 
     return await getReq(query, signal);
 }
 
-async function addComment(comment) {
+async function addComment(comment, signal = null) {
     const query = `${serverUrl}/comment`;
-    return await addReq(query, comment);
+    return await addReq(query, comment, signal);
 }
 
 async function updateComment(id, comment) {

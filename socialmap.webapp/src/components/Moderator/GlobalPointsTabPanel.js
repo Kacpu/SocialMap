@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {Button} from "@chakra-ui/react";
-import BaseTabPanel from "../UserPanel/Tabs/BaseTabPanel";
+import {Box, Button} from "@chakra-ui/react";
+import BaseInfiniteScrollPanel from "../UserPanel/Tabs/BaseInfiniteScrollPanel";
 import {POIToAcceptMock} from "../../mocks/POIToAcceptMock";
 import PointBox from "./PointBox";
 import {getPois} from "../../socialMapApi/poiRequests";
+import SearchInput from "../Buttons/SearchInput";
 
 export default function GlobalPointsTabPanel() {
     const [isLoading, setIsLoading] = useState(true);
@@ -61,15 +62,18 @@ export default function GlobalPointsTabPanel() {
     return (
         <React.Fragment>
             {isLoading ? (
-                    <Button width={"100%"} isLoading={true}></Button>
-                ) : (
-                    <BaseTabPanel
-                        filteredData={filteredGlobalPoints}
-                        searchPlaceholder={"point name or id"}
-                        filterData={filter}
+                <Button width={"100%"} isLoading={true}></Button>
+            ) : (
+                <React.Fragment>
+                    <Box mb={"30px"}>
+                        <SearchInput placeholder={"point name or id"} findFromInput={filter}/>
+                    </Box>
+                    <BaseInfiniteScrollPanel
+                        allData={filteredGlobalPoints}
                         createDataComponentList={globalPoints}
                     />
-                )
+                </React.Fragment>
+            )
             }
         </React.Fragment>
     );

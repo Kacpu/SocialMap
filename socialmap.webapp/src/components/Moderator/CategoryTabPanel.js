@@ -1,10 +1,11 @@
-import BaseTabPanel from "../UserPanel/Tabs/BaseTabPanel";
+import BaseInfiniteScrollPanel from "../UserPanel/Tabs/BaseInfiniteScrollPanel";
 import React, {useEffect, useState} from "react";
-import {Button} from "@chakra-ui/react";
+import {Box, Button} from "@chakra-ui/react";
 import {getCategories} from "../../socialMapApi/categoryRequests";
 import CategoryModerator from "./CategoryModerator";
 import {Link as RouterLink} from "react-router-dom";
 import AddButton from "../Buttons/AddButton";
+import SearchInput from "../Buttons/SearchInput";
 
 export default function CategoryTabPanel() {
     const [isLoading, setIsLoading] = useState(true);
@@ -61,10 +62,11 @@ export default function CategoryTabPanel() {
                         <AddButton as={RouterLink} to="/moderatorpanel/addcategory" w={"100%"} mb={"4"}>
                             Add Category
                         </AddButton>
-                        <BaseTabPanel
-                            filteredData={filteredCategories}
-                            searchPlaceholder={"category name or id"}
-                            filterData={filter}
+                        <Box mb={"30px"}>
+                            <SearchInput placeholder={"category name or id"} findFromInput={filter}/>
+                        </Box>
+                        <BaseInfiniteScrollPanel
+                            allData={filteredCategories}
                             createDataComponentList={categories}
                         />
                     </React.Fragment>

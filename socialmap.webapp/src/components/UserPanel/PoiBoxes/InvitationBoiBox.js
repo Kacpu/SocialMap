@@ -2,7 +2,7 @@ import {Badge, Button, Text, useToast} from "@chakra-ui/react";
 import BasePoiBox from "./BasePoiBox";
 import React, {useState} from "react";
 import {BsFillPeopleFill} from "react-icons/bs";
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import WrapText from "../../Elems/WrapText";
 import useOpenStatus from "../../../hooks/useOpenStatus";
 import DeleteAccessToPoiModal from "../../Modals/DeleteAccessToPoiModal";
@@ -10,9 +10,14 @@ import {getPoiAccessesForUser, updatePoiAccess} from "../../../socialMapApi/poiA
 import {errorToast, successToast} from "../../Toasts/ToastUtil";
 
 export default function InvitationBoiBox(props) {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const {isOpen: isOpenRejectModal, onOpen: onOpenRejectModal, onClose: onCloseRejectModal} = useOpenStatus();
     const toast = useToast()
+
+    const onDetails = () => {
+        navigate(`/point/${props.poiData.id}`, {state: {beforeSite: "/profile/#invitationPointsTab"}});
+    }
 
     const onAccept = async () => {
         setIsLoading(true);
@@ -74,8 +79,7 @@ export default function InvitationBoiBox(props) {
     ];
 
     const rightButtons = [
-        <Button as={RouterLink} to={`/point/${props.poiData.id}`}
-                variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
+        <Button key={1} variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} onClick={onDetails}>
             Details
         </Button>
     ];

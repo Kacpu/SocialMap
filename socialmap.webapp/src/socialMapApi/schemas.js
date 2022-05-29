@@ -7,6 +7,13 @@ const updateCommentSchema = {
     content: ""
 }
 
+const commentResponse = {
+    id: 0,
+    content: "",
+    authorName: "",
+    publicationDate: ""
+}
+
 const createCategory = {
     name: ""
 }

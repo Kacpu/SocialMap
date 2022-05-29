@@ -26,12 +26,13 @@ async function getReq(query, signal = null) {
 
 async function addReq(query, addObj, signal = null) {
     try {
-        return await fetch(query, {
+        const response = await fetch(query, {
             method: methods.post,
             headers: paramHeaders,
             signal: signal,
             body: JSON.stringify(addObj)
         });
+        return response.ok ? {ok: response.ok, data: await response.json()} : {ok: response.ok, status: response.status};
     } catch (e) {
         console.error(query + " " + e);
         return null;

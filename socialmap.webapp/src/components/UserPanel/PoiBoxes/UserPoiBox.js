@@ -30,7 +30,7 @@ export default function UserPoiBox(props) {
     }
 
     const onEdit = () => {
-        navigate("/editpoint", {state: {pointId: props.poiData.id}})
+        navigate("/editpoint", {state: {pointId: props.poiData.id, beforeSite: "/profile/#userPointsTab"}})
     }
 
     const onDelete = () => {
@@ -39,6 +39,10 @@ export default function UserPoiBox(props) {
 
     const onChangeStatus = () => {
         onOpenChangeStatusModal();
+    }
+
+    const onDetails = () => {
+        navigate(`/point/${props.poiData.id}`, {state: {beforeSite: "/profile/#userPointsTab"}});
     }
 
     const handleChangeStatus = () => {
@@ -74,8 +78,7 @@ export default function UserPoiBox(props) {
     )));
 
     const leftButtons = [
-        <Button as={RouterLink} to={`/point/${props.poiData.id}`}
-                   variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1}>
+        <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1} onClick={onDetails}>
             Details
         </Button>,
         <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={2} onClick={handleShare}>

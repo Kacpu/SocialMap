@@ -7,8 +7,8 @@ export default function SearchInput(props) {
 
     function checkKey(event){
         if(event.key == 'Enter'){
-            checkReset();
             props.findFromInput(inputValue);
+            checkReset();
         }
     }
 
@@ -20,8 +20,8 @@ export default function SearchInput(props) {
     }
 
     const onButtonClick = () => {
-        checkReset();
         props.findFromInput(inputValue)
+        checkReset();
     }
 
     function checkReset(){

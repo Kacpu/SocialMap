@@ -42,7 +42,7 @@ export default function AddCategoryModerator() {
     const subBoxColor = useColorModeValue('gray.600', 'gray.600');
 
     async function onSubmit(data) {
-        let res = await addCategory(data)
+        const res = await addCategory(data)
         if(res?.ok){
             successToast(toast, "added", "category")
         } else {

@@ -10,7 +10,7 @@ import {
     Icon,
     Input,
     Stack,
-    useColorModeValue
+    useColorModeValue, useToast
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form'
 import { ArrowBackIcon } from '@chakra-ui/icons';
@@ -18,6 +18,8 @@ import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom"
 import { categoryData } from '../../mocks/CategoryMock';
 import React, { useState } from "react";
 import AddButton from '../../components/Buttons/AddButton';
+import {addCategory} from "../../socialMapApi/categoryRequests";
+import {errorToast, successToast} from "../../components/Toasts/ToastUtil";
 
 function InfoBadge(props) {
     return (
@@ -33,6 +35,7 @@ export default function EditCategoryModerator() {
     const navigate = useNavigate();
     const { state } = useLocation();
     const { categoryId } = state;
+    const toast = useToast();
 
     console.log(categoryId)
     const [value, setValue] = React.useState('')
@@ -42,7 +45,14 @@ export default function EditCategoryModerator() {
     const inputColor = useColorModeValue('gray.100', 'gray.50')
     const subBoxColor = useColorModeValue('gray.600', 'gray.600');
 
-    function onSubmit(data) {
+    async function onSubmit(data) {
+        const res = await addCategory(data)
+        if(res?.ok){
+            successToast(toast, "edited", "category")
+        } else {
+            errorToast(toast)
+        }
+        navigate('/moderatorpanel/#categories')
         let obj = JSON.stringify(data, null, 2)
         //obj.isGlobal = !obj.isGlobal;
         alert(obj);

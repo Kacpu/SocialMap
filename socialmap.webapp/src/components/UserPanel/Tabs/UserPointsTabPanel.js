@@ -2,9 +2,10 @@ import React, {useEffect, useState} from "react";
 import {Box, Button} from "@chakra-ui/react";
 import AddButton from "../../Buttons/AddButton";
 import {Link as RouterLink} from "react-router-dom";
-import BaseTabPanel from "./BaseTabPanel";
+import BaseInfiniteScrollPanel from "./BaseInfiniteScrollPanel";
 import {getPoisForUser} from "../../../socialMapApi/poiRequests";
 import UserPoiBox from "../PoiBoxes/UserPoiBox";
+import SearchInput from "../../Buttons/SearchInput";
 
 export default function UserPointsTabPanel() {
     const [isLoading, setIsLoading] = useState(true);
@@ -63,10 +64,11 @@ export default function UserPointsTabPanel() {
                     <AddButton as={RouterLink} to="/addpoint" w={"100%"} mb={"4"}>
                         Add Point
                     </AddButton>
-                    <BaseTabPanel
-                        filteredData={filteredUserPoints}
-                        searchPlaceholder={"point name or category"}
-                        filterData={filter}
+                    <Box mb={"30px"}>
+                        <SearchInput placeholder={"point name or category"} findFromInput={filter}/>
+                    </Box>
+                    <BaseInfiniteScrollPanel
+                        allData={filteredUserPoints}
                         createDataComponentList={createUserPointComponentList}
                     />
                 </React.Fragment>
