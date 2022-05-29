@@ -89,7 +89,7 @@ namespace SocialMap.Infrastructure.DTO
                 IssueDate = new DateDTO(poiAccess.IssueDate),
                 InvitedUserName = poiAccess.AppUser?.UserName,
                 IssuerName = poiAccess.POI?.AppUser?.UserName,
-                POIDTO = poiAccess.POI?.ToDTO()
+                Poi = poiAccess.POI?.ToDTO()
             };
         }
 

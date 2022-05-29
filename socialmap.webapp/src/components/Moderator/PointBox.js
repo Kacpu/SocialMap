@@ -24,7 +24,6 @@ export default function PointBox(props) {
     const toast = useToast()
 
     const downIcon = () => <ChevronDownIcon w={10} h={10}/>;
-
     const upIcon = () => <ChevronUpIcon w={10} h={10}/>;
 
     const handleToggle = () => {

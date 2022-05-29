@@ -14,6 +14,7 @@ export default function InvitationPointsTabPanel() {
         (async () => {
             //console.log("send req " + "cat tab panel");
             const res = await getPoisForUser(ac.signal, false, false, true).catch(console.error);
+            //console.log(res);
             if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
                 setFetchedInvitationPoints(res.data);
@@ -29,7 +30,7 @@ export default function InvitationPointsTabPanel() {
 
     const filter = (input) => {
         const filtered = fetchedInvitationPoints.filter(x => x.name.toLowerCase().includes(input.toLowerCase())
-            || x.categoryDTOs.some(c => c.name.toLowerCase().includes(input.toLowerCase())));
+            || x.categories.some(c => c.name.toLowerCase().includes(input.toLowerCase())));
         setFilteredInvitationPoints(filtered);
     }
 
@@ -45,6 +46,7 @@ export default function InvitationPointsTabPanel() {
             <React.Fragment key={p.id}>
                 <InvitationBoiBox
                     poiData={p}
+                    onInvitationPointDelete={onInvitationPointDelete}
                 />
                 <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3}
                      boxShadow={'0 3px 10px -0.5px gray'}/>

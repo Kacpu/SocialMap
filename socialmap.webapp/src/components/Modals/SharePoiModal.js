@@ -71,6 +71,8 @@ export default function SharePoiModal(props) {
         } else if (!res.ok && res.status === 404) {
             setChosenUser(null);
             setSearchError("User not found!");
+        } else {
+            return;
         }
         setIsUserSearching(false);
     };

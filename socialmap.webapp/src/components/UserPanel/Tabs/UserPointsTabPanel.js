@@ -31,7 +31,7 @@ export default function UserPointsTabPanel() {
 
     const filter = (input) => {
         const filtered = fetchedUserPoints.filter(x => x.name.toLowerCase().includes(input.toLowerCase())
-            || x.categoryDTOs.some(c => c.name.toLowerCase().includes(input.toLowerCase())));
+            || x.categories.some(c => c.name.toLowerCase().includes(input.toLowerCase())));
         setFilteredUserPoints(filtered);
     }
 

@@ -29,7 +29,7 @@ export default function AccessedPointsTabPanel() {
 
     const filter = (input) => {
         const filtered = fetchedAccessedPoints.filter(x => x.name.toLowerCase().includes(input.toLowerCase())
-            || x.categoryDTOs.some(c => c.name.toLowerCase().includes(input.toLowerCase())));
+            || x.categories.some(c => c.name.toLowerCase().includes(input.toLowerCase())));
         setFilteredAccessedPoints(filtered);
     }
 
@@ -45,6 +45,7 @@ export default function AccessedPointsTabPanel() {
             <React.Fragment key={p.id}>
                 <AccessedPoiBox
                     poiData={p}
+                    onAccessedPointDelete={onAccessedPointDelete}
                 />
                 <Box height={0.5} border={'none'} bg={'gray.600'} opacity={0.5} my={3}
                      boxShadow={'0 3px 10px -0.5px gray'}/>

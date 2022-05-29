@@ -12,11 +12,11 @@ const constructTitle = (action) =>{
 //musisz zainicjowac useToast w kompnencie i tutaj przekazać!
 //const toast = useToast();
 
-function successToast(toast, action, item, extraPhrase = ""){
+function successToast(toast, action, item, extraPhrase = "", description = null){
     return(
     toast({
         title: "Success!",
-        description: constructCom(action, item, extraPhrase),
+        description: description !== null ? description : constructCom(action, item, extraPhrase),
         status: 'success',
         duration: 4000,
         isClosable: true,
