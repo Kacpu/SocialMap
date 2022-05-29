@@ -1,5 +1,5 @@
-import SignupForm from '../auth/SignupForm'
-import SignupFormCustom from "../auth/SignupFormCustom";
+import SignupForm from '../../auth/SignupForm'
+import SignupFormCustom from "../../auth/SignupFormCustom";
 import {Button, Flex} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 

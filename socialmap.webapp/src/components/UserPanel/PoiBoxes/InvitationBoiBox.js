@@ -4,7 +4,7 @@ import React, {useEffect} from "react";
 import {rgbToHex} from "@mui/material";
 import {BsFillPeopleFill} from "react-icons/bs";
 import {Link as RouterLink} from "react-router-dom";
-import WrapText from "../../../Elems/WrapText";
+import WrapText from "../../Elems/WrapText";
 
 export default function InvitationBoiBox(props) {
     let badges = [
@@ -13,7 +13,7 @@ export default function InvitationBoiBox(props) {
         </Badge>
     ];
 
-    badges = badges.concat(props.poiData.categoryDTOs.map(category => (
+    badges = badges.concat(props.poiData.categories.map(category => (
         <Badge key={category.id + 1} colorScheme={"teal"} mr={"2"}>
             {category.name}
         </Badge>

@@ -119,7 +119,7 @@ namespace SocialMap.Infrastructure.DTO
                 CreatorId = p.AppUserId,
                 CreatorName = p.AppUser?.UserName,
                 LikesNumber = p.Likes?.Count ?? 0,
-                CategoryDTOs = p.Categories?.Select(c => c.ToDTO())
+                Categories = p.Categories?.Select(c => c.ToDTO())
             };
         }
 

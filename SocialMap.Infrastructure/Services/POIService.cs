@@ -85,7 +85,7 @@ namespace SocialMap.Infrastructure.Services
             p.Y = updatePoi.Y ?? p.Y;
             p.Description = !string.IsNullOrEmpty(updatePoi.Description) ? updatePoi.Description : p.Description;
             p.IsGlobal = updatePoi.IsGlobal ?? p.IsGlobal;
-            p.IsAccepted = updatePoi.IsAccepted ?? p.IsAccepted;
+            p.IsAccepted = updatePoi.IsAccepted ?? false;
 
             if (updatePoi.CategoriesId != null)
             {

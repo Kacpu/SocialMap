@@ -19,7 +19,7 @@ import {CloseIcon} from "@chakra-ui/icons";
 import Userfront from "@userfront/react";
 import {errorToast, successToast} from "../Toasts/ToastUtil";
 import {addPoiAccess, getPoiAccesses} from "../../socialMapApi/poiAccessRequests";
-import WrapText from "../../Elems/WrapText";
+import WrapText from "../Elems/WrapText";
 
 export default function SharePoiModal(props) {
     const [isUserSearching, setIsUserSearching] = useState(null);

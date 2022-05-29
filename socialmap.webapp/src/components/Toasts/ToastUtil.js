@@ -2,8 +2,7 @@
 function constructCom(action, item,extra){
     let prepAction = action.charAt(0).toLowerCase() + action.slice(1);
     let preItem = item.charAt(0).toUpperCase() + item.slice(1);
-    let com = preItem + " " + prepAction + "! " + extra;
-    return com;
+    return preItem + " " + prepAction + "! " + extra;
 }
 
 const constructTitle = (action) =>{
@@ -17,7 +16,7 @@ function successToast(toast, action, item, extraPhrase = ""){
     return(
     toast({
         title: "Success!",
-        description: constructCom(action,item, extraPhrase),
+        description: constructCom(action, item, extraPhrase),
         status: 'success',
         duration: 4000,
         isClosable: true,

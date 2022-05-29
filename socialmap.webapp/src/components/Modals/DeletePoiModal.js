@@ -13,7 +13,7 @@ import React, {useState} from "react";
 import WarningButton from "../Buttons/WarningButton";
 import {errorToast, successToast} from "../Toasts/ToastUtil";
 import {deletePoi} from "../../socialMapApi/poiRequests";
-import WrapText from "../../Elems/WrapText";
+import WrapText from "../Elems/WrapText";
 
 export default function DeletePoiModal(props) {
     const toast = useToast()
@@ -24,11 +24,11 @@ export default function DeletePoiModal(props) {
         let res = await deletePoi(props.id);
         if (res?.ok) {
             successToast(toast, "deleted", "point " + props.name);
+            props.onUserPointDelete(props.id);
         } else {
             errorToast(toast)
         }
         props.onClose();
-        props.onUserPointDelete(props.id);
     }
 
     return (

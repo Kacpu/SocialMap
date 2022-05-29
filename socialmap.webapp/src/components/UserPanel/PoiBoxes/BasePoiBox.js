@@ -3,7 +3,7 @@ import {useState} from "react";
 import React from "react";
 import {ReactComponent as Like} from '../../../icons/like-icon.svg'
 import ExpandButton from "../../Buttons/ExpandButton";
-import WrapText from "../../../Elems/WrapText";
+import WrapText from "../../Elems/WrapText";
 
 export default function BasePoiBox(props) {
     const [displayContent, setDisplayContent] = useState(false);

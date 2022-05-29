@@ -45,7 +45,7 @@ const poiResponse = {
     creatorId: 0,
     creatorName: "",
     likesNumber: 0,
-    categoryDTOs: []
+    categories: []
 }
 
 const createPoiAccess = {

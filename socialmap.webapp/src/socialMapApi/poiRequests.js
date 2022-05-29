@@ -8,12 +8,17 @@ async function getPoi(id, signal = null) {
 
 async function getPois(signal = null, creatorId = null, isGlobal = null, isAccepted = null) {
     let query = `${serverUrl}/poi`;
-    if (creatorId != null)
-        query += `?creatorId=${creatorId}`;
-    if (isGlobal != null)
-        query += `&isGlobal=${isGlobal}`;
+    let mark = "?";
+    if (creatorId != null) {
+        query += mark + `creatorId=${creatorId}`;
+        mark = "&"
+    }
+    if (isGlobal != null){
+        query += mark + `isGlobal=${isGlobal}`;
+        mark = "&"
+    }
     if (isAccepted != null)
-        query += `&isAccepted=${isAccepted}`;
+        query += mark + `isAccepted=${isAccepted}`;
 
     return await getReq(query, signal);
 }

@@ -15,11 +15,11 @@ import {
 import { useForm } from 'react-hook-form'
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate, Link as RouterLink } from "react-router-dom"
-import { categoryData } from '../mocks/CategoryMock';
+import { categoryData } from '../../mocks/CategoryMock';
 import React, { useState } from "react";
-import AddButton from '../components/Buttons/AddButton';
-import {errorToast, successToast} from "../components/Toasts/ToastUtil";
-import {addCategory} from "../socialMapApi/categoryRequests";
+import AddButton from '../../components/Buttons/AddButton';
+import {errorToast, successToast} from "../../components/Toasts/ToastUtil";
+import {addCategory} from "../../socialMapApi/categoryRequests";
 
 function InfoBadge(props) {
     return (

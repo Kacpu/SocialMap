@@ -15,9 +15,9 @@ import {
 import { useForm } from 'react-hook-form'
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom"
-import { categoryData } from '../mocks/CategoryMock';
+import { categoryData } from '../../mocks/CategoryMock';
 import React, { useState } from "react";
-import AddButton from '../components/Buttons/AddButton';
+import AddButton from '../../components/Buttons/AddButton';
 
 function InfoBadge(props) {
     return (

@@ -1,11 +1,11 @@
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useRef, useState} from "react"
 import {Box, Button, Container, Flex, Heading, HStack, Icon, Input, Stack, Text, VStack} from "@chakra-ui/react";
-import Map from "../components/Map/Map";
-import HorizontalLineBox from "../components/Boxes/HorizontalLineBox";
+import Map from "../../components/Map/Map";
+import HorizontalLineBox from "../../components/Boxes/HorizontalLineBox";
 import {AddIcon, ArrowBackIcon, SmallAddIcon} from "@chakra-ui/icons";
 import {FaUser} from "react-icons/fa"
-import CommentsList from "../components/PoiDetails/CommentsList";
+import CommentsList from "../../components/PoiDetails/CommentsList";
 
 
 export default function PoiDetails(props) {

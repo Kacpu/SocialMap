@@ -5,23 +5,23 @@ import NavBar from "./components/NavBar/NavBar";
 import CustomFooter from "./components/Footer/Footer";
 import {Routes, Route} from "react-router-dom";
 import './index.css';
-import PrivatePage from "./Pages/PrivatePage";
+import PrivatePage from "./Pages/AuthPages/PrivatePage";
 import ApiTest from "./Pages/ApiTest";
-import ContactUs from "./Pages/ContactUs";
+import ContactUs from "./Pages/MainPages/ContactUs";
 import AddPoint from "./Pages/PointPages/AddPoint";
-import ModeratorPanel from "./Pages/ModeratorPanel";
+import ModeratorPanel from "./Pages/ModeratorPages/ModeratorPanel";
 import {Box, useColorModeValue} from '@chakra-ui/react';
-import Login from "./Pages/Login";
-import Signup from "./Pages/Signup";
-import PasswordReset from "./Pages/PasswordReset";
+import Login from "./Pages/AuthPages/Login";
+import Signup from "./Pages/AuthPages/Signup";
+import PasswordReset from "./Pages/AuthPages/PasswordReset";
 import PrivateRoute from "./auth/PrivateRoute";
-import ProfilePage from "./Pages/ProfilePage";
-import AddCategoryModerator from "./Pages/AddCategoryModerator";
-import EditCategoryModerator from "./Pages/EditCategoryModerator";
+import ProfilePage from "./Pages/MainPages/ProfilePage";
+import AddCategoryModerator from "./Pages/ModeratorPages/AddCategoryModerator";
+import EditCategoryModerator from "./Pages/ModeratorPages/EditCategoryModerator";
 import EditPoint from "./Pages/PointPages/EditPoint";
 import ScrollToTop from "./tools/ScrollToTop";
-import About from "./Pages/About";
-import PoiDetails from "./Pages/PoiDetails";
+import About from "./Pages/MainPages/About";
+import PoiDetails from "./Pages/PointPages/PoiDetails";
 
 //Wczenisej bylo Route z Navbarem. Musialem to zmienic by footer ladnie sie kleil konca strony
 function App() {

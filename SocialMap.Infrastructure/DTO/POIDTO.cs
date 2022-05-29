@@ -20,7 +20,7 @@ namespace SocialMap.Infrastructure.DTO
         public int CreatorId { get; set; }
         public string CreatorName { get; set; }
 
-        public IEnumerable<CategoryDTO> CategoryDTOs { get; set; }
+        public IEnumerable<CategoryDTO> Categories { get; set; }
 
         public int LikesNumber { get; set; }
     }
