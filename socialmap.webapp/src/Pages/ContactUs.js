@@ -21,9 +21,11 @@ import {
 } from 'react-icons/md';
 import React from "react";
 import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs';
+import {useNavigate} from "react-router-dom";
 
 export default function Contact() {
     //dane do skopiowania
+    const navigate = useNavigate();
     const [value, setValue] = React.useState('');
     const { hasCopied, onCopy } = useClipboard(value, 500);
     
@@ -37,6 +39,10 @@ export default function Contact() {
     function handleAction(name){
         navigator.clipboard.writeText(name);
         onCopy();
+    }
+
+    const testClick = () => {
+        navigate(`/point/2`, {state: {beforeSite : "/contact"}});
     }
 
     const emailsMapped = emails.map( (email) =>
@@ -65,6 +71,7 @@ export default function Contact() {
 
     return (
             <Stack spacing={12} mx={'auto'} maxW={'500px'} w={'100%'} py={12} px={0}>
+                <Button onClick={testClick}>detail</Button>
                 <Stack align={'center'}>
                     <Heading fontSize={'4xl'} textAlign={'center'}>
                         Contact us!
