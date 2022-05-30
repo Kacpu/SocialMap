@@ -23,11 +23,12 @@ import {useForm} from 'react-hook-form'
 import {ArrowBackIcon, CloseIcon, SearchIcon} from '@chakra-ui/icons';
 import Map from '../../components/Map/Map'
 import {categoryData} from '../../mocks/CategoryMock';
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import {Select as SelectMaterial} from "@mui/material";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {getCategories} from "../../socialMapApi/categoryRequests";
 
 const darkTheme = createTheme({
     palette: {
@@ -50,10 +51,13 @@ export default function PointForm(props) {
     const [mapCenter, setMapCenter] = React.useState(initialMap());
     const [reloadMap, setReloadMap] = React.useState(false)
     const [displayClearButton, setDisplayClearButton] = React.useState(false)
-    const [chosenItem, setChosenItem] = React.useState('helelelelp')
+    const [chosenItem, setChosenItem] = React.useState('')
 
     const [items, setItems] = useState([]);
     const [showPointList, setShowPointList] = useState(false)
+
+    const [categories, setCategories] = useState([]);
+    const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
 
     const boxColor = useColorModeValue('gray.600', 'gray.700');
     const labelColor = useColorModeValue('gray.600', 'gray.200');
@@ -69,51 +73,61 @@ export default function PointForm(props) {
         formState: {errors, isSubmitting},
     } = useForm()
 
-    function initialMap(){
-        if(props.defaultValues){
-            return [props.defaultValues.x,props.defaultValues.y]
+    function initialMap() {
+        if (props.defaultValues) {
+            return [props.defaultValues.x, props.defaultValues.y]
         }
 
         return [52.22983, 21.01173]
     }
 
-
-    React.useEffect(()=>{
-        if(props.defaultValues) {
-            reset(
-                {name: props.defaultValues.name,
+    useEffect(() => {
+        if (props.defaultValues) {
+            reset({
+                    name: props.defaultValues.name,
                     description: props.defaultValues.description,
-                    category: props.defaultValues.categoryId,
-                    isGlobal: props.defaultValues.isGlobal,
+                    category: props.defaultValues.categories?.length > 0 ? props.defaultValues.categories[0].id : null
                 }
             )
         }
-
         // if(props.defaultValues.x && props.defaultValues.y){
         //     setMapCenter([props.defaultValues.x, props.defaultValues.y]);
         // }
         // setCenterMarkerFlag(true);
+    }, [])
 
-    },[])
+    useEffect(() => {
+        const ac = new AbortController();
+        (async () => {
+            const res = await getCategories(ac.signal).catch(console.error);
+            if (res?.ok) {
+                const sortData = res.data?.sort(c => c.name);
+                setCategories(sortData);
+            }
+            setIsCategoriesLoading(false);
 
+        })();
+        return () => {
+            ac.abort("abort from fetch categories at add point");
+        };
+    }, []);
 
-    const categoryList = categoryData.map((category) =>
-        <option
-            key={category.id} value={category.id}
-        >
+    const categoryList = categories?.map((category) =>
+        <option key={category.id} value={category.id}>
             {category.name}
         </option>
     );
 
-    function onSubmit(data) {
+    async function onSubmit(data) {
         const markerPosition = getCentralMarkerPosition();
-        let obj = JSON.stringify([data.name, data.description, data.category, data.isGlobal, markerPosition.lat, markerPosition.lng], null, 3)
-        return new Promise(resolve => {
-            props.submitAction(obj);
-        });
+        const poi = {
+            ...data,
+            x: markerPosition.lat,
+            y: markerPosition.lng,
+            categoriesId: data.category ? [data.category] : null
+        };
+        await props.submitAction(poi);
     }
-
-
 
     const handleChange = (event) => {
         setInputValue(event.target.value)
@@ -162,7 +176,6 @@ export default function PointForm(props) {
         setInputValue('')
         setDisplayClearButton(false)
     }
-
 
     const mapRef = useRef()
     const getCentralMarkerPosition = () => {
@@ -270,27 +283,30 @@ export default function PointForm(props) {
 
                             <FormControl isInvalid={errors.category}>
                                 <FormLabel htmlFor='category' color={labelColor}>Category</FormLabel>
-                                <Select id='category' color={inputColor} bgColor={subBoxColor}
-                                        placeholder='Select category'
-                                        {...register("category", {
-                                                required: "This is required"
-                                            }
-                                        )}>
-                                    {categoryList}
-                                </Select>
+                                {isCategoriesLoading ? (
+                                    <Button width={"100%"} isLoading={true} loadingText={"loading categories"}></Button>
+                                ) : (
+                                    <Select id='category' color={inputColor} bgColor={subBoxColor}
+                                            placeholder='Select category'
+                                            {...register("category", {})}>
+                                        {categoryList}
+                                    </Select>
+                                )}
                                 <FormErrorMessage>
                                     {errors.category && errors.category.message}
                                 </FormErrorMessage>
                             </FormControl>
 
-                            <FormControl isInvalid={errors.isGlobal} display='flex' alignItems='center'>
-                                <FormLabel htmlFor='isGlobal' mb='0' color={labelColor}>Global</FormLabel>
-                                <Switch id='isGlobal'
-                                        {...register("isGlobal", {})} />
-                                <FormErrorMessage>
-                                    {errors.isGlobal && errors.isGlobal.message}
-                                </FormErrorMessage>
-                            </FormControl>
+                            {props.action === "add" &&
+                                <FormControl isInvalid={errors.isGlobal} display='flex' alignItems='center'>
+                                    <FormLabel htmlFor='isGlobal' mb='0' color={labelColor}>Global</FormLabel>
+                                    <Switch id='isGlobal'
+                                            {...register("isGlobal", {})} />
+                                    <FormErrorMessage>
+                                        {errors.isGlobal && errors.isGlobal.message}
+                                    </FormErrorMessage>
+                                </FormControl>
+                            }
 
                         </Stack>
                     </Box>

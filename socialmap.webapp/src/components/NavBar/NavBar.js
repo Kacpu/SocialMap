@@ -129,7 +129,7 @@ export default function NavBar() {
 
                 </Stack>
 
-                {isAuthenticated() && console.log(Userfront.user)}
+                {/*{isAuthenticated() && console.log(Userfront.user)}*/}
                 {/*console.log(Userfront.user) &&*/}
 
                 <Stack

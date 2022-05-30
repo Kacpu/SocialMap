@@ -70,12 +70,12 @@ namespace SocialMap.Infrastructure.Services
                 throw new NotFoundException("poi not found");
             }
 
-            if (authId != null && p.AppUserId != authId)
+            if (authId != -1 && p.AppUserId != authId)
             {
                 throw new ForbidException("you do not have permission to change this poi");
             }
 
-            if (authId != null && updatePoi.IsAccepted == true)
+            if (authId != -1 && updatePoi.IsAccepted == true)
             {
                 throw new ForbidException("you do not have permission to accept this poi");
             }
@@ -84,8 +84,26 @@ namespace SocialMap.Infrastructure.Services
             p.X = updatePoi.X ?? p.X;
             p.Y = updatePoi.Y ?? p.Y;
             p.Description = !string.IsNullOrEmpty(updatePoi.Description) ? updatePoi.Description : p.Description;
-            p.IsGlobal = updatePoi.IsGlobal ?? p.IsGlobal;
-            p.IsAccepted = updatePoi.IsAccepted ?? false;
+            
+            if (updatePoi.IsGlobal == false)
+            {
+                p.IsGlobal = false;
+                p.IsAccepted = false;
+            }
+            else if (authId == -1 && p.IsGlobal == true && updatePoi.IsAccepted.HasValue)
+            {
+                p.IsGlobal = updatePoi.IsAccepted.Value;
+                p.IsAccepted = updatePoi.IsAccepted.Value;
+            }
+            else if (updatePoi.IsGlobal == true)
+            {
+                p.IsGlobal = true;
+            }
+
+            if(p.IsGlobal == false && p.IsAccepted == true)
+            {
+                throw new BadRequestException("isGlobal can not be false and isAccepted can not be true at once");
+            }
 
             if (updatePoi.CategoriesId != null)
             {

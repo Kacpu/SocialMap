@@ -1,36 +1,35 @@
 import PointForm from "../../components/Forms/PointForm";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useToast} from "@chakra-ui/react";
-import {successToast} from "../../components/Toasts/ToastUtil";
+import {errorToast, successToast} from "../../components/Toasts/ToastUtil";
+import {addCategory, updateCategory} from "../../socialMapApi/categoryRequests";
+import {addPoi} from "../../socialMapApi/poiRequests";
 
 
 export default function AddPoint(){
-
     const navigate = useNavigate();
     const {state} = useLocation();
     const {beforeSite} = state || {};
 
     const toast = useToast();
 
-    function handleSubmit(data){
-            alert(data);
-            //handle API
+    async function handleSubmit(data) {
+        const res = await addPoi(data);
+        if (res?.ok) {
             successToast(toast, "added", "point", "Check map")
-            navigate("/profile")
+        } else {
+            errorToast(toast)
+        }
+        handleBack();
     }
 
     function handleBack() {
-        let to = "";
-        if(!beforeSite){
-            to="/"
-        } else{
-            to = beforeSite;
-        }
-        navigate(to);
+        navigate(!beforeSite ? "/" : beforeSite);
     }
 
     return(
         <PointForm
+            action={"add"}
             backAction={handleBack}
             title={"Add new interesting Point!"}
             subtitle={"save your favourite place 🌎"}

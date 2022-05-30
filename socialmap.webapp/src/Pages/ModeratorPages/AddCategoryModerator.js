@@ -14,27 +14,18 @@ import {
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form'
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { useNavigate, Link as RouterLink } from "react-router-dom"
+import {useNavigate, Link as RouterLink, useLocation} from "react-router-dom"
 import { categoryData } from '../../mocks/CategoryMock';
 import React, { useState } from "react";
 import AddButton from '../../components/Buttons/AddButton';
 import {errorToast, successToast} from "../../components/Toasts/ToastUtil";
 import {addCategory} from "../../socialMapApi/categoryRequests";
 
-function InfoBadge(props) {
-    return (
-        <Box display='flex' alignItems='baseline'>
-            <Badge borderRadius='full' px='2' colorScheme='blue'>
-                {props.text}
-            </Badge>
-        </Box>
-    );
-}
-
 export default function AddCategoryModerator() {
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     const toast = useToast();
-    //const [value, setValue] = React.useState('')
+    const {state} = useLocation();
+    const {beforeSite} = state || {};
 
     const boxColor = useColorModeValue('gray.600', 'gray.700');
     const labelColor = useColorModeValue('gray.600', 'gray.200');
@@ -48,7 +39,7 @@ export default function AddCategoryModerator() {
         } else {
             errorToast(toast)
         }
-        navigate('/moderatorpanel/#categories')
+        handleBack();
     }
 
     const {
@@ -61,6 +52,10 @@ export default function AddCategoryModerator() {
     //     setValue(event.target.value)
     // }
 
+    function handleBack() {
+        navigate(!beforeSite ? "/" : beforeSite);
+    }
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Flex
@@ -68,8 +63,7 @@ export default function AddCategoryModerator() {
                 justify={'center'}
             >
                 <Stack spacing={5} mx={'auto'} maxW={'700px'} w={'90%'} py={9} px={0}>
-                    <Button alignSelf={"flex-start"} position="absolute" variant={"outline"}
-                    as={RouterLink} to="/moderatorpanel/#categories">
+                    <Button alignSelf={"flex-start"} position="absolute" variant={"outline"} onClick={handleBack}>
                         <ArrowBackIcon />
                     </Button>
                     <Stack align={'center'} pt={6}>
@@ -116,5 +110,15 @@ export default function AddCategoryModerator() {
                 </Stack>
             </Flex>
         </form>
+    );
+}
+
+function InfoBadge(props) {
+    return (
+        <Box display='flex' alignItems='baseline'>
+            <Badge borderRadius='full' px='2' colorScheme='blue'>
+                {props.text}
+            </Badge>
+        </Box>
     );
 }

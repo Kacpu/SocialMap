@@ -40,7 +40,6 @@ export default function ModeratorPanel() {
     }
 
     function focusOnName(name){
-        console.log(name)
         let index = 0;
         switch (name) {
             case "#categories":

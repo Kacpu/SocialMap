@@ -24,7 +24,9 @@ export default function DeletePoiModal(props) {
         let res = await deletePoi(props.id);
         if (res?.ok) {
             successToast(toast, "deleted", "point " + props.name);
+            props.onClose();
             props.onUserPointDelete(props.id);
+            return;
         } else {
             errorToast(toast)
         }

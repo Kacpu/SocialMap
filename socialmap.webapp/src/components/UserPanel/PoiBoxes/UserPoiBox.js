@@ -41,7 +41,7 @@ export default function UserPoiBox(props) {
         onOpenChangeStatusModal();
     }
 
-    const onDetails = () => {
+    const redirectToDetails = () => {
         navigate(`/point/${props.poiData.id}`, {state: {beforeSite: "/profile/#userPointsTab"}});
     }
 
@@ -78,7 +78,7 @@ export default function UserPoiBox(props) {
     )));
 
     const leftButtons = [
-        <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1} onClick={onDetails}>
+        <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={1} onClick={redirectToDetails}>
             Details
         </Button>,
         <Button variant={'ghost'} size='sm' color={"teal.300"} fontSize={16} key={2} onClick={handleShare}>

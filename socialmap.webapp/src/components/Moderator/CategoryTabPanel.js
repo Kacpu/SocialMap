@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {Box, Button} from "@chakra-ui/react";
 import {getCategories} from "../../socialMapApi/categoryRequests";
 import CategoryModerator from "./CategoryModerator";
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import AddButton from "../Buttons/AddButton";
 import SearchInput from "../Buttons/SearchInput";
 
@@ -12,6 +12,8 @@ export default function CategoryTabPanel() {
     const [fetchedCategories, setFetchedCategories] = useState([]);
     const [filteredCategories, setFilteredCategories] = useState([]);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         const ac = new AbortController();
         (async () => {
@@ -19,8 +21,9 @@ export default function CategoryTabPanel() {
             const res = await getCategories(ac.signal).catch(console.error);
             if (res?.ok) {
                 //console.log("get req " + props.searchPlaceholder)
-                setFetchedCategories(res.data);
-                setFilteredCategories(res.data);
+                const sortData = res.data?.sort(c => c.name);
+                setFetchedCategories(sortData);
+                setFilteredCategories(sortData);
                 setIsLoading(false);
             }
         })();
@@ -53,13 +56,17 @@ export default function CategoryTabPanel() {
         );
     }
 
+    const onAddCategory = () => {
+        navigate("/moderatorpanel/addcategory", {state: {beforeSite: "/moderatorpanel/#categories"}})
+    }
+
     return (
         <React.Fragment>
             {isLoading ? (
                     <Button width={"100%"} isLoading={true}></Button>
                 ) : (
                     <React.Fragment>
-                        <AddButton as={RouterLink} to="/moderatorpanel/addcategory" w={"100%"} mb={"4"}>
+                        <AddButton w={"100%"} mb={"4"} onClick={onAddCategory}>
                             Add Category
                         </AddButton>
                         <Box mb={"30px"}>

@@ -17,12 +17,13 @@ export default function DeleteCategoryModal(props) {
         setIsDeleting(true);
         let res = await deleteCategory(props.id);
         if (res?.ok) {
+            props.onClose();
             props.onCategoryDelete(props.id);
             successToast(toast, "deleted", "category " + props.name);
         } else {
+            props.onClose();
             errorToast(toast)
         }
-        props.onClose();
     }
 
     return (

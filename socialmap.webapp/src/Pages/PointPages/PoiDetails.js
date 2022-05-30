@@ -77,13 +77,7 @@ export default function PoiDetails(props) {
     }
 
     function handleBack() {
-        let to = "";
-        if (!beforeSite) {
-            to = "/"
-        } else {
-            to = beforeSite;
-        }
-        navigate(to);
+        navigate(!beforeSite ? "/" : beforeSite);
     }
 
     const mapRef = useRef()

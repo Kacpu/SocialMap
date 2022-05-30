@@ -16,7 +16,7 @@ export default function CategoryModerator(props) {
     const navigate = useNavigate();
 
     const redirectToEdit = (id) => {
-        navigate("editcategory", {state: {categoryId: id}})
+        navigate("editcategory", {state: {categoryId: id, beforeSite: "/moderatorpanel/#categories"}})
     }
 
     const handleDelete = () => {

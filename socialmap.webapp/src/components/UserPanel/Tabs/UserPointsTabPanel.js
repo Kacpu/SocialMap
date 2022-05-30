@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Box, Button} from "@chakra-ui/react";
 import AddButton from "../../Buttons/AddButton";
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import BaseInfiniteScrollPanel from "./BaseInfiniteScrollPanel";
 import {getPoisForUser} from "../../../socialMapApi/poiRequests";
 import UserPoiBox from "../PoiBoxes/UserPoiBox";
@@ -11,6 +11,8 @@ export default function UserPointsTabPanel() {
     const [isLoading, setIsLoading] = useState(true);
     const [fetchedUserPoints, setFetchedUserPoints] = useState([]);
     const [filteredUserPoints, setFilteredUserPoints] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const ac = new AbortController();
@@ -26,7 +28,6 @@ export default function UserPointsTabPanel() {
         })();
         return () => {
             ac.abort("unm ");
-            //console.log("unmount ");
         };
     }, []);
 
@@ -55,13 +56,17 @@ export default function UserPointsTabPanel() {
         );
     }
 
+    const onAddPoint = () => {
+        navigate("/addpoint", {state: {beforeSite: "/profile/#userPointsTab"}})
+    }
+
     return (
         <React.Fragment>
             {isLoading ? (
                 <Button width={"100%"} isLoading={true}></Button>
             ) : (
                 <React.Fragment>
-                    <AddButton as={RouterLink} to="/addpoint" w={"100%"} mb={"4"}>
+                    <AddButton w={"100%"} mb={"4"} onClick={onAddPoint}>
                         Add Point
                     </AddButton>
                     <Box mb={"30px"}>

@@ -32,7 +32,9 @@ export default function DeleteAccessToPoiModal(props) {
             if (res?.ok) {
                 successToast(toast, null, null,null,
                     getSuccessToastMessage() + " to point " + props.name + "!");
+                props.onClose();
                 props.onAccessToPoiDelete(props.id);
+                return;
             } else {
                 errorToast(toast)
             }

@@ -93,7 +93,7 @@ namespace SocialMap.WebAPI.Controllers
                 return BadRequest();
             }
 
-            int? authorId = User.IsAdmin() || User.IsMod() ? null : User.GetId();
+            int? authorId = User.IsAdmin() || User.IsMod() ? -1 : User.GetId();
             var p = await _poiService.UpdateAsync(id, updatePoi, authorId);
 
             return Json(p);
