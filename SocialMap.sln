@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialMap.Infrastructure", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialMap.WebAPI", "SocialMap.WebAPI\SocialMap.WebAPI.csproj", "{AA193411-773B-439D-9EAA-FDC14E773073}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialMap.WebApp", "SocialMap.WebApp\SocialMap.WebApp.csproj", "{97A4D0BB-1715-460C-AE74-AB82E43F689E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

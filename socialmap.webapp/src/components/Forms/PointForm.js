@@ -29,6 +29,8 @@ import MenuItem from '@mui/material/MenuItem';
 import {Select as SelectMaterial} from "@mui/material";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {getCategories} from "../../socialMapApi/categoryRequests";
+import searchOSM from "../../tools/SearchOSM"
+import filterOSMName from "../../tools/FilterOSMName";
 
 const darkTheme = createTheme({
     palette: {
@@ -52,18 +54,14 @@ export default function PointForm(props) {
     const [reloadMap, setReloadMap] = React.useState(false)
     const [displayClearButton, setDisplayClearButton] = React.useState(false)
     const [chosenItem, setChosenItem] = React.useState('')
-
     const [items, setItems] = useState([]);
     const [showPointList, setShowPointList] = useState(false)
-
     const [categories, setCategories] = useState([]);
     const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
-
     const boxColor = useColorModeValue('gray.600', 'gray.700');
     const labelColor = useColorModeValue('gray.600', 'gray.200');
     const inputColor = useColorModeValue('gray.100', 'gray.50')
     const subBoxColor = useColorModeValue('gray.600', 'gray.600');
-
     const [centerMarkerFlag, setCenterMarkerFlag] = React.useState(true);
 
     const {
@@ -138,19 +136,7 @@ export default function PointForm(props) {
     }
 
     async function getData() {
-        if (inputValue.trim().length === 0)
-            return 0;
-        setItems([])
-        let url = 'https://nominatim.openstreetmap.org/?addressdetails=1&q=' + inputValue + ', Warszawa&format=json&limit=5'
-        const response = await fetch(url)
-        let data = await response.json()
-        if (data.length === 0) {
-            setShowPointList(false)
-            return 0;
-        } else {
-            setShowPointList(true)
-        }
-        data = data.filter(x => x.address.city === "Warszawa" || x.address.city === "Warsaw");
+        const data = await searchOSM(inputValue, 5)
         if (data.length === 0) {
             setShowPointList(false)
             return 0;
@@ -162,7 +148,6 @@ export default function PointForm(props) {
         setMapCenter([parseFloat(data[0].lat), parseFloat(data[0].lon)])
         setReloadMap(true)
         setTimeout(() => setReloadMap(false), 1)
-        console.log(data)
     }
 
     const handleSelectChange = (event) => {
@@ -187,37 +172,6 @@ export default function PointForm(props) {
             <CloseIcon/>
         </Button>
     );
-
-    function filterString(string) {
-        let poiName = string.display_name.split(',')
-        let res = []
-        if (string.address.hasOwnProperty('city'))
-            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.country.replace(/\s/g, ''))
-        if (string.address.hasOwnProperty('state'))
-            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.state.replace(/\s/g, ''))
-        if (string.address.hasOwnProperty('postcode'))
-            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.postcode)
-        if (string.address.hasOwnProperty('city_district'))
-            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.city_district.replace(/\s/g, ''))
-        if (string.address.hasOwnProperty('quarter'))
-            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.quarter.replace(/\s/g, ''))
-        if (string.address.hasOwnProperty('suburb')) {
-            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.suburb.replace(/\s/g, ''))
-            res.push(string.address.suburb)
-        }
-        if (string.address.hasOwnProperty('neighbourhood'))
-            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.neighbourhood.replace(/\s/g, ''))
-        if (string.address.hasOwnProperty('road')) {
-            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.road.replace(/\s/g, ''))
-            res.splice(0, 0, string.address.road)
-        }
-        if (string.address.hasOwnProperty('house_number')) {
-            poiName = poiName.filter(a => a.replace(/\s/g, '') !== string.address.house_number.replace(/\s/g, ''))
-            res.splice(1, 0, string.address.house_number)
-        }
-        res.splice(0, 0, poiName.join(''))
-        return res
-    }
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -358,10 +312,10 @@ export default function PointForm(props) {
                                         style={{width: '100%'}}
                                     >
                                         {items.map(data => (
-                                            <MenuItem value={data}>
-                                                {filterString(data)[0]}
+                                            <MenuItem value={data} key={data.place_id}>
+                                                {filterOSMName(data)[0]}
                                                 <br/>
-                                                {filterString(data).splice(1, filterString(data).length).join(' ')}
+                                                {filterOSMName(data).splice(1, filterOSMName(data).length).join(' ')}
                                             </MenuItem>
                                         ))}
                                     </SelectMaterial>

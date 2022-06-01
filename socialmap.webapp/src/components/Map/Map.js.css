@@ -7,7 +7,7 @@
 
 .input-container {
     z-index: 1;
-    position: absolute;
+    position: fixed;
     top: 12px;
     left: 60px;
 }

@@ -9,32 +9,34 @@ import {AiFillLike, AiOutlineLike} from "react-icons/ai";
 import L from "leaflet";
 import ReactDOMServer from "react-dom/server";
 import {ReactComponent as BluePin} from "../../icons/Pin-blue.svg";
-
-const iconPerson = new L.DivIcon({
-    html: ReactDOMServer.renderToString(<BluePin className={"mapPin"}/>),
-    iconSize: new L.Point(30, 30),
-    iconAnchor: new L.Point(0, 30),
-    className: "markerHolder"
-});
+import {ReactComponent as GreenPin} from "../../icons/Pin-green.svg";
 
 export default function CustomMarker(props) {
-
     const navigate = useNavigate();
-
     const [isLiked, setIsLiked] = useState();
     const [likesCount, setLikesCount] = useState(props.data.likes.length);
+
+    const markerIconBlue = new L.DivIcon({
+        html: ReactDOMServer.renderToString(<BluePin className={"mapPin"}/>),
+        iconSize: new L.Point(30, 30),
+        iconAnchor: new L.Point(0, 30),
+        className: "markerHolder"
+    });
+    const markerIconGreen = new L.DivIcon({
+        html: ReactDOMServer.renderToString(<GreenPin className={"mapPin"}/>),
+        iconSize: new L.Point(30, 30),
+        iconAnchor: new L.Point(0, 30),
+        className: "markerHolder"
+    });
 
     function toggleLike() {
         if (isLiked) {
             //delete like from API
-
             setLikesCount(likesCount - 1);
         } else {
             //add like to API
-
             setLikesCount(likesCount + 1);
         }
-
         setIsLiked(!isLiked);
     }
 
@@ -47,7 +49,7 @@ export default function CustomMarker(props) {
             <Marker
                 key={props.data.Id}
                 position={[props.data.X, props.data.Y]}
-                icon={iconPerson}>
+                icon={markerIconBlue}>
                 <Popup autoClose={false} className={"popup-marker"}>
                     <Box className={"google-link"} mb={"-10px"}>
                         <Link

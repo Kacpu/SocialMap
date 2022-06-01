@@ -1,9 +1,7 @@
 import React, {forwardRef, useImperativeHandle, useMemo, useRef} from "react";
-import {MapContainer, Marker, Popup, TileLayer} from 'react-leaflet';
+import {MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents} from 'react-leaflet';
 import './Map.js.css'
 import MapMarkers from "./MapMarkers";
-import {ReactComponent as Pin} from '../../icons/pin-icon.svg'
-import {ReactComponent as Arrow} from '../../icons/arrow-right.svg'
 import {
     Box,
     Button,
@@ -26,19 +24,19 @@ const Map = forwardRef((props, _ref) => {
     const [mapBounds, setMapBounds] = React.useState([[52.368, 21.271], [52.098, 20.852]])
     const [centerMarkerPosition, setCenterMarkerPosition] = React.useState(new L.LatLng(props.mapCenter[0], props.mapCenter[1]))
     const [displayClearButton, setDisplayClearButton] = React.useState(false)
+    const [currentBounds, setCurrentBounds] = React.useState(mapBounds)
 
     const handleChange = (event) => {
         setValue(event.target.value)
         if (event.target.value.trim().length === 0) {
             setDisplayClearButton(false);
             setPoiName('')
-        }
-        else
+        } else
             setDisplayClearButton(true)
     }
 
     const handleButtonPress = (event) => {
-        if(event.code === "Enter"){
+        if (event.code === "Enter") {
             handleClick();
         }
     }
@@ -67,7 +65,6 @@ const Map = forwardRef((props, _ref) => {
                 const marker = markerRef.current
                 if (marker != null) {
                     setCenterMarkerPosition(marker.getLatLng())
-                    console.log(marker.getLatLng())
                 }
             },
         }),
@@ -76,7 +73,7 @@ const Map = forwardRef((props, _ref) => {
     const centerMarker = () => {
         return (
             <Marker position={props.mapCenter} icon={centerIcon} draggable={props.draggable} ref={markerRef}
-                    eventHandlers={eventHandlers} >
+                    eventHandlers={eventHandlers}>
                 <Popup autoClose={false}>
                     <HStack>
                         <Text fontSize={"lg"}>Current</Text>
@@ -87,10 +84,8 @@ const Map = forwardRef((props, _ref) => {
         );
     }
     const getInput = () => (
-        <InputGroup className={"input-container"} minWidth={"235px"} width={"25%"} borderStyle={"solid"}
-                    borderColor={"#1A202C"}>
+        <InputGroup className={"input-container"} minWidth={"235px"} width={"25%"} borderStyle={"solid"} borderColor={"#1A202C"}>
             <InputLeftElement
-
                 pointerEvents='none'
                 children={<Icon color={"black"} as={FiMapPin}/>}
             />
@@ -107,14 +102,13 @@ const Map = forwardRef((props, _ref) => {
             <InputRightElement style={{width: "auto", height: "100%", marginRight: "4px"}}>
                 <HStack spacing='0px'>
                     {displayClearButton ? clearButton() : null}
-                    <Button  variant={'ghost'} color={'blue.300'} onClick={handleClick}>
+                    <Button variant={'ghost'} color={'blue.300'} onClick={handleClick}>
                         <ArrowForwardIcon w={6} h={6}/>
                     </Button>
                 </HStack>
             </InputRightElement>
         </InputGroup>
     );
-
     const clearButton = () => (
         <Button variant={'ghost'} color={'blue.300'} onClick={handleClearClick}>
             <CloseIcon/>
@@ -125,6 +119,15 @@ const Map = forwardRef((props, _ref) => {
             return centerMarkerPosition;
         }
     }))
+
+    function MapMoved() {
+        const map = useMapEvents({
+            moveend() {
+                setCurrentBounds([[map.getBounds()._northEast.lat, map.getBounds()._northEast.lng], [map.getBounds()._southWest.lat, map.getBounds()._southWest.lng]])
+            }
+        })
+        return null
+    }
     return (
         <Box className={"map-container"}>
             {props.showSearch ? getInput() : null}
@@ -139,11 +142,8 @@ const Map = forwardRef((props, _ref) => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
-                {/*<Rectangle*/}
-                {/*    bounds={mapBounds}*/}
-                {/*    color={"#ff7800"}*/}
-                {/*/>*/}
-                <MapMarkers poiName={poiName} />
+                <MapMoved/>
+                <MapMarkers poiName={poiName} currentBounds={currentBounds}/>
                 {props.diplayCenterMarker ? centerMarker() : null}
             </MapContainer>
         </Box>
