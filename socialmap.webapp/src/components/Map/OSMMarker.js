@@ -1,6 +1,6 @@
 import React, {useState} from "react"
 import {Marker, Popup} from "react-leaflet";
-import {Box, Button, Flex, HStack, Icon, Link} from "@chakra-ui/react";
+import {Box, Button, Flex, HStack, Icon, Link, Text} from "@chakra-ui/react";
 import {SiGooglestreetview} from "react-icons/si";
 import L from "leaflet";
 import ReactDOMServer from "react-dom/server";
@@ -31,10 +31,13 @@ export default function OSMMarker(props) {
                             </Button>
                         </Link>
                     </Box>
-                    <Box className={"popup-title"} mb={"2"}>
-                        {filterOSMName(props.data)[0]}
-                        <br/>
-                        {filterOSMName(props.data).splice(1, filterOSMName(props.data).length).join(' ')}
+                    <Box className={"popup-content"} mb={"2"}>
+                        <Box fontWeight={"bold"} mb={"2"}>
+                            {filterOSMName(props.data)[0]}
+                        </Box>
+                        <Box >
+                            {filterOSMName(props.data).splice(1, filterOSMName(props.data).length).join(' ')}
+                        </Box>
                     </Box>
                 </Popup>
             </Marker>
