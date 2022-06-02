@@ -117,6 +117,7 @@ namespace SocialMap.Infrastructure.DTO
                 IsGlobal = p.IsGlobal,
                 IsAccepted = p.IsAccepted,
                 CreatorId = p.AppUserId,
+                CreatorUuid = p.AppUser?.UserfrontId,
                 CreatorName = p.AppUser?.UserName,
                 LikesNumber = p.Likes?.Count ?? 0,
                 Categories = p.Categories?.Select(c => c.ToDTO())

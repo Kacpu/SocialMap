@@ -14,34 +14,93 @@ import {
     ModalHeader,
     ModalOverlay, Spinner, toast, useToast
 } from "@chakra-ui/react";
+import {getPois, getPoisForUser} from "../../socialMapApi/poiRequests";
+import isUserAuthenticated from "../../auth/isUserAuthenticated";
 
 function GetMarkers(props) {
-    const [markers, setMarkers] = useState([]);
+    const [appMarkers, setAppMarkers] = useState([]);
+    const [filteredAppMarkers, setFilteredAppMarkers] = useState([]);
     const [markersOSM, setMarkersOSM] = useState([]);
-    const [openModal, setOpenModal] = useState(true);
+    const [openLoadingModal, setOpenLoadingModal] = useState(true);
     const toast = useToast()
+    const ac = new AbortController();
 
-    useEffect(async () => {
-        setMarkers(initialLoad(props.poiName));
-        let data = []
-        if (props.poiName.trim().length > 4) {
-            data = await searchOSM(props.poiName, 50, props.currentBounds)
-            setMarkersOSM(data)
-        } else if(props.poiName.trim().length < 5 && props.poiName.trim().length !== 0){
-            getToastTooShort()
-        }if(data.length === 0 && props.poiName.trim().length !== 0) {
-            getToastNoResults()
+    useEffect(() => {
+        (async () => {
+            // console.log("start hook")
+            await loadAppMarkers();
+        })();
+        return () => {
+            ac.abort("from map");
+        };
+    }, []);
+
+    useEffect(() => {
+        (async () => {
+            // console.log("second hook")
+            const filteredLength = filterAppMarkers(props.searchedPhrase);
+            const osmLength = await loadOsmMarkers(props.searchedPhrase);
+            if (props.searchedPhrase.length > 0 && filteredLength === 0 && osmLength === 0) {
+                getToastNoResults()
+            }
+        })();
+        return () => {
+            ac.abort("from map");
+        };
+    }, [props.searchedPhrase])
+
+    const loadAppMarkers = async () => {
+        setOpenLoadingModal(true)
+        let res;
+        if (isUserAuthenticated()) {
+            res = await getPoisForUser(ac.signal, true, true, false, true).catch(console.error);
+        } else {
+            res = await getPois(ac.signal).catch(console.error);
         }
-        setOpenModal(false)
-    }, [props.poiName])
-
-    function initialLoad(poiName) {
-        setOpenModal(false)
-        setOpenModal(true)
-        setMarkersOSM([])
-        setMarkers([])
-        return POIMock.filter(x => x.Name.toLowerCase().includes(poiName.toLowerCase()));
+        if (res?.ok) {
+            setAppMarkers(res.data);
+            setFilteredAppMarkers(res.data);
+        }
+        if (res) {
+            setOpenLoadingModal(false)
+        }
     }
+
+    const filterAppMarkers = (searchedPhrase) => {
+        if(props.searchedPhrase.trim().length > 0){
+            const filtered = appMarkers.filter(x => x.name.toLowerCase().includes(searchedPhrase.toLowerCase())
+                || x.categories.some(c => c.name.toLowerCase().includes(searchedPhrase.toLowerCase())));
+
+            setFilteredAppMarkers(filtered);
+            return filtered.length;
+        }
+        else if(appMarkers?.length > 0){
+            setFilteredAppMarkers(appMarkers);
+            return appMarkers.length;
+        }
+    }
+
+    const loadOsmMarkers = async (searchedPhrase) => {
+        let data = []
+        if (searchedPhrase.trim().length >= 3) {
+            setOpenLoadingModal(true)
+            data = await searchOSM(searchedPhrase, 50, props.currentBounds, ac.signal)
+            setMarkersOSM(data)
+            setOpenLoadingModal(false)
+            return data.length;
+        } else {
+            setMarkersOSM([])
+            return 0;
+        }
+    }
+
+    // function initialLoad(poiName) {
+    //     setOpenLoadingModal(false)
+    //     setOpenLoadingModal(true)
+    //     setMarkersOSM([])
+    //     setAppMarkers([])
+    //     return POIMock.filter(x => x.Name.toLowerCase().includes(poiName.toLowerCase()));
+    // }
 
     const getOSMMarkers = () => {
         return (
@@ -54,13 +113,18 @@ function GetMarkers(props) {
     }
 
     const getSpinner = () => {
-        return(
-            <Modal isOpen={openModal}>
-                <ModalOverlay />
+        return (
+            <Modal isOpen={openLoadingModal}>
+                <ModalOverlay/>
                 <ModalContent style={{width: "min-content", maxWidth: "min-content"}}>
                     <ModalHeader>Loading...</ModalHeader>
                     <ModalBody>
-                        <div style={{marginLeft: 'auto', marginRight: 'auto', width: 'min-content', height: "min-content"}}>
+                        <div style={{
+                            marginLeft: 'auto',
+                            marginRight: 'auto',
+                            width: 'min-content',
+                            height: "min-content"
+                        }}>
                             <Spinner
                                 thickness='4px'
                                 speed='0.65s'
@@ -90,16 +154,16 @@ function GetMarkers(props) {
             title: 'No results',
             description: "Your search query returned no results.",
             status: 'error',
-            duration: 3000,
+            duration: 2000,
             isClosable: true,
         })
     }
 
     return (
         <div>
-            {openModal ? getSpinner() : null}
-            {markers.map(data => (
-            <CustomMarker key={data.Id} data={data}/>
+            {openLoadingModal ? getSpinner() : null}
+            {filteredAppMarkers.map(poi => (
+                <CustomMarker key={poi.id} data={poi}/>
             ))}
             {markersOSM.length === 0 ? null : getOSMMarkers()}
         </div>

@@ -17,7 +17,7 @@ import mapIcon from "../../icons/map-icon.png";
 import {useNavigate} from "react-router-dom";
 import Userfront from "@userfront/react";
 import Logo from "./Logo";
-import isAuthenticated from "../../auth/isAuthenticated";
+import isUserAuthenticated from "../../auth/isUserAuthenticated";
 import {FaUser} from "react-icons/fa";
 
 //Userfront.init("pn4xgmpn");
@@ -54,7 +54,7 @@ export default function NavBar() {
         {id: 2, name: "Log Out", onClick: Userfront.logout, signed: true}]
 
     const linkItems = links.map((link) =>
-        ((link.protect && isAuthenticated()) || !link.protect) &&
+        ((link.protect && isUserAuthenticated()) || !link.protect) &&
         <Link as={RouterLink} to={{pathname: link.url}}
               key={link.id}
               color={linkColor}
@@ -85,7 +85,7 @@ export default function NavBar() {
                                 </Button>
 
     const buttonItems = buttons.map((button) =>
-        ((!button.signed && !isAuthenticated()) || (button.signed && isAuthenticated())) &&
+        ((!button.signed && !isUserAuthenticated()) || (button.signed && isUserAuthenticated())) &&
         <Button
             key={button.id}
             color={linkColor}
@@ -129,7 +129,7 @@ export default function NavBar() {
 
                 </Stack>
 
-                {/*{isAuthenticated() && console.log(Userfront.user)}*/}
+                {/*{isUserAuthenticated() && console.log(Userfront.user)}*/}
                 {/*console.log(Userfront.user) &&*/}
 
                 <Stack
@@ -140,7 +140,7 @@ export default function NavBar() {
                 >
                     <Divider display={{base: "", md:"none"}}/>
                     {
-                        isAuthenticated() &&
+                        isUserAuthenticated() &&
                         profileLinkButton
                     }
                     {buttonItems}

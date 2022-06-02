@@ -53,14 +53,9 @@ namespace SocialMap.WebAPI.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> BrowseAllLikes(int? userId, int? poiId)
+        public async Task<IActionResult> BrowseAllLikes(int? poiId)
         {
-            if(userId != null && userId != User.GetId() && !User.IsAdmin() && !User.IsMod())
-            {
-                return Forbid();
-            }
-
-            IEnumerable<LikeDTO> ls = await _likeService.BrowseAllAsync(userId, poiId);
+            IEnumerable<LikeDTO> ls = await _likeService.BrowseAllAsync(User.GetId(), poiId);
             return Json(ls);
         }
 

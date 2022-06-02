@@ -1,7 +1,7 @@
 // Initialize Userfront Core JS
 import Userfront from "@userfront/react";
 import React from "react";
-import isAuthenticated from "./isAuthenticated";
+import isUserAuthenticated from "./isUserAuthenticated";
 
 Userfront.init("xbr78p4n");
 
@@ -41,7 +41,7 @@ export default class SignupFormCustom extends React.Component {
                 accountName: this.state.accountName,
             },
         }).then(() => {
-            if(isAuthenticated()) {
+            if(isUserAuthenticated()) {
             console.log("hello")
         }
         });

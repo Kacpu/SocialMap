@@ -18,6 +18,7 @@ namespace SocialMap.Infrastructure.DTO
         public bool IsAccepted { get; set; }
 
         public int CreatorId { get; set; }
+        public string CreatorUuid { get; set; }
         public string CreatorName { get; set; }
 
         public IEnumerable<CategoryDTO> Categories { get; set; }

@@ -20,7 +20,7 @@ import {FiMapPin} from "react-icons/fi";
 
 const Map = forwardRef((props, _ref) => {
     const [value, setValue] = React.useState('')
-    const [poiName, setPoiName] = React.useState('')
+    const [searchedPhrase, setSearchedPhrase] = React.useState('')
     const [mapBounds, setMapBounds] = React.useState([[52.368, 21.271], [52.098, 20.852]])
     const [centerMarkerPosition, setCenterMarkerPosition] = React.useState(new L.LatLng(props.mapCenter[0], props.mapCenter[1]))
     const [displayClearButton, setDisplayClearButton] = React.useState(false)
@@ -30,7 +30,7 @@ const Map = forwardRef((props, _ref) => {
         setValue(event.target.value)
         if (event.target.value.trim().length === 0) {
             setDisplayClearButton(false);
-            setPoiName('')
+            setSearchedPhrase('')
         } else
             setDisplayClearButton(true)
     }
@@ -42,13 +42,13 @@ const Map = forwardRef((props, _ref) => {
     }
 
     const handleClick = () => {
-        setPoiName(value)
+        setSearchedPhrase(value)
     }
 
     const handleClearClick = () => {
         setValue('')
         setDisplayClearButton(false)
-        setPoiName('')
+        setSearchedPhrase('')
     }
     const ReactDOMServer = require('react-dom/server');
     const centerIcon = new L.DivIcon({
@@ -92,7 +92,7 @@ const Map = forwardRef((props, _ref) => {
             <Input
                 variant='outline'
                 textColor={"black"}
-                placeholder='Point name'
+                placeholder='Point name or category'
                 _placeholder={{opacity: 1, color: 'gray.500'}}
                 value={value}
                 backgroundColor={"white"}
@@ -143,7 +143,7 @@ const Map = forwardRef((props, _ref) => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
                 <MapMoved/>
-                <MapMarkers poiName={poiName} currentBounds={currentBounds}/>
+                <MapMarkers searchedPhrase={searchedPhrase} currentBounds={currentBounds}/>
                 {props.diplayCenterMarker ? centerMarker() : null}
             </MapContainer>
         </Box>

@@ -9,7 +9,7 @@ import {addPoi} from "../../socialMapApi/poiRequests";
 export default function AddPoint(){
     const navigate = useNavigate();
     const {state} = useLocation();
-    const {beforeSite} = state || {};
+    const {beforeSite, startLocation} = state || {};
 
     const toast = useToast();
 
@@ -35,6 +35,7 @@ export default function AddPoint(){
             subtitle={"save your favourite place 🌎"}
             submitAction={handleSubmit}
             buttonName={"Add Point"}
+            defaultValues={startLocation}
         />
     );
 }

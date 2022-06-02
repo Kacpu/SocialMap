@@ -27,10 +27,10 @@ async function getReq(query, signal = null) {
 async function addReq(query, addObj, signal = null) {
     try {
         const response = await fetch(query, {
+            signal: signal,
             method: methods.post,
             headers: paramHeaders,
-            signal: signal,
-            body: JSON.stringify(addObj)
+            body: JSON.stringify(addObj),
         });
         return response.ok ? {ok: response.ok, data: await response.json()} : {ok: response.ok, status: response.status};
     } catch (e) {
@@ -42,9 +42,9 @@ async function addReq(query, addObj, signal = null) {
 async function updateReq(query, updateObj, signal= null) {
     try {
         return await fetch(query, {
+            signal: signal,
             method: methods.put,
             headers: paramHeaders,
-            signal: signal,
             body: JSON.stringify(updateObj)
         });
     } catch (e) {

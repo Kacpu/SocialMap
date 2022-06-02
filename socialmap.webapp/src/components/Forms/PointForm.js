@@ -63,6 +63,7 @@ export default function PointForm(props) {
     const inputColor = useColorModeValue('gray.100', 'gray.50')
     const subBoxColor = useColorModeValue('gray.600', 'gray.600');
     const [centerMarkerFlag, setCenterMarkerFlag] = React.useState(true);
+    const ac = new AbortController();
 
     const {
         handleSubmit,
@@ -95,14 +96,15 @@ export default function PointForm(props) {
     }, [])
 
     useEffect(() => {
-        const ac = new AbortController();
         (async () => {
             const res = await getCategories(ac.signal).catch(console.error);
             if (res?.ok) {
                 const sortData = res.data?.sort(c => c.name);
                 setCategories(sortData);
             }
-            setIsCategoriesLoading(false);
+            if(res){
+                setIsCategoriesLoading(false);
+            }
 
         })();
         return () => {
@@ -136,7 +138,7 @@ export default function PointForm(props) {
     }
 
     async function getData() {
-        const data = await searchOSM(inputValue, 5)
+        const data = await searchOSM(inputValue, 5,null, ac.signal)
         if (data.length === 0) {
             setShowPointList(false)
             return 0;
