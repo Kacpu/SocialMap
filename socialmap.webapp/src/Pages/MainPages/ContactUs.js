@@ -49,8 +49,8 @@ export default function Contact() {
     }
 
     const emailsMapped = emails.map((email) =>
-        <React.Fragment>
-            <VStack pl={0} spacing={3} alignItems="center" mb={2}>
+        <React.Fragment key={email}>
+            <VStack  pl={0} spacing={3} alignItems="center" mb={2}>
                 <Tooltip
                     label={hasCopied ? 'Email Copied!' : 'Copy Email'}
                     closeOnClick={false}

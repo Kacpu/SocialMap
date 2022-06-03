@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react"
 import {Marker, Popup} from "react-leaflet";
-import {Box, Button, Flex, HStack, Icon, Link, Text} from "@chakra-ui/react";
+import {Box, Button, Flex, HStack, Icon, Link, Text, useToast} from "@chakra-ui/react";
 import {SiGooglestreetview} from "react-icons/si";
 import AddButton from "../Buttons/AddButton";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
@@ -12,10 +12,10 @@ import {ReactComponent as BluePin} from "../../icons/Pin-blue.svg";
 import {ReactComponent as DarkRedPin} from "../../icons/Pin-dark-red.svg";
 import {ReactComponent as GreenPin} from "../../icons/Pin-green.svg";
 import {addLike, deleteLike, getLike, getLikes} from "../../socialMapApi/likeRequests";
-import isUserAuthenticated from "../../auth/isUserAuthenticated";
 import {getPois, getPoisForUser} from "../../socialMapApi/poiRequests";
 import useOpenStatus from "../../hooks/useOpenStatus";
 import Userfront from "@userfront/react";
+import {isUserAuthenticated} from "../../auth/authenticationFunctions";
 
 export default function CustomMarker(props) {
     const navigate = useNavigate();
@@ -25,6 +25,7 @@ export default function CustomMarker(props) {
     const [isLikable, setIsLikable] = useState(false);
     const ac = new AbortController();
     //const [isAborted, setAborted] = useState(false)
+    const toast = useToast()
 
     useEffect(() => {
         return () => {
@@ -88,7 +89,11 @@ export default function CustomMarker(props) {
     }
 
     function handleChangePage() {
-        navigate(`point/${props.data.id}`, {state: {beforeSite: "/"}});
+        if(isUserAuthenticated()){
+            navigate(`point/${props.data.id}`, {state: {beforeSite: "/"}});
+        } else {
+            noLogToast();
+        }
     }
 
     const markerIconBlue = new L.DivIcon({
@@ -112,6 +117,16 @@ export default function CustomMarker(props) {
         iconAnchor: new L.Point(0, 30),
         className: "markerHolder"
     });
+
+    const noLogToast = () => {
+        toast({
+            title: 'You are not log in',
+            description: "Please log in or create account to see more content.",
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+        })
+    }
 
     return (
         <React.Fragment>

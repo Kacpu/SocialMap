@@ -3,7 +3,6 @@ import {Link as RouterLink, Outlet} from "react-router-dom";
 import {
     Box,
     Stack,
-    Heading,
     Flex,
     Text,
     Button,
@@ -12,13 +11,11 @@ import {
     Link, Icon, Divider
 } from "@chakra-ui/react";
 import {HamburgerIcon} from "@chakra-ui/icons";
-import mapIcon from "../../icons/map-icon.png";
-//import "./NavBar.css";
 import {useNavigate} from "react-router-dom";
 import Userfront from "@userfront/react";
 import Logo from "./Logo";
-import isUserAuthenticated from "../../auth/isUserAuthenticated";
 import {FaUser} from "react-icons/fa";
+import {isMod, isUserAuthenticated} from "../../auth/authenticationFunctions";
 
 //Userfront.init("pn4xgmpn");
 
@@ -41,12 +38,9 @@ export default function NavBar() {
     }
 
     const links = [
-        {id: 0, name: "Add point", url: '/addpoint', protect: false},
+        {id: 0, name: "Add point", url: '/addpoint', protect: true},
         {id: 1, name: "About", url: '/about', protect: false},
         {id: 2, name: "Contact Us", url: '/contact', protect: false},
-        //{id: 3, name: "PrivateTest", url: '/private', protect: false},
-        //{id: 4, name: "ApiTest", url: '/apitest', protect: false},
-        {id: 5, name: "Moderator", url: '/moderatorpanel', protect: false},
     ]
 
     const buttons = [{id: 0, name: "Log In", onClick: handleLogin, signed: false},
@@ -69,20 +63,35 @@ export default function NavBar() {
         </Link>
     );
 
-    const profileLinkButton = <Button as={RouterLink} to={'/profile'}
-                                      fontWeight={'bold'}
-                                      href={'/profile'}
-                                      onClick={isOpen ? handleToggle : null}
-                                      _hover={{
-                                          textDecoration: 'none',
-                                          color: linkHoverColor,
-                                      }}
-                                      variant={"ghost"}>
-                                    <Icon as={FaUser}></Icon>
-                                    <Text ml={"10px"}>
-                                        {Userfront.user.name}
-                                    </Text>
-                                </Button>
+    const moderatorLink =
+        <Link as={RouterLink} to={{pathname: '/moderatorpanel'}}
+              key={3}
+              color={linkColor}
+              fontSize='lg'
+              href={'/moderatorpanel'}
+              onClick={isOpen ? handleToggle : null}
+              _hover={{
+                  textDecoration: 'none',
+                  color: linkHoverColor,
+              }}>
+            {"Moderator Panel"}
+        </Link>
+
+    const profileLinkButton =
+        <Button as={RouterLink} to={'/profile'}
+                fontWeight={'bold'}
+                href={'/profile'}
+                onClick={isOpen ? handleToggle : null}
+                _hover={{
+                    textDecoration: 'none',
+                    color: linkHoverColor,
+                }}
+                variant={"ghost"}>
+            <Icon as={FaUser}></Icon>
+            <Text ml={"10px"}>
+                {Userfront.user.name}
+            </Text>
+        </Button>
 
     const buttonItems = buttons.map((button) =>
         ((!button.signed && !isUserAuthenticated()) || (button.signed && isUserAuthenticated())) &&
@@ -114,7 +123,6 @@ export default function NavBar() {
                     </Button>
                 </Box>
 
-
                 <Stack
                     direction={{base: "column", md: "row"}}
                     display={{base: isOpen ? "flex" : "none", md: "flex"}}
@@ -125,12 +133,13 @@ export default function NavBar() {
                     paddingLeft={isOpen ? 0 : 5}
                     spacing={5}
                 >
+                    {isMod() && moderatorLink}
                     {linkItems}
 
                 </Stack>
 
-                {/*{isUserAuthenticated() && console.log(Userfront.user)}*/}
-                {/*console.log(Userfront.user) &&*/}
+                {/*{authenticationFunctions() && console.log(Userfront.user)}*/}
+                {/*{console.log(Userfront.user?.hasRole("admin"))}*/}
 
                 <Stack
                     direction={{base: "column", md: "row"}}
@@ -138,7 +147,7 @@ export default function NavBar() {
                     width={{base: "full", md: "auto"}}
                     mt={{base: 5, md: 0}}
                 >
-                    <Divider display={{base: "", md:"none"}}/>
+                    <Divider display={{base: "", md: "none"}}/>
                     {
                         isUserAuthenticated() &&
                         profileLinkButton

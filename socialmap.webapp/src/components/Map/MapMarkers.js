@@ -15,7 +15,7 @@ import {
     ModalOverlay, Spinner, toast, useToast
 } from "@chakra-ui/react";
 import {getPois, getPoisForUser} from "../../socialMapApi/poiRequests";
-import isUserAuthenticated from "../../auth/isUserAuthenticated";
+import {isUserAuthenticated} from "../../auth/authenticationFunctions";
 
 function GetMarkers(props) {
     const [appMarkers, setAppMarkers] = useState([]);

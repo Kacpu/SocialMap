@@ -1,6 +1,6 @@
 import React, {useState} from "react"
 import {Marker, Popup} from "react-leaflet";
-import {Box, Button, Flex, HStack, Icon, Link, Text} from "@chakra-ui/react";
+import {Box, Button, Flex, HStack, Icon, Link, Text, useToast} from "@chakra-ui/react";
 import {SiGooglestreetview} from "react-icons/si";
 import L from "leaflet";
 import ReactDOMServer from "react-dom/server";
@@ -9,9 +9,11 @@ import filterOSMName from "../../tools/FilterOSMName";
 import {AddIcon, ExternalLinkIcon} from "@chakra-ui/icons";
 import AddButton from "../Buttons/AddButton";
 import {useNavigate} from "react-router-dom";
+import {isUserAuthenticated} from "../../auth/authenticationFunctions";
 
 export default function OSMMarker(props) {
     const navigate = useNavigate();
+    const toast = useToast()
 
     const markerIconGreen = new L.DivIcon({
         html: ReactDOMServer.renderToString(<GreenPin className={"mapPin"}/>),
@@ -21,7 +23,21 @@ export default function OSMMarker(props) {
     });
 
     const onConnect = () => {
-        navigate("/addpoint", {state: {beforeSite: "/", startLocation: {x: props.data.lat, y: props.data.lon}}})
+        if(isUserAuthenticated()){
+            navigate("/addpoint", {state: {beforeSite: "/", startLocation: {x: props.data.lat, y: props.data.lon}}})
+        } else {
+            noLogToast();
+        }
+    }
+
+    const noLogToast = () => {
+        toast({
+            title: 'You are not log in',
+            description: "Please log in or create account to connect to point.",
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+        })
     }
 
     return (

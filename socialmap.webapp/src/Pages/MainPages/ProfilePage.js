@@ -35,12 +35,3 @@ export default function ProfilePage() {
         </Box>
     );
 }
-
-function getRole() {
-    if (Userfront.user.hasRole("admin"))
-        return "Admin";
-    else if (Userfront.user.hasRole("editor"))
-        return "Editor";
-    else
-        return "User";
-}

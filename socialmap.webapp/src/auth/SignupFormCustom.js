@@ -1,7 +1,7 @@
 // Initialize Userfront Core JS
 import Userfront from "@userfront/react";
 import React from "react";
-import isUserAuthenticated from "./isUserAuthenticated";
+import {isUserAuthenticated} from "./authenticationFunctions";
 
 Userfront.init("xbr78p4n");
 

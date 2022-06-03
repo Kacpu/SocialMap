@@ -13,7 +13,7 @@ export default function InvitationBoiBox(props) {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const {isOpen: isOpenRejectModal, onOpen: onOpenRejectModal, onClose: onCloseRejectModal} = useOpenStatus();
-    const toast = useToast()
+    const toast = useToast();
 
     const onDetails = () => {
         navigate(`/point/${props.poiData.id}`, {state: {beforeSite: "/profile/#invitationPointsTab"}});
