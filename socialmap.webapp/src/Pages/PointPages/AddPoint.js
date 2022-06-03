@@ -16,7 +16,7 @@ export default function AddPoint(){
     async function handleSubmit(data) {
         const res = await addPoi(data);
         if (res?.ok) {
-            successToast(toast, "added", "point", "Check map")
+            successToast(toast, "added", "point", "Wait some time and check map!")
         } else {
             errorToast(toast)
         }

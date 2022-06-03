@@ -9,6 +9,7 @@ import {AiFillLike, AiOutlineLike} from "react-icons/ai";
 import L from "leaflet";
 import ReactDOMServer from "react-dom/server";
 import {ReactComponent as BluePin} from "../../icons/Pin-blue.svg";
+import {ReactComponent as DarkRedPin} from "../../icons/Pin-dark-red.svg";
 import {ReactComponent as GreenPin} from "../../icons/Pin-green.svg";
 import {addLike, deleteLike, getLike, getLikes} from "../../socialMapApi/likeRequests";
 import isUserAuthenticated from "../../auth/isUserAuthenticated";
@@ -76,6 +77,16 @@ export default function CustomMarker(props) {
         }
     }
 
+    function shortenDescription(text){
+        const maxLen = 80;
+        if(text.length > maxLen){
+            let newText = text.slice(0,maxLen) + "...";
+            return newText;
+        }
+
+        return text;
+    }
+
     function handleChangePage() {
         navigate(`point/${props.data.id}`, {state: {beforeSite: "/"}});
     }
@@ -86,6 +97,15 @@ export default function CustomMarker(props) {
         iconAnchor: new L.Point(0, 30),
         className: "markerHolder"
     });
+
+    const markerIconDarkRed = new L.DivIcon({
+        html: ReactDOMServer.renderToString(<DarkRedPin className={"mapPin"}/>),
+        iconSize: new L.Point(30, 30),
+        iconAnchor: new L.Point(0, 30),
+        className: "markerHolder"
+    });
+
+
     const markerIconGreen = new L.DivIcon({
         html: ReactDOMServer.renderToString(<GreenPin className={"mapPin"}/>),
         iconSize: new L.Point(30, 30),
@@ -101,9 +121,9 @@ export default function CustomMarker(props) {
                 }}
                 key={props.data.id}
                 position={[props.data.x, props.data.y]}
-                icon={markerIconBlue}>
+                icon={props.data.creatorUuid === Userfront?.user?.userUuid ? markerIconDarkRed : markerIconBlue}>
                 <Popup autoClose={false} className={"popup-marker"}>
-                    <Box className={"google-link"} mb={"-10px"}>
+                    <Box className={"google-link"} mb={"5px"}>
                         <Link
                             href={'https://www.google.com/maps/dir//' + props.data.x + ',' + props.data.y + '/@' + props.data.x + ',' + props.data.y + ',15z'}
                             isExternal>
@@ -112,11 +132,13 @@ export default function CustomMarker(props) {
                             </Button>
                         </Link>
                     </Box>
-                    <Box className={"popup-title"} mb={"2"}>
-                        {props.data.name}
-                    </Box>
-                    <Box mb={"5"} className={"popup-description"}>
-                        {props.data.description}
+                    <Box className={"popup-content"}>
+                        <Box className={"popup-title"}>
+                            {props.data.name}
+                        </Box>
+                        <Box className={"popup-desc"}>
+                            {shortenDescription(props.data.description)}
+                        </Box>
                     </Box>
                     <HStack spacing='24px' align={"center"}>
                         <Box w='50%' h='40px'>

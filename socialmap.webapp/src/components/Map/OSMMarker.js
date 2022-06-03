@@ -40,11 +40,11 @@ export default function OSMMarker(props) {
                             </Button>
                         </Link>
                     </Box>
-                    <Box className={"popup-content"} mb={"2"}>
-                        <Box fontWeight={"bold"} mb={"2"}>
+                    <Box className={"popup-content"} >
+                        <Box className={"popup-title"}>
                             {filterOSMName(props.data)[0]}
                         </Box>
-                        <Box>
+                        <Box className={"popup-desc"}>
                             {filterOSMName(props.data).splice(1, filterOSMName(props.data).length).join(' ')}
                         </Box>
                         <AddButton onClick={onConnect}
