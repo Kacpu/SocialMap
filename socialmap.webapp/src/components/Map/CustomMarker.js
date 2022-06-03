@@ -137,7 +137,7 @@ export default function CustomMarker(props) {
                 key={props.data.id}
                 position={[props.data.x, props.data.y]}
                 icon={props.data.creatorUuid === Userfront?.user?.userUuid ? markerIconDarkRed : markerIconBlue}>
-                <Popup autoClose={false} className={"popup-marker"}>
+                <Popup autoClose={false} autoPan={false} className={"popup-marker"}>
                     <Box className={"google-link"} mb={"5px"}>
                         <Link
                             href={'https://www.google.com/maps/dir//' + props.data.x + ',' + props.data.y + '/@' + props.data.x + ',' + props.data.y + ',15z'}

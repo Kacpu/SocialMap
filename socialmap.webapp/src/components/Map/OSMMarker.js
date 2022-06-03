@@ -46,7 +46,7 @@ export default function OSMMarker(props) {
                 key={props.data.place_id}
                 position={[props.data.lat, props.data.lon]}
                 icon={markerIconGreen}>
-                <Popup autoClose={false} className={"popup-marker"}>
+                <Popup autoClose={false} autoPan={false} className={"popup-marker"}>
                     <Box className={"google-link"} mb={"5px"}>
                         <Link
                             href={'https://www.google.com/maps/dir//' + props.data.lat + ',' + props.data.lon + '/@' + props.data.lat + ',' + props.data.lon + ',15z'}
