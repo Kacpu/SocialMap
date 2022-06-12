@@ -105,7 +105,6 @@ export default function PointForm(props) {
             if(res){
                 setIsCategoriesLoading(false);
             }
-
         })();
         return () => {
             ac.abort("abort from fetch categories at add point");
@@ -327,7 +326,9 @@ export default function PointForm(props) {
                             {
                                 reloadMap ? <Box className={'map-container'}/> :
                                     <Map ref={mapRef} height={'400px'} diplayMarkers={true} mapCenter={mapCenter}
-                                         diplayCenterMarker={centerMarkerFlag} zoom={17} draggable={true}/>
+                                         diplayCenterMarker={centerMarkerFlag} zoom={17} draggable={true}
+                                         centerPoi={props.defaultValues}
+                                    />
                             }
                         </Stack>
                     </Box>

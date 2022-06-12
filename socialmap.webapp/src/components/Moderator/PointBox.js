@@ -126,7 +126,8 @@ export default function PointBox(props) {
                         <Text mb={1}>Map: </Text>
                         {displayMap ? (
                             <Box><Map diplayMarkers={false} mapCenter={[props.x, props.y]} zoom={17} showSearch={false}
-                                      diplayCenterMarker={true} draggable={false}/> </Box>) : (<></>)}
+                                      diplayCenterMarker={true} draggable={false} centerPoi={props}/>
+                            </Box>) : (<></>)}
                         <Text mb={1} mt={5}>Description: </Text>
                         {makeBox(props.description)}
                     </Box>

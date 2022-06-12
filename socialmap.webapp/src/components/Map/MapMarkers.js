@@ -58,8 +58,9 @@ function GetMarkers(props) {
             res = await getPois(ac.signal).catch(console.error);
         }
         if (res?.ok) {
-            setAppMarkers(res.data);
-            setFilteredAppMarkers(res.data);
+            const data = res.data.filter(x => x.id !== props.centerPoi?.id);
+            setAppMarkers(data);
+            setFilteredAppMarkers(data);
         }
         if (res) {
             setOpenLoadingModal(false)
@@ -70,7 +71,6 @@ function GetMarkers(props) {
         if(props.searchedPhrase.trim().length > 0){
             const filtered = appMarkers.filter(x => x.name.toLowerCase().includes(searchedPhrase.toLowerCase())
                 || x.categories.some(c => c.name.toLowerCase().includes(searchedPhrase.toLowerCase())));
-
             setFilteredAppMarkers(filtered);
             return filtered.length;
         }

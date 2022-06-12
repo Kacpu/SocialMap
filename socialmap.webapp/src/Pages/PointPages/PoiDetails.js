@@ -113,7 +113,9 @@ export default function PoiDetails(props) {
                         {
                             reloadMap ? <Box className={'map-container'}/> :
                                 <Map ref={mapRef} height={'400px'} diplayMarkers={true} mapCenter={mapCenter}
-                                     diplayCenterMarker={centerMarkerFlag} zoom={17} draggable={false}/>
+                                     diplayCenterMarker={centerMarkerFlag} zoom={17} draggable={false}
+                                     centerPoi={poiData}
+                                />
                         }
                         <Stack mt={"20px"} width={"100%"}>
                             <Text color={"gray.300"}>Description:</Text>
@@ -132,7 +134,6 @@ export default function PoiDetails(props) {
                     </Flex>
                 </Flex>
             )}
-
         </React.Fragment>
     );
 

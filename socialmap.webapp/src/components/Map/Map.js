@@ -84,7 +84,8 @@ const Map = forwardRef((props, _ref) => {
         );
     }
     const getInput = () => (
-        <InputGroup className={"input-container"} minWidth={"235px"} width={"25%"} borderStyle={"solid"} borderColor={"#1A202C"}>
+        <InputGroup className={"input-container"} minWidth={"235px"} width={"25%"} borderStyle={"solid"}
+                    borderColor={"#1A202C"}>
             <InputLeftElement
                 pointerEvents='none'
                 children={<Icon color={"black"} as={FiMapPin}/>}
@@ -128,6 +129,7 @@ const Map = forwardRef((props, _ref) => {
         })
         return null
     }
+
     return (
         <Box className={"map-container"}>
             {props.showSearch ? getInput() : null}
@@ -143,7 +145,8 @@ const Map = forwardRef((props, _ref) => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
                 <MapMoved/>
-                <MapMarkers searchedPhrase={searchedPhrase} currentBounds={currentBounds}/>
+                <MapMarkers searchedPhrase={searchedPhrase} currentBounds={currentBounds}
+                            centerPoi={props.centerPoi}/>
                 {props.diplayCenterMarker ? centerMarker() : null}
             </MapContainer>
         </Box>
