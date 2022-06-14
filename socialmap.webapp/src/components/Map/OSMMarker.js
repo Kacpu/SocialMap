@@ -23,8 +23,13 @@ export default function OSMMarker(props) {
     });
 
     const onConnect = () => {
-        if(isUserAuthenticated()){
-            navigate("/addpoint", {state: {beforeSite: "/", startLocation: {x: props.data.lat, y: props.data.lon}}})
+        if (isUserAuthenticated()) {
+            navigate("/addpoint", {
+                state: {
+                    beforeSite: "/",
+                    defaultValues: {x: props.data.lat, y: props.data.lon, name: filterOSMName(props.data)[0]}
+                }
+            })
         } else {
             noLogToast();
         }
@@ -56,7 +61,7 @@ export default function OSMMarker(props) {
                             </Button>
                         </Link>
                     </Box>
-                    <Box className={"popup-content"} >
+                    <Box className={"popup-content"}>
                         <Box className={"popup-title"}>
                             {filterOSMName(props.data)[0]}
                         </Box>
@@ -64,8 +69,8 @@ export default function OSMMarker(props) {
                             {filterOSMName(props.data).splice(1, filterOSMName(props.data).length).join(' ')}
                         </Box>
                         <AddButton onClick={onConnect}
-                                leftIcon={<AddIcon/>}
-                                size='sm' className={'editButton'} mt={5}>
+                                   leftIcon={<AddIcon/>}
+                                   size='sm' className={'editButton'} mt={5}>
                             Connect
                         </AddButton>
                     </Box>
