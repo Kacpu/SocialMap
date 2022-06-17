@@ -3,7 +3,9 @@
 # SocialMap
 Projekt grupowy - mapa społecznościowa z integracją OpenStreetMap
 
-### Prezentacja
+Group project - social map with OpenStreetMap integration
+
+### Prezentacja / Presentation
 
 ![alt text](https://github.com/Kacpu/SocialMap/blob/master/images/Slajd3.JPG)
 ![alt text](https://github.com/Kacpu/SocialMap/blob/master/images/Slajd5.JPG)
