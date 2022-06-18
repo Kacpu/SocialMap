@@ -2,8 +2,10 @@
 
 # SocialMap
 Projekt grupowy - mapa społecznościowa z integracją OpenStreetMap
-
 Group project - social map with OpenStreetMap integration
+
+### Disconnected and mocked version:
+https://socialmap-mocked.netlify.app
 
 ### Prezentacja / Presentation
 
